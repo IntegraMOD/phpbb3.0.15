@@ -151,7 +151,7 @@ table.table1 tbody tr:hover, table.table1 tbody tr.hover {
 }
 
 table.table1 td {
-	color: #536482;
+	color: #919191;
 }
 
 table.table1 tbody td {
@@ -175,7 +175,7 @@ dl.details dt {
 }
 
 dl.details dd {
-	color: #536482;
+	color: #232322;
 }
 
 .sep {
@@ -602,7 +602,7 @@ fieldset.polls dl.voted {
 }
 
 fieldset.polls dd div {
-	color: #FFFFFF;
+	color: #868688;
 }
 
 .rtl .pollbar1, .rtl .pollbar2, .rtl .pollbar3, .rtl .pollbar4, .rtl .pollbar5 {
@@ -828,7 +828,7 @@ ul.cplist {
 
 #tabs a span {
 	background-image: url("images/dark/bg_tabs2.gif") !important;
-	color: #3C3B41;
+	color: #919191;
 }
 
 #tabs a:hover span {
@@ -995,7 +995,7 @@ option.disabled-option {
 /* Definition list layout for forms
 ---------------------------------------- */
 dd label {
-	color: #333;
+	color: #333333;
 }
 
 /* Hover effects */

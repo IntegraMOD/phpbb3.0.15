@@ -1070,6 +1070,5 @@ input.disabled {
 	color: #666666;
 }
 
-.lightstyle { display:none; }
+.lightstyle { display:none !important; }
 .darkstyle { display:block; }
-
