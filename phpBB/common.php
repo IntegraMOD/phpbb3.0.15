@@ -16,6 +16,10 @@ if (!defined('IN_PHPBB'))
 	exit;
 }
 
+// ini_set('display_startup_errors',1); 
+// ini_set('display_errors',1);
+// error_reporting(-1);
+
 require($phpbb_root_path . 'includes/startup.' . $phpEx);
 
 if (file_exists($phpbb_root_path . 'config.' . $phpEx))
@@ -126,5 +130,3 @@ foreach ($cache->obtain_hooks() as $hook)
 {
 	@include($phpbb_root_path . 'includes/hooks/' . $hook . '.' . $phpEx);
 }
-
-?>

@@ -25,7 +25,7 @@ class acm
 	/**
 	* Set cache path
 	*/
-	function acm()
+	function __construct()
 	{
 	}
 
@@ -152,5 +152,3 @@ class acm
 		return false;
 	}
 }
-
-?>

@@ -397,28 +397,7 @@ class acp_main
 
 		// Version check
 		$user->add_lang('install');
-
-		if ($auth->acl_get('a_server') && version_compare(PHP_VERSION, '5.3.3', '<'))
-		{
-			$template->assign_vars(array(
-				'S_PHP_VERSION_OLD'	=> true,
-				'L_PHP_VERSION_OLD'	=> sprintf($user->lang['PHP_VERSION_OLD'], '<a href="https://www.phpbb.com/community/viewtopic.php?f=14&amp;t=2152375">', '</a>'),
-			));
-		}
-
-		$latest_version_info = false;
-		if (($latest_version_info = obtain_latest_version_info(request_var('versioncheck_force', false))) === false)
-		{
-			$template->assign_var('S_VERSIONCHECK_FAIL', true);
-		}
-		else
-		{
-			$latest_version_info = explode("\n", $latest_version_info);
-
-			$template->assign_vars(array(
-				'S_VERSION_UP_TO_DATE'	=> phpbb_version_compare(trim($latest_version_info[0]), $config['version'], '<='),
-			));
-		}
+		$template->assign_var('S_VERSION_UP_TO_DATE', true);
 
 		// Get forum statistics
 		$total_posts = $config['num_posts'];
@@ -517,8 +496,8 @@ class acp_main
 			'U_ACTION'			=> $this->u_action,
 			'U_ADMIN_LOG'		=> append_sid("{$phpbb_admin_path}index.$phpEx", 'i=logs&amp;mode=admin'),
 			'U_INACTIVE_USERS'	=> append_sid("{$phpbb_admin_path}index.$phpEx", 'i=inactive&amp;mode=list'),
-			'U_VERSIONCHECK'	=> append_sid("{$phpbb_admin_path}index.$phpEx", 'i=update&amp;mode=version_check'),
-			'U_VERSIONCHECK_FORCE'	=> append_sid("{$phpbb_admin_path}index.$phpEx", 'versioncheck_force=1'),
+			'U_VERSIONCHECK'	=> '#',
+			'U_VERSIONCHECK_FORCE'	=> '#',
 
 			'S_ACTION_OPTIONS'	=> ($auth->acl_get('a_board')) ? true : false,
 			'S_FOUNDER'			=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
@@ -604,10 +583,7 @@ class acp_main
 		{
 			$template->assign_vars(array(
 				'S_MBSTRING_LOADED'						=> true,
-				'S_MBSTRING_FUNC_OVERLOAD_FAIL'			=> (intval(@ini_get('mbstring.func_overload')) & (MB_OVERLOAD_MAIL | MB_OVERLOAD_STRING)),
 				'S_MBSTRING_ENCODING_TRANSLATION_FAIL'	=> (@ini_get('mbstring.encoding_translation') != 0),
-				'S_MBSTRING_HTTP_INPUT_FAIL'			=> !in_array(@ini_get('mbstring.http_input'), array('pass', '')),
-				'S_MBSTRING_HTTP_OUTPUT_FAIL'			=> !in_array(@ini_get('mbstring.http_output'), array('pass', '')),
 			));
 		}
 
@@ -621,5 +597,3 @@ class acp_main
 		$this->page_title = 'ACP_MAIN';
 	}
 }
-
-?>

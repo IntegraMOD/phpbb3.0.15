@@ -571,7 +571,7 @@ function phpbb_create_config_file_data($data, $dbms, $load_extensions, $debug = 
 		'dbport'		=> $data['dbport'],
 		'dbname'		=> $data['dbname'],
 		'dbuser'		=> $data['dbuser'],
-		'dbpasswd'		=> htmlspecialchars_decode($data['dbpasswd']),
+		'dbpasswd'		=> htmlspecialchars_decode($data['dbpasswd'], ENT_COMPAT),
 		'table_prefix'	=> $data['table_prefix'],
 		'acm_type'		=> 'file',
 		'load_extensions'	=> $load_extensions,
@@ -602,5 +602,3 @@ function phpbb_create_config_file_data($data, $dbms, $load_extensions, $debug = 
 
 	return $config_data;
 }
-
-?>

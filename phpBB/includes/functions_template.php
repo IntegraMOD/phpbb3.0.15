@@ -46,7 +46,7 @@ class template_compile
 	/**
 	* constuctor
 	*/
-	function template_compile(&$template)
+	function __construct(&$template)
 	{
 		$this->template = &$template;
 	}
@@ -113,7 +113,7 @@ class template_compile
 
 		if ($echo_var)
 		{
-			global $$echo_var;
+			global ${$echo_var};
 		}
 
 		// Remove any "loose" php ... we want to give admins the ability
@@ -305,8 +305,8 @@ class template_compile
 		}
 
 		// Handle remaining varrefs
-		$text_blocks = preg_replace('#\{([A-Z0-9\-_]+)\}#', "<?php echo (isset(\$this->_rootref['\\1'])) ? \$this->_rootref['\\1'] : ''; ?>", $text_blocks);
-		$text_blocks = preg_replace('#\{\$([A-Z0-9\-_]+)\}#', "<?php echo (isset(\$this->_tpldata['DEFINE']['.']['\\1'])) ? \$this->_tpldata['DEFINE']['.']['\\1'] : ''; ?>", $text_blocks);
+		$text_blocks = preg_replace('#\{([A-Z0-9\-_]+)\}#', "<?php echo \$this->_rootref['\\1'] ?? ''; ?>", $text_blocks);
+		$text_blocks = preg_replace('#\{\$([A-Z0-9\-_]+)\}#', "<?php echo \$this->_tpldata['DEFINE']['.']['\\1'] ?? ''; ?>", $text_blocks);
 
 		return;
 	}
@@ -380,7 +380,7 @@ class template_compile
 		if (sizeof($block) < 2)
 		{
 			// Block is not nested.
-			$tag_template_php = '$_' . $tag_args . "_count = (isset(\$this->_tpldata['$tag_args'])) ? sizeof(\$this->_tpldata['$tag_args']) : 0;";
+			$tag_template_php = '$_' . $tag_args . "_count = (isset(\$this->_tpldata['$tag_args']) && is_array(\$this->_tpldata['$tag_args'])) ? count(\$this->_tpldata['$tag_args']) : 0;";
 			$varref = "\$this->_tpldata['$tag_args']";
 		}
 		else
@@ -394,7 +394,7 @@ class template_compile
 			$varref = $this->generate_block_data_ref($namespace, false);
 
 			// Create the for loop code to iterate over this block.
-			$tag_template_php = '$_' . $tag_args . '_count = (isset(' . $varref . ')) ? sizeof(' . $varref . ') : 0;';
+			$tag_template_php = '$_' . $tag_args . '_count = (isset(' . $varref . ') && is_array(' . $varref . ')) ? count(' . $varref . ') : 0;';
 		}
 
 		$tag_template_php .= 'if ($_' . $tag_args . '_count) {';
@@ -528,7 +528,8 @@ class template_compile
 				default:
 					if (preg_match('#^((?:[a-z0-9\-_]+\.)+)?(\$)?(?=[A-Z])([A-Z0-9\-_]+)#s', $token, $varrefs))
 					{
-						$token = (!empty($varrefs[1])) ? $this->generate_block_data_ref(substr($varrefs[1], 0, -1), true, $varrefs[2]) . '[\'' . $varrefs[3] . '\']' : (($varrefs[2]) ? '$this->_tpldata[\'DEFINE\'][\'.\'][\'' . $varrefs[3] . '\']' : '$this->_rootref[\'' . $varrefs[3] . '\']');
+						// should the end of this be '' or null ??? null seems correct, but...
+						$token = (!empty($varrefs[1])) ? $this->generate_block_data_ref(substr($varrefs[1], 0, -1), true, $varrefs[2]) . '[\'' . $varrefs[3] . '\']' : (($varrefs[2]) ? '(isset($this->_tpldata[\'DEFINE\']) && $this->_tpldata[\'DEFINE\'][\'.\'][\'' . $varrefs[3] . '\'])' : '($this->_rootref[\'' . $varrefs[3] . '\'] ?? null)');
 					}
 					else if (preg_match('#^\.((?:[a-z0-9\-_]+\.?)+)$#s', $token, $varrefs))
 					{
@@ -554,7 +555,7 @@ class template_compile
 							// Add the block reference for the last child.
 							$varref .= "['" . $blocks[0] . "']";
 						}
-						$token = "sizeof($varref)";
+						$token = "!empty($varref)";
 					}
 					else if (!empty($token))
 					{
@@ -605,6 +606,9 @@ class template_compile
 		else
 		{
 			preg_match('#true|false|\.#i', $match[4], $type);
+			if (empty($type[0])) {
+				$type = [0];
+			}
 
 			switch (strtolower($type[0]))
 			{
@@ -810,5 +814,3 @@ class template_compile
 		return;
 	}
 }
-
-?>

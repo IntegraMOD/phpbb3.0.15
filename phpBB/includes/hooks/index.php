@@ -1,5 +1,10 @@
 <?php
 /**
+ * Patched for compatibility with PHP 8.1
+ * @copyright (c) 2023 Dion Designs
+ */
+
+/**
 *
 * @package phpBB3
 * @version $Id$
@@ -42,7 +47,7 @@ class phpbb_hook
 	*
 	* @param array $valid_hooks array containing the hookable functions/methods
 	*/
-	function phpbb_hook($valid_hooks)
+	function __construct($valid_hooks)
 	{
 		foreach ($valid_hooks as $_null => $method)
 		{

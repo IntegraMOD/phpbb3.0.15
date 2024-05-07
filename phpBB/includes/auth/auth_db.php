@@ -273,4 +273,3 @@ function login_db($username, $password, $ip = '', $browser = '', $forwarded_for 
 	);
 }
 
-?>

@@ -578,16 +578,16 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 	$hilit = phpbb_clean_search_string(str_replace(array('+', '-', '|', '(', ')', '&quot;'), ' ', $keywords));
 	$hilit = str_replace(' ', '|', $hilit);
 
-	$u_hilit = urlencode(htmlspecialchars_decode(str_replace('|', ' ', $hilit)));
+	$u_hilit = urlencode(htmlspecialchars_decode(str_replace('|', ' ', $hilit), ENT_COMPAT));
 	$u_show_results = '&amp;sr=' . $show_results;
 	$u_search_forum = implode('&amp;fid%5B%5D=', $search_forum);
 
 	$u_search = append_sid("{$phpbb_root_path}search.$phpEx", $u_sort_param . $u_show_results);
 	$u_search .= ($search_id) ? '&amp;search_id=' . $search_id : '';
-	$u_search .= ($u_hilit) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords)) : '';
+	$u_search .= ($u_hilit) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords, ENT_COMPAT)) : '';
 	$u_search .= ($search_terms != 'all') ? '&amp;terms=' . $search_terms : '';
 	$u_search .= ($topic_id) ? '&amp;t=' . $topic_id : '';
-	$u_search .= ($author) ? '&amp;author=' . urlencode(htmlspecialchars_decode($author)) : '';
+	$u_search .= ($author) ? '&amp;author=' . urlencode(htmlspecialchars_decode($author, ENT_COMPAT)) : '';
 	$u_search .= ($author_id) ? '&amp;author_id=' . $author_id : '';
 	$u_search .= ($u_search_forum) ? '&amp;fid%5B%5D=' . $u_search_forum : '';
 	$u_search .= (!$search_child) ? '&amp;sc=0' : '';
@@ -713,7 +713,8 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 			// If we have some shadow topics, update the rowset to reflect their topic information
 			if (sizeof($shadow_topic_list))
 			{
-				$sql = 'SELECT *
+// Helter		$sql = 'SELECT *
+				$sql = 'SELECT topic_id, topic_moved_id, topic_status, forum_name 
 					FROM ' . TOPICS_TABLE . '
 					WHERE ' . $db->sql_in_set('topic_id', array_keys($shadow_topic_list));
 				$result = $db->sql_query($sql);
@@ -819,7 +820,8 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 
 			if (sizeof($attach_list))
 			{
-				$sql = 'SELECT *
+// Helter		$sql = 'SELECT *
+				$sql = 'SELECT post_msg_id, $attach_list
 					FROM ' . ATTACHMENTS_TABLE . '
 					WHERE ' . $db->sql_in_set('post_msg_id', $attach_list) . '
 						AND in_message = 0
@@ -1216,7 +1218,7 @@ if ($auth->acl_get('a_search'))
 			'KEYWORDS'	=> $keywords,
 			'TIME'		=> $user->format_date($row['search_time']),
 
-			'U_KEYWORDS'	=> append_sid("{$phpbb_root_path}search.$phpEx", 'keywords=' . urlencode(htmlspecialchars_decode($keywords)))
+			'U_KEYWORDS'	=> append_sid("{$phpbb_root_path}search.$phpEx", 'keywords=' . urlencode(htmlspecialchars_decode($keywords, ENT_COMPAT)))
 		));
 	}
 	$db->sql_freeresult($result);
@@ -1231,5 +1233,3 @@ $template->set_filenames(array(
 make_jumpbox(append_sid("{$phpbb_root_path}viewforum.$phpEx"));
 
 page_footer();
-
-?>

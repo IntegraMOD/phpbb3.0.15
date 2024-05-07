@@ -26,7 +26,7 @@ class mcp_main
 	var $p_master;
 	var $u_action;
 
-	function mcp_main(&$p_master)
+	function __construct(&$p_master)
 	{
 		$this->p_master = &$p_master;
 	}
@@ -1335,5 +1335,3 @@ function mcp_fork_topic($topic_ids)
 		trigger_error($user->lang[$success_msg] . '<br /><br />' . $return_link);
 	}
 }
-
-?>

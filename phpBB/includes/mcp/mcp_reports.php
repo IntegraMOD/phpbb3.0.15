@@ -26,7 +26,7 @@ class mcp_reports
 	var $p_master;
 	var $u_action;
 
-	function mcp_reports(&$p_master)
+	function __construct(&$p_master)
 	{
 		$this->p_master = &$p_master;
 	}
@@ -656,18 +656,18 @@ function close_report($report_id_list, $mode, $action, $pm = false)
 				if ($pm)
 				{
 					$messenger->assign_vars(array(
-						'USERNAME'		=> htmlspecialchars_decode($reporter['username']),
-						'CLOSER_NAME'	=> htmlspecialchars_decode($user->data['username']),
-						'PM_SUBJECT'	=> htmlspecialchars_decode(censor_text($post_info[$post_id]['message_subject'])),
+						'USERNAME'		=> htmlspecialchars_decode($reporter['username'], ENT_COMPAT),
+						'CLOSER_NAME'	=> htmlspecialchars_decode($user->data['username'], ENT_COMPAT),
+						'PM_SUBJECT'	=> htmlspecialchars_decode(censor_text($post_info[$post_id]['message_subject']), ENT_COMPAT),
 					));
 				}
 				else
 				{
 					$messenger->assign_vars(array(
-						'USERNAME'		=> htmlspecialchars_decode($reporter['username']),
-						'CLOSER_NAME'	=> htmlspecialchars_decode($user->data['username']),
-						'POST_SUBJECT'	=> htmlspecialchars_decode(censor_text($post_info[$post_id]['post_subject'])),
-						'TOPIC_TITLE'	=> htmlspecialchars_decode(censor_text($post_info[$post_id]['topic_title'])))
+						'USERNAME'		=> htmlspecialchars_decode($reporter['username'], ENT_COMPAT),
+						'CLOSER_NAME'	=> htmlspecialchars_decode($user->data['username'], ENT_COMPAT),
+						'POST_SUBJECT'	=> htmlspecialchars_decode(censor_text($post_info[$post_id]['post_subject']), ENT_COMPAT),
+						'TOPIC_TITLE'	=> htmlspecialchars_decode(censor_text($post_info[$post_id]['topic_title']), ENT_COMPAT))
 					);
 				}
 
@@ -725,5 +725,3 @@ function close_report($report_id_list, $mode, $action, $pm = false)
 		trigger_error($user->lang[$success_msg] . '<br /><br />' . $return_forum . $return_topic . sprintf($user->lang['RETURN_PAGE'], "<a href=\"$redirect\">", '</a>'));
 	}
 }
-
-?>

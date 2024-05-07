@@ -804,5 +804,3 @@ class dbal_oracle extends dbal
 		}
 	}
 }
-
-?>

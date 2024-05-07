@@ -1181,5 +1181,3 @@ class custom_profile_admin extends custom_profile
 		return $options;
 	}
 }
-
-?>

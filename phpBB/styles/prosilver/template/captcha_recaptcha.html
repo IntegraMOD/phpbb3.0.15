@@ -12,7 +12,7 @@
 	<dl>
 	<dt><label>{L_CONFIRM_CODE}</label>:<br /><span>{L_RECAPTCHA_EXPLAIN}</span></dt>
 	<dd>
-		<script type="text/javascript">
+		<script>
 		// <![CDATA[
 		var RecaptchaOptions = {
 			lang : '{LA_RECAPTCHA_LANG}',
@@ -21,8 +21,8 @@
 		};
 		// ]]>
 		</script>
-		<script type="text/javascript" src="{RECAPTCHA_SERVER}/challenge?k={RECAPTCHA_PUBKEY}{RECAPTCHA_ERRORGET}"></script>
-		<script type="text/javascript">
+		<script src="{RECAPTCHA_SERVER}/challenge?k={RECAPTCHA_PUBKEY}{RECAPTCHA_ERRORGET}"></script>
+		<script>
 		// <![CDATA[
 		<!-- IF S_CONTENT_DIRECTION eq 'rtl' -->
 			document.getElementById('recaptcha_table').style.direction = 'ltr';

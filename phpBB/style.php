@@ -138,7 +138,7 @@ if ($id)
 	if ($config['gzip_compress'])
 	{
 		// IE6 is not able to compress the style (do not ask us why!)
-		$browser = (!empty($_SERVER['HTTP_USER_AGENT'])) ? strtolower(htmlspecialchars((string) $_SERVER['HTTP_USER_AGENT'])) : '';
+		$browser = (!empty($_SERVER['HTTP_USER_AGENT'])) ? strtolower(htmlspecialchars(strval($_SERVER['HTTP_USER_AGENT']), ENT_COMPAT)) : '';
 
 		if ($browser && strpos($browser, 'msie 6.0') === false && @extension_loaded('zlib') && !headers_sent())
 		{
@@ -185,8 +185,9 @@ if ($id)
 	if ($recache)
 	{
 		include_once($phpbb_root_path . 'includes/acp/acp_styles.' . $phpEx);
+		$acp = new acp_styles;
 
-		$theme['theme_data'] = acp_styles::db_theme_data($theme);
+		$theme['theme_data'] = $acp->db_theme_data($theme);
 		$theme['theme_mtime'] = $update_time;
 
 		// Save CSS contents
@@ -267,9 +268,6 @@ if ($id)
 				case 'HEIGHT':
 					$replace[] = $imgs[$img]['height'];
 				break;
-
-				default:
-					continue;
 			}
 		}
 
@@ -289,5 +287,3 @@ if ($id)
 }
 
 exit;
-
-?>

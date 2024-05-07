@@ -723,7 +723,7 @@ inherit_from = {INHERIT_FROM}
 		$filelist = $filelist_cats = array();
 
 		$template_data	= utf8_normalize_nfc(request_var('template_data', '', true));
-		$template_data	= htmlspecialchars_decode($template_data);
+		$template_data	= htmlspecialchars_decode($template_data, ENT_COMPAT);
 		$template_file	= utf8_normalize_nfc(request_var('template_file', '', true));
 		$text_rows		= max(5, min(999, request_var('text_rows', 20)));
 		$save_changes	= (isset($_POST['save'])) ? true : false;
@@ -766,7 +766,7 @@ inherit_from = {INHERIT_FROM}
 				if (!($fp = @fopen($file, 'wb')))
 				{
 					// File exists and is writeable, but still not able to be written to
-					trigger_error(sprintf($user->lang['TEMPLATE_FILE_NOT_WRITABLE'], htmlspecialchars($template_file)) . adm_back_link($this->u_action), E_USER_WARNING);
+					trigger_error(sprintf($user->lang['TEMPLATE_FILE_NOT_WRITABLE'], htmlspecialchars($template_file, ENT_COMPAT)) . adm_back_link($this->u_action), E_USER_WARNING);
 				}
 				fwrite($fp, $template_data);
 				fclose($fp);
@@ -1139,7 +1139,7 @@ inherit_from = {INHERIT_FROM}
 		$filelist = $filelist_cats = array();
 
 		$theme_data		= utf8_normalize_nfc(request_var('template_data', '', true));
-		$theme_data		= htmlspecialchars_decode($theme_data);
+		$theme_data		= htmlspecialchars_decode($theme_data, ENT_COMPAT);
 		$theme_file		= utf8_normalize_nfc(request_var('template_file', '', true));
 		$text_rows		= max(5, min(999, request_var('text_rows', 20)));
 		$save_changes	= (isset($_POST['save'])) ? true : false;
@@ -1552,12 +1552,12 @@ inherit_from = {INHERIT_FROM}
 				if ($selected)
 				{
 					$image_found = true;
-					$img_val = htmlspecialchars($img);
+					$img_val = htmlspecialchars($img, ENT_COMPAT);
 				}
 				$template->assign_block_vars('imagesetlist.images', array(
 					'SELECTED'			=> $selected,
 					'TEXT'				=> $imgtext,
-					'VALUE'				=> htmlspecialchars($img)
+					'VALUE'				=> htmlspecialchars($img, ENT_COMPAT)
 				));
 			}
 		}
@@ -3972,5 +3972,3 @@ inherit_from = {INHERIT_FROM}
 	}
 
 }
-
-?>

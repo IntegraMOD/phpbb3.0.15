@@ -433,5 +433,3 @@ class cache extends acm
 		return $hook_files;
 	}
 }
-
-?>

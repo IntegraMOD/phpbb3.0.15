@@ -1,5 +1,10 @@
 <?php
 /**
+ * Patched for compatibility with PHP 8.1
+ * @copyright (c) 2023 Dion Designs
+ */
+
+/**
 *
 * @package install
 * @version $Id$
@@ -46,7 +51,7 @@ if (!empty($setmodules))
 */
 class install_install extends module
 {
-	function install_install(&$p_master)
+	function __construct(&$p_master)
 	{
 		$this->p_master = &$p_master;
 	}
@@ -271,10 +276,10 @@ class install_install extends module
 			));
 
 			$checks = array(
-				array('func_overload', '&', MB_OVERLOAD_MAIL|MB_OVERLOAD_STRING),
+//				array('func_overload', '&', MB_OVERLOAD_MAIL|MB_OVERLOAD_STRING),
 				array('encoding_translation', '!=', 0),
-				array('http_input', '!=', array('pass', '')),
-				array('http_output', '!=', array('pass', ''))
+//				array('http_input', '!=', array('pass', '')),
+//				array('http_output', '!=', array('pass', ''))
 			);
 
 			foreach ($checks as $mb_checks)
@@ -560,7 +565,7 @@ class install_install extends module
 			}
 			else
 			{
-				$connect_test = connect_check_db(true, $error, $available_dbms[$data['dbms']], $data['table_prefix'], $data['dbhost'], $data['dbuser'], htmlspecialchars_decode($data['dbpasswd']), $data['dbname'], $data['dbport']);
+				$connect_test = connect_check_db(true, $error, $available_dbms[$data['dbms']], $data['table_prefix'], $data['dbhost'], $data['dbuser'], htmlspecialchars_decode($data['dbpasswd'], ENT_COMPAT), $data['dbname'], $data['dbport']);
 			}
 
 			$template->assign_block_vars('checks', array(
@@ -597,7 +602,7 @@ class install_install extends module
 			$available_dbms_temp = array();
 			foreach ($available_dbms as $type => $dbms_ary)
 			{
-				if (!$dbms_ary['AVAILABLE'])
+				if (empty($dbms_ary['AVAILABLE']))
 				{
 					continue;
 				}
@@ -1136,7 +1141,7 @@ class install_install extends module
 
 		// Instantiate the database
 		$db = new $sql_db();
-		$db->sql_connect($data['dbhost'], $data['dbuser'], htmlspecialchars_decode($data['dbpasswd']), $data['dbname'], $data['dbport'], false, false);
+		$db->sql_connect($data['dbhost'], $data['dbuser'], htmlspecialchars_decode($data['dbpasswd'], ENT_COMPAT), $data['dbname'], $data['dbport'], false, false);
 
 		// NOTE: trigger_error does not work here.
 		$db->sql_return_on_error(true);
@@ -1219,7 +1224,7 @@ class install_install extends module
 
 		$current_time = time();
 
-		$user_ip = (!empty($_SERVER['REMOTE_ADDR'])) ? htmlspecialchars($_SERVER['REMOTE_ADDR']) : '';
+		$user_ip = (!empty($_SERVER['REMOTE_ADDR'])) ? htmlspecialchars($_SERVER['REMOTE_ADDR'], ENT_COMPAT) : '';
 		$user_ip = (stripos($user_ip, '::ffff:') === 0) ? substr($user_ip, 7) : $user_ip;
 
 		if ($data['script_path'] !== '/')
@@ -1356,17 +1361,6 @@ class install_install extends module
 				WHERE config_name = 'dbms_version'",
 		);
 
-		if (@extension_loaded('gd') || can_load_dll('gd'))
-		{
-			$sql_ary[] = 'UPDATE ' . $data['table_prefix'] . "config
-				SET config_value = 'phpbb_captcha_gd'
-				WHERE config_name = 'captcha_plugin'";
-
-			$sql_ary[] = 'UPDATE ' . $data['table_prefix'] . "config
-				SET config_value = '1'
-				WHERE config_name = 'captcha_gd'";
-		}
-
 		$ref = substr($referer, strpos($referer, '://') + 3);
 
 		if (!(stripos($ref, $server_name) === 0))
@@ -1437,7 +1431,7 @@ class install_install extends module
 
 		// Instantiate the database
 		$db = new $sql_db();
-		$db->sql_connect($data['dbhost'], $data['dbuser'], htmlspecialchars_decode($data['dbpasswd']), $data['dbname'], $data['dbport'], false, false);
+		$db->sql_connect($data['dbhost'], $data['dbuser'], htmlspecialchars_decode($data['dbpasswd'], ENT_COMPAT), $data['dbname'], $data['dbport'], false, false);
 
 		// NOTE: trigger_error does not work here.
 		$db->sql_return_on_error(true);
@@ -1761,7 +1755,7 @@ class install_install extends module
 				$lang_pack = array(
 					'lang_iso'			=> basename($path),
 					'lang_dir'			=> basename($path),
-					'lang_english_name'	=> trim(htmlspecialchars($lang_file[0])),
+					'lang_english_name'	=> trim(htmlspecialchars($lang_file[0], ENT_COMPAT)),
 					'lang_local_name'	=> trim(htmlspecialchars($lang_file[1], ENT_COMPAT, 'UTF-8')),
 					'lang_author'		=> trim(htmlspecialchars($lang_file[2], ENT_COMPAT, 'UTF-8')),
 				);
@@ -1946,6 +1940,11 @@ class install_install extends module
 		}
 		$db->sql_freeresult($result);
 
+		define('CAPTCHA_QUESTIONS_TABLE',	$data['table_prefix'] . 'captcha_questions');
+		define('CAPTCHA_ANSWERS_TABLE',		$data['table_prefix'] . 'captcha_answers');
+		define('CAPTCHA_QA_CONFIRM_TABLE',	$data['table_prefix'] . 'qa_confirm');
+		$this->captcha_qa_install();
+
 		$user->session_begin();
 		$auth->login($data['admin_name'], $data['admin_pass1'], false, true, true);
 
@@ -1967,8 +1966,8 @@ class install_install extends module
 			$messenger->anti_abuse_headers($config, $user);
 
 			$messenger->assign_vars(array(
-				'USERNAME'		=> htmlspecialchars_decode($data['admin_name']),
-				'PASSWORD'		=> htmlspecialchars_decode($data['admin_pass1']))
+				'USERNAME'		=> htmlspecialchars_decode($data['admin_name'], ENT_COMPAT),
+				'PASSWORD'		=> htmlspecialchars_decode($data['admin_pass1'], ENT_COMPAT))
 			);
 
 			$messenger->send(NOTIFY_EMAIL);
@@ -1981,8 +1980,69 @@ class install_install extends module
 			'TITLE'		=> $lang['INSTALL_CONGRATS'],
 			'BODY'		=> sprintf($lang['INSTALL_CONGRATS_EXPLAIN'], $config['version'], append_sid($phpbb_root_path . 'install/index.' . $phpEx, 'mode=convert&amp;language=' . $data['language']), '../docs/README.html'),
 			'L_SUBMIT'	=> $lang['INSTALL_LOGIN'],
-			'U_ACTION'	=> append_sid($phpbb_root_path . 'adm/index.' . $phpEx, 'i=send_statistics&amp;mode=send_statistics'),
+			'U_ACTION'	=> append_sid($phpbb_root_path . 'adm/index.' . $phpEx),
 		));
+	}
+
+	function captcha_qa_install()
+	{
+		global $db, $phpbb_root_path, $phpEx;
+
+		if (!class_exists('phpbb_db_tools'))
+		{
+			include("$phpbb_root_path/includes/db/db_tools.$phpEx");
+		}
+		$db_tool = new phpbb_db_tools($db);
+
+		$tables = array(CAPTCHA_QUESTIONS_TABLE, CAPTCHA_ANSWERS_TABLE, CAPTCHA_QA_CONFIRM_TABLE);
+
+		$schemas = array(
+			CAPTCHA_QUESTIONS_TABLE => array (
+				'COLUMNS' => array(
+					'question_id'	=> array('UINT', Null, 'auto_increment'),
+					'strict'		=> array('BOOL', 0),
+					'lang_id'		=> array('UINT', 0),
+					'lang_iso'		=> array('VCHAR:30', ''),
+					'question_text'	=> array('TEXT_UNI', ''),
+				),
+				'PRIMARY_KEY' => 'question_id',
+				'KEYS' => array(
+					'lang'			=> array('INDEX', 'lang_iso'),
+				),
+			),
+			CAPTCHA_ANSWERS_TABLE => array (
+				'COLUMNS' => array(
+					'question_id'	=> array('UINT', 0),
+					'answer_text'	=> array('STEXT_UNI', ''),
+				),
+				'KEYS' => array(
+					'qid'			=> array('INDEX', 'question_id'),
+				),
+			),
+			CAPTCHA_QA_CONFIRM_TABLE => array (
+				'COLUMNS' => array(
+					'session_id'	=> array('CHAR:32', ''),
+					'confirm_id'	=> array('CHAR:32', ''),
+					'lang_iso'		=> array('VCHAR:30', ''),
+					'question_id'	=> array('UINT', 0),
+					'attempts'		=> array('UINT', 0),
+					'confirm_type'	=> array('USINT', 0),
+				),
+				'PRIMARY_KEY' => 'confirm_id',
+				'KEYS' => array(
+					'session_id'	=> array('INDEX', 'session_id'),
+					'lookup'		=> array('INDEX', array('confirm_id', 'session_id', 'lang_iso')),
+				),
+			),
+		);
+
+		foreach($schemas as $table => $schema)
+		{
+			if (!$db_tool->sql_table_exists($table))
+			{
+				$db_tool->sql_create_table($table, $schema);
+			}
+		}
 	}
 
 	/**
@@ -2140,51 +2200,32 @@ class install_install extends module
 	* 'Xaldon [Spider]'				'Xaldon WebSpider'
 	*/
 	var $bot_list = array(
-		'AdsBot [Google]'			=> array('AdsBot-Google', ''),
+		'Ahrefs [Bot]'				=> array('AhrefsBot/', ''),
 		'Alexa [Bot]'				=> array('ia_archiver', ''),
 		'Alta Vista [Bot]'			=> array('Scooter/', ''),
-		'Ask Jeeves [Bot]'			=> array('Ask Jeeves', ''),
+		'Amazon [Bot]'				=> array('Amazonbot/', ''),
 		'Baidu [Spider]'			=> array('Baiduspider', ''),
 		'Bing [Bot]'				=> array('bingbot/', ''),
-		'Exabot [Bot]'				=> array('Exabot', ''),
-		'FAST Enterprise [Crawler]'	=> array('FAST Enterprise Crawler', ''),
-		'FAST WebCrawler [Crawler]'	=> array('FAST-WebCrawler/', ''),
-		'Francis [Bot]'				=> array('http://www.neomo.de/', ''),
+		'DuckDuckGo [Bot]'			=> array('DuckDuckBot/', ''),
+		'Exabot [Bot]'				=> array('Exabot/', ''),
 		'Gigabot [Bot]'				=> array('Gigabot/', ''),
 		'Google Adsense [Bot]'		=> array('Mediapartners-Google', ''),
-		'Google Desktop'			=> array('Google Desktop', ''),
 		'Google Feedfetcher'		=> array('Feedfetcher-Google', ''),
 		'Google [Bot]'				=> array('Googlebot', ''),
-		'Heise IT-Markt [Crawler]'	=> array('heise-IT-Markt-Crawler', ''),
-		'Heritrix [Crawler]'		=> array('heritrix/1.', ''),
-		'IBM Research [Bot]'		=> array('ibm.com/cs/crawler', ''),
 		'ICCrawler - ICjobs'		=> array('ICCrawler - ICjobs', ''),
-		'ichiro [Crawler]'			=> array('ichiro/', ''),
 		'Majestic-12 [Bot]'			=> array('MJ12bot/', ''),
-		'Metager [Bot]'				=> array('MetagerBot/', ''),
-		'MSN NewsBlogs'				=> array('msnbot-NewsBlogs/', ''),
-		'MSN [Bot]'					=> array('msnbot/', ''),
-		'MSNbot Media'				=> array('msnbot-media/', ''),
 		'Nutch [Bot]'				=> array('http://lucene.apache.org/nutch/', ''),
-		'Online link [Validator]'	=> array('online link validator', ''),
+		'NutchCVS [Bot]'			=> array('NutchCVS/', ''),
+		'OmniExplorer [Bot]'		=> array('OmniExplorer_Bot/', ''),
 		'psbot [Picsearch]'			=> array('psbot/0', ''),
-		'Sensis [Crawler]'			=> array('Sensis Web Crawler', ''),
+		'Semrush [Bot]'				=> array('SemrushBot/', ''),
 		'SEO Crawler'				=> array('SEO search Crawler/', ''),
 		'Seoma [Crawler]'			=> array('Seoma [SEO Crawler]', ''),
 		'SEOSearch [Crawler]'		=> array('SEOsearch/', ''),
 		'Snappy [Bot]'				=> array('Snappy/1.1 ( http://www.urltrends.com/ )', ''),
-		'Steeler [Crawler]'			=> array('http://www.tkl.iis.u-tokyo.ac.jp/~crawler/', ''),
-		'Telekom [Bot]'				=> array('crawleradmin.t-info@telekom.de', ''),
-		'TurnitinBot [Bot]'			=> array('TurnitinBot/', ''),
 		'Voyager [Bot]'				=> array('voyager/', ''),
-		'W3 [Sitesearch]'			=> array('W3 SiteSearch Crawler', ''),
-		'W3C [Linkcheck]'			=> array('W3C-checklink/', ''),
-		'W3C [Validator]'			=> array('W3C_Validator', ''),
-		'YaCy [Bot]'				=> array('yacybot', ''),
-		'Yahoo MMCrawler [Bot]'		=> array('Yahoo-MMCrawler/', ''),
 		'Yahoo Slurp [Bot]'			=> array('Yahoo! DE Slurp', ''),
 		'Yahoo [Bot]'				=> array('Yahoo! Slurp', ''),
-		'YahooSeeker [Bot]'			=> array('YahooSeeker/', ''),
 	);
 
 	/**
@@ -2225,9 +2266,9 @@ class install_install extends module
 			'ACP_CAT_MAINTENANCE'	=> array(
 				'ACP_FORUM_LOGS',
 				'ACP_CAT_DATABASE',
+				'ACP_CAT_FILES',
 			),
 			'ACP_CAT_SYSTEM'		=> array(
-				'ACP_AUTOMATION',
 				'ACP_GENERAL_TASKS',
 				'ACP_MODULE_MANAGEMENT',
 			),
@@ -2272,5 +2313,3 @@ class install_install extends module
 		),
 	);
 }
-
-?>

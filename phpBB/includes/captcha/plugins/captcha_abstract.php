@@ -96,7 +96,7 @@ class phpbb_default_captcha
 		else
 		{
 			$link = append_sid($phpbb_root_path . 'ucp.' . $phpEx,  'mode=confirm&amp;confirm_id=' . $this->confirm_id . '&amp;type=' . $this->type);
-			$explain = $user->lang(($this->type != CONFIRM_POST) ? 'CONFIRM_EXPLAIN' : 'POST_CONFIRM_EXPLAIN', '<a href="mailto:' . htmlspecialchars($config['board_contact']) . '">', '</a>');
+			$explain = $user->lang(($this->type != CONFIRM_POST) ? 'CONFIRM_EXPLAIN' : 'POST_CONFIRM_EXPLAIN', '<a href="mailto:' . htmlspecialchars($config['board_contact'], ENT_COMPAT) . '">', '</a>');
 
 			$template->assign_vars(array(
 				'CONFIRM_IMAGE_LINK'		=> $link,
@@ -149,7 +149,7 @@ class phpbb_default_captcha
 		return $hidden_fields;
 	}
 
-	function garbage_collect($type)
+	static function garbage_collect($type = 0)
 	{
 		global $db, $config;
 
@@ -181,7 +181,7 @@ class phpbb_default_captcha
 
 	function uninstall()
 	{
-		$this->garbage_collect(0);
+		self::garbage_collect(0);
 	}
 
 	function install()
@@ -376,5 +376,3 @@ class phpbb_default_captcha
 	}
 
 }
-
-?>

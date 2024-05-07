@@ -41,14 +41,14 @@
 .newpm-icon span 	{ background: none 0 0 no-repeat; }
 .forwardpm-icon span 	{ background: none 0 0 no-repeat; }
 
-/* Set big button dimensions */
+/* Set big button dimensions
 .buttons div.reply-icon		{ width: {IMG_BUTTON_TOPIC_REPLY_WIDTH}px; height: {IMG_BUTTON_TOPIC_REPLY_HEIGHT}px; }
 .buttons div.post-icon		{ width: {IMG_BUTTON_TOPIC_NEW_WIDTH}px; height: {IMG_BUTTON_TOPIC_NEW_HEIGHT}px; }
 .buttons div.locked-icon	{ width: {IMG_BUTTON_TOPIC_LOCKED_WIDTH}px; height: {IMG_BUTTON_TOPIC_LOCKED_HEIGHT}px; }
 .buttons div.pmreply-icon	{ width: {IMG_BUTTON_PM_REPLY_WIDTH}px; height: {IMG_BUTTON_PM_REPLY_HEIGHT}px; }
 .buttons div.newpm-icon		{ width: {IMG_BUTTON_PM_NEW_WIDTH}px; height: {IMG_BUTTON_PM_NEW_HEIGHT}px; }
 .buttons div.forwardpm-icon	{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }
-
+ */
 /* Sub-header (navigation bar)
 --------------------------------------------- */
 a.print, a.sendemail, a.fontsize {
@@ -70,21 +70,10 @@ a.sendemail {
 	width: 22px;
 }
 
-a.fontsize {
-	background-image: none;
-	background-position: 0 -1px;
-	width: 29px;
-}
-
-a.fontsize:hover {
-	background-position: 0 -20px;
-	text-decoration: none;
-}
-
 /* Icon images
 ---------------------------------------- */
-.sitehome, .icon-faq, .icon-members, .icon-home, .icon-ucp, .icon-register, .icon-logout,
-.icon-bookmark, .icon-bump, .icon-subscribe, .icon-unsubscribe, .icon-pages, .icon-search {
+.sitehome, .icon-faq, .icon-contact, .icon-members, .icon-home, .icon-ucp, .icon-register, .icon-logout, .icon-download, .icon-hacklist, .icon-tracker,
+.icon-bookmark, .icon-bump, .icon-subscribe, .icon-unsubscribe, .icon-pages, .icon-search, .icon-points, .icon-kb, .icon-notes, .icon-meeting, .icon-dls {
 	background-position: 0 50%;
 	background-repeat: no-repeat;
 	background-image: none;
@@ -133,31 +122,28 @@ ul.profile-icons li a:hover { background: none; }
 .aim-icon, .aim-icon a			{ background: none top left no-repeat; }
 .yahoo-icon, .yahoo-icon a		{ background: none top left no-repeat; }
 .web-icon, .web-icon a			{ background: none top left no-repeat; }
-.msnm-icon, .msnm-icon a			{ background: none top left no-repeat; }
+.msnm-icon, .msnm-icon a		{ background: none top left no-repeat; }
 .icq-icon, .icq-icon a			{ background: none top left no-repeat; }
-.jabber-icon, .jabber-icon a		{ background: none top left no-repeat; }
-.pm-icon, .pm-icon a				{ background: none top left no-repeat; }
+.jabber-icon, .jabber-icon a	{ background: none top left no-repeat; }
+.pm-icon, .pm-icon a			{ background: none top left no-repeat; }
 .quote-icon, .quote-icon a		{ background: none top left no-repeat; }
 
 /* Moderator icons */
-.report-icon, .report-icon a		{ background: none top left no-repeat; }
-.warn-icon, .warn-icon a			{ background: none top left no-repeat; }
-.edit-icon, .edit-icon a			{ background: none top left no-repeat; }
-.delete-icon, .delete-icon a		{ background: none top left no-repeat; }
-.info-icon, .info-icon a			{ background: none top left no-repeat; }
+.report-icon, .report-icon a	{ background: none top left no-repeat; }
+.warn-icon, .warn-icon a		{ background: none top left no-repeat; }
+.edit-icon, .edit-icon a		{ background: none top left no-repeat; }
+.delete-icon, .delete-icon a	{ background: none top left no-repeat; }
+.info-icon, .info-icon a		{ background: none top left no-repeat; }
 
 /* Set profile icon dimensions */
-ul.profile-icons li.email-icon		{ width: {IMG_ICON_CONTACT_EMAIL_WIDTH}px; height: {IMG_ICON_CONTACT_EMAIL_HEIGHT}px; }
+ul.profile-icons li.email-icon	{ width: {IMG_ICON_CONTACT_EMAIL_WIDTH}px; height: {IMG_ICON_CONTACT_EMAIL_HEIGHT}px; }
 ul.profile-icons li.aim-icon	{ width: {IMG_ICON_CONTACT_AIM_WIDTH}px; height: {IMG_ICON_CONTACT_AIM_HEIGHT}px; }
 ul.profile-icons li.yahoo-icon	{ width: {IMG_ICON_CONTACT_YAHOO_WIDTH}px; height: {IMG_ICON_CONTACT_YAHOO_HEIGHT}px; }
 ul.profile-icons li.web-icon	{ width: {IMG_ICON_CONTACT_WWW_WIDTH}px; height: {IMG_ICON_CONTACT_WWW_HEIGHT}px; }
 ul.profile-icons li.msnm-icon	{ width: {IMG_ICON_CONTACT_MSNM_WIDTH}px; height: {IMG_ICON_CONTACT_MSNM_HEIGHT}px; }
 ul.profile-icons li.icq-icon	{ width: {IMG_ICON_CONTACT_ICQ_WIDTH}px; height: {IMG_ICON_CONTACT_ICQ_HEIGHT}px; }
 ul.profile-icons li.jabber-icon	{ width: {IMG_ICON_CONTACT_JABBER_WIDTH}px; height: {IMG_ICON_CONTACT_JABBER_HEIGHT}px; }
-ul.profile-icons li.pm-icon		{ width: {IMG_ICON_CONTACT_PM_WIDTH}px; height: {IMG_ICON_CONTACT_PM_HEIGHT}px; }
-ul.profile-icons li.quote-icon	{ width: {IMG_ICON_POST_QUOTE_WIDTH}px; height: {IMG_ICON_POST_QUOTE_HEIGHT}px; }
 ul.profile-icons li.report-icon	{ width: {IMG_ICON_POST_REPORT_WIDTH}px; height: {IMG_ICON_POST_REPORT_HEIGHT}px; }
-ul.profile-icons li.edit-icon	{ width: {IMG_ICON_POST_EDIT_WIDTH}px; height: {IMG_ICON_POST_EDIT_HEIGHT}px; }
 ul.profile-icons li.delete-icon	{ width: {IMG_ICON_POST_DELETE_WIDTH}px; height: {IMG_ICON_POST_DELETE_HEIGHT}px; }
 ul.profile-icons li.info-icon	{ width: {IMG_ICON_POST_INFO_WIDTH}px; height: {IMG_ICON_POST_INFO_HEIGHT}px; }
 ul.profile-icons li.warn-icon	{ width: {IMG_ICON_USER_WARN_WIDTH}px; height: {IMG_ICON_USER_WARN_HEIGHT}px; }
@@ -166,4 +152,113 @@ ul.profile-icons li.warn-icon	{ width: {IMG_ICON_USER_WARN_WIDTH}px; height: {IM
 ul.profile-icons li.edit-icon	{ margin: 0 0 0 3px; }
 ul.profile-icons li.quote-icon	{ margin: 0 0 0 10px; }
 ul.profile-icons li.info-icon, ul.profile-icons li.report-icon	{ margin: 0 3px 0 0; }
+
+
+div.buttons, div.buttons div.locked-icon, div.buttons div.post-icon, div.buttons div.reply-icon, div.buttons div.upload-icon, div.buttons div.qreply-icon, .postbody ul.profile-icons li.edit-icon, .postbody ul.profile-icons li.quote-icon, ul.profile-icons li.pm-icon {
+	background : none 0 0 no-repeat transparent;
+	padding : 0;
+	margin : 0;
+	height : 0;
+}
+
+.reply-icon span, .upload-icon, .post-icon span, .locked-icon span, .pmreply-icon span, .newpm-icon span, .forwardpm-icon span, .qreply-icon, .edit-icon, .quote-icon, .pm-icon {
+	background : none 0 0 no-repeat transparent;
+}
+
+div.buttons {
+	float : left;
+	width : auto;
+	height : auto;
+}
+
+div.buttons div.locked-icon a, div.buttons div.post-icon a, div.buttons div.reply-icon a, div.buttons div.upload-icon a, div.buttons div.qreply-icon a, .postbody ul.profile-icons li.edit-icon a, .postbody ul.profile-icons li.quote-icon a, div.buttons div.pmreply-icon a, div.buttons div.newpm-icon a, div.buttons div.forwardpm-icon a {
+	text-decoration : none;
+	display : inline-block;
+}
+
+div.buttons div.locked-icon, div.buttons div.post-icon, div.buttons div.reply-icon, div.buttons div.upload-icon, div.buttons div.qreply-icon, div.buttons div.pmreply-icon, div.buttons div.newpm-icon, div.buttons div.forwardpm-icon {
+	border-radius : 4px;
+	font-size : 12px;
+	font-family : helvetica, sans-serif;
+	margin : 0 4px;
+	padding : 0 8px 0 8px;
+	text-transform : uppercase;
+	text-decoration : none;
+	display : inline-block;
+	font-weight : 600;
+	line-height : 2.2em;
+	width : auto;
+	height : 25px;
+	white-space : nowrap;
+}
+
+div.buttons div.locked-icon:hover, div.buttons div.post-icon:hover, div.buttons div.reply-icon:hover, div.buttons div.upload-icon:hover, div.buttons div.qreply-icon:hover, div.buttons div.pmreply-icon:hover, div.buttons div.newpm-icon:hover, div.buttons div.forwardpm-icon:hover {
+	text-decoration : none;
+}
+
+.postbody ul.profile-icons li.edit-icon, .postbody ul.profile-icons li.quote-icon {
+	display : none;
+	width : auto;
+	height : auto;
+}
+
+.postbody ul.profile-icons li.edit-icon, .postbody ul.profile-icons li.quote-icon {
+	border-radius : 3px;
+	font-size : 10px;
+	font-family : helvetica, sans-serif;
+	padding : 0 4px 0 4px;
+	text-transform : uppercase;
+	text-decoration : none;
+	display : inline-block;
+	font-weight : 600;
+	line-height : 1.6em;
+	width : auto;
+	height : 16px;
+	white-space : nowrap;
+}
+
+ul.profile-icons li.pm-icon {
+	border : #CCCCCC solid 1px;
+	border-radius : 3px;
+	font-size : 10px;
+	font-family : helvetica, sans-serif;
+	padding : 0 4px 0 4px;
+	margin-right : 5px;
+	text-transform : uppercase;
+	text-decoration : none;
+	display : inline-block;
+	font-weight : 600;
+	line-height : 1.6em;
+	width : auto;
+	height : 18px;
+	white-space : nowrap;
+	color : #243D5B;
+	background-color : #E0E0DB;
+	background-image : linear-gradient(to bottom, #E0E0DB, #C9C9C6);
+}
+
+h6 {
+	display : inline-block;
+	font-size : 12px;
+	font-family : helvetica, sans-serif;
+	font-weight : 800;
+}
+
+h6, h6:hover {
+	font-weight : 800;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -254,7 +254,7 @@ class compress_zip extends compress
 							}
 						}
 						// This is a directory, we are not writting files
-						continue;
+						continue 2;
 					}
 					else
 					{
@@ -735,5 +735,3 @@ class compress_tar extends compress
 		}
 	}
 }
-
-?>

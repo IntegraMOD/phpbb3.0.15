@@ -1,5 +1,10 @@
 <?php
 /**
+ * Patched for compatibility with PHP 8.1
+ * @copyright (c) 2023 Dion Designs
+ */
+
+/**
 *
 * @package install
 * @version $Id$
@@ -24,7 +29,7 @@ if (!empty($setmodules))
 		'module_title'		=> 'OVERVIEW',
 		'module_filename'	=> substr(basename(__FILE__), 0, -strlen($phpEx)-1),
 		'module_order'		=> 0,
-		'module_subs'		=> array('INTRO', 'LICENSE', 'SUPPORT'),
+		'module_subs'		=> array('INTRO'),
 		'module_stages'		=> '',
 		'module_reqs'		=> ''
 	);
@@ -36,7 +41,7 @@ if (!empty($setmodules))
 */
 class install_main extends module
 {
-	function install_main(&$p_master)
+	function __construct(&$p_master)
 	{
 		$this->p_master = &$p_master;
 	}
@@ -45,34 +50,16 @@ class install_main extends module
 	{
 		global $lang, $template, $language;
 
-		switch ($sub)
-		{
-			case 'intro' :
-				$title = $lang['SUB_INTRO'];
-				$body = $lang['OVERVIEW_BODY'];
-			break;
-
-			case 'license' :
-				$title = $lang['GPL'];
-				$body = implode("<br/>\n", file('../docs/COPYING'));
-			break;
-
-			case 'support' :
-				$title = $lang['SUB_SUPPORT'];
-				$body = $lang['SUPPORT_BODY'];
-			break;
-		}
+		$title = $lang['SUB_INTRO'];
 
 		$this->tpl_name = 'install_main';
 		$this->page_title = $title;
 
 		$template->assign_vars(array(
 			'TITLE'		=> $title,
-			'BODY'		=> $body,
+			'BODY'		=> $lang['OVERVIEW_BODY'],
 
 			'S_LANG_SELECT'	=> '<select id="language" name="language">' . $this->p_master->inst_language_select($language) . '</select>',
 		));
 	}
 }
-
-?>

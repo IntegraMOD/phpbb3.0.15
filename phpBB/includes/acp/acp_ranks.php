@@ -70,7 +70,7 @@ class acp_ranks
 					'rank_title'		=> $rank_title,
 					'rank_special'		=> $special_rank,
 					'rank_min'			=> $min_posts,
-					'rank_image'		=> htmlspecialchars_decode($rank_image)
+					'rank_image'		=> htmlspecialchars_decode($rank_image, ENT_COMPAT)
 				);
 				
 				if ($rank_id)
@@ -183,7 +183,7 @@ class acp_ranks
 							continue;
 						}
 
-						$filename_list .= '<option value="' . htmlspecialchars($img) . '"' . $selected . '>' . $img . ((in_array($img, $existing_imgs)) ? ' ' . $user->lang['RANK_IMAGE_IN_USE'] : '') . '</option>';
+						$filename_list .= '<option value="' . htmlspecialchars($img, ENT_COMPAT) . '"' . $selected . '>' . $img . ((in_array($img, $existing_imgs)) ? ' ' . $user->lang['RANK_IMAGE_IN_USE'] : '') . '</option>';
 					}
 				}
 
@@ -236,5 +236,3 @@ class acp_ranks
 
 	}
 }
-
-?>

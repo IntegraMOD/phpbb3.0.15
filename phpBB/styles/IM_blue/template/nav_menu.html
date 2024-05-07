@@ -1,0 +1,69 @@
+<script src="{ROOT_PATH}assets/js/css-menu.js"></script>
+<a id="top"></a>
+<nav class="menu">
+  <input type="checkbox" class="responsive-menu" onclick="updatemenu()"><label></label>
+  <ul>
+  	<li class="menu-item genarrow arrows"><a href="#bottom" title="{L_BOTTOM}"><i class="fa-solid fa-arrow-down"></i></a></li>
+    <!-- IF STARGATE -->
+	<li class="menu-item<!-- IF S_IS_PORTAL --> activetab<!-- ENDIF -->"><a href="{U_PORTAL}" title="{L_PORTAL}"> {L_PORTAL} </a></li>
+	<!-- ENDIF -->
+    <li class="menu-item<!-- IF S_IS_INDEX --> activetab<!-- ENDIF -->"><a href="{U_INDEX}" title="{L_INDEX}"> {L_FORUM} </a></li>
+	<!-- IF S_DISPLAY_SEARCH -->
+    <li class="menu-item"><a class="dropdown-arrow" href="#"> {L_SEARCH} </a>
+      <ul class="sub-menus submenu">
+	    <li><a href="{U_SEARCH}"> {L_SEARCH_ADV} </a></li>
+		<li><a href="{U_SEARCH_ACTIVE_TOPICS}">{L_SEARCH_ACTIVE_TOPICS}</a></li>
+		<li><a href="{U_SEARCH_UNANSWERED}">{L_SEARCH_UNANSWERED}</a></li>
+	  <!-- IF S_USER_LOGGED_IN and not S_IS_BOT -->
+		<li><a href="{U_SEARCH_NEW}">{L_SEARCH_NEW}</a></li>
+		<li><a href="{U_SEARCH_UNREAD}">{L_SEARCH_UNREAD}</a></li>
+	    <li><a href="{U_SEARCH_SELF}">{L_SEARCH_SELF}</a></li>
+	  <!-- ENDIF -->
+	  </ul>	
+    </li>
+	<!-- ENDIF -->
+    <li class="menu-item"><a class="dropdown-arrow" href="#"> {L_LINKS} </a>
+      <ul class="sub-menus submenu">
+        <li><a href="{U_FAQ}">{L_FAQ}</a></li>
+	  <!-- IF not S_IS_BOT -->
+		<!-- IF S_DISPLAY_MEMBERLIST -->
+		<li><a href="{U_MEMBERLIST}">{L_MEMBERLIST}</a></li>
+		<!-- ENDIF -->	  
+      <!-- ENDIF -->
+      </ul>
+    </li>
+	<!-- IF not S_IS_BOT -->
+	<!-- IF not S_USER_LOGGED_IN -->
+    <li class="menu-item"><a href="{U_LOGIN_LOGOUT}">&nbsp;{L_LOGIN_LOGOUT}&nbsp;</a></li>
+	<!-- IF S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) -->
+	<li class="menu-item"><a href="{U_REGISTER}">&nbsp;{L_REGISTER}&nbsp;</a></li>
+	<!-- ENDIF -->
+	<!-- ENDIF -->
+	<!-- ENDIF -->
+	
+	<!-- IF S_USER_LOGGED_IN and not S_IS_BOT -->
+    <li class="menu-item"><a class="dropdown-arrow username uname" href="http:#">&nbsp;{S_USERNAME}&nbsp;</a>
+      <ul class="sub-menus submenu">
+		<li><a href="{U_PROFILE}">{L_PROFILE}</a></li>
+		<li><a href="{U_OWN_PROFILE}" title="{L_READ_PROFILE}">{L_READ_PROFILE}</a></li>
+		<!-- IF S_DISPLAY_SEARCH -->
+		<li><a href="{U_SEARCH_SELF}">{L_SEARCH_SELF}</a></li>
+		<!-- ENDIF -->
+		<!-- IF U_RESTORE_PERMISSIONS -->
+		<li><a href="{U_RESTORE_PERMISSIONS}">{L_RESTORE_PERMISSIONS}</a></li>
+		<!-- ENDIF -->
+
+        <li><a href="{U_LOGIN_LOGOUT}">{L_LOGIN_LOGOUT}</a></li>		
+      </ul>
+    </li>
+    <!-- ENDIF -->
+  	<li class="menu-item genarrow arrows right-arrow"><a href="#bottom" title="{L_BOTTOM}"><i class="fa-solid fa-arrow-down"></i></a></li>
+
+	<li class="style lightstyle"><a href="#" onclick="setActiveStyleSheet('light'); return false;" title="{L_STYLE_LIGHT}"><i class="fa-solid fa-lightbulb fa-lg"></i></a></li>
+    <li class="style darkstyle"><a href="#" onclick="setActiveStyleSheet('dark'); return false;" title="{L_STYLE_DARK}"><i class="fa-solid fa-lightbulb fa-lg" style="color: #747576;"></i></a></li> 
+
+  </ul>
+  <li class="genarrow sm-right-arrow"><a href="#bottom" title="{L_BOTTOM}"><i class="fa-solid fa-arrow-down"></i></a></li>
+  <div class="sm-style lightstyle"><a href="#" onclick="setActiveStyleSheet('light'); return false;" title="{L_STYLE_LIGHT}"><i class="fa-solid fa-lightbulb fa-lg"></i></a></div>
+  <div class="sm-style darkstyle"><a href="#" onclick="setActiveStyleSheet('dark'); return false;" title="{L_STYLE_DARK}"><i class="fa-solid fa-lightbulb fa-lg" style="color: #747576;"></i></a></div> 
+</nav>

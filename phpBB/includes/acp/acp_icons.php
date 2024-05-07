@@ -683,7 +683,7 @@ class acp_icons
 
 					foreach ($_paks as $pak)
 					{
-						$pak_options .= '<option value="' . $pak . '">' . htmlspecialchars($pak) . '</option>';
+						$pak_options .= '<option value="' . $pak . '">' . htmlspecialchars($pak, ENT_COMPAT) . '</option>';
 					}
 
 					$template->assign_vars(array(
@@ -954,5 +954,3 @@ class acp_icons
 		return $item_count;
 	}
 }
-
-?>

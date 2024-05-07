@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
+<head>
+
+<meta http-equiv="content-type" content="text/html; charset={S_CONTENT_ENCODING}" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="content-style-type" content="text/css" />
+<meta http-equiv="content-language" content="{S_USER_LANG}" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="resource-type" content="document" />
+<meta name="distribution" content="global" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+{META}
+<title>{SITENAME} &bull; <!-- IF S_IN_MCP -->{L_MCP} &bull; <!-- ELSEIF S_IN_UCP -->{L_UCP} &bull; <!-- ENDIF -->{PAGE_TITLE}</title>
+<link rel="icon" type="image/x-icon" href="{ROOT_PATH}images/favicon.ico">
+
+<!-- IF S_ENABLE_FEEDS -->
+	<!-- IF S_ENABLE_FEEDS_OVERALL --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {SITENAME}" href="{U_FEED}" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_NEWS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_NEWS}" href="{U_FEED}?mode=news" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_FORUMS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_ALL_FORUMS}" href="{U_FEED}?mode=forums" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPICS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_NEW}" href="{U_FEED}?mode=topics" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPICS_ACTIVE --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_ACTIVE}" href="{U_FEED}?mode=topics_active" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_FORUM and S_FORUM_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FORUM} - {FORUM_NAME}" href="{U_FEED}?f={S_FORUM_ID}" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPIC and S_TOPIC_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_TOPIC} - {TOPIC_TITLE}" href="{U_FEED}?f={S_FORUM_ID}&amp;t={S_TOPIC_ID}" /><!-- ENDIF -->
+<!-- ENDIF -->
+
+<!--
+	phpBB style name: IM Blue
+	Based on style:   prosilver (this is the default phpBB3 style)
+	Original author:  Tom Beddard ( http://www.subBlue.com/ )
+	Modified by:
+-->
+
+<script>
+// <![CDATA[
+var jump_page = '{LA_JUMP_PAGE}:';
+var on_page = '{ON_PAGE}';
+var per_page = '{PER_PAGE}';
+var base_url = '{A_BASE_URL}';
+var style_cookie = 'phpBBstyle';
+var style_cookie_settings = '{A_COOKIE_SETTINGS}';
+var onload_functions = [];
+var onunload_functions = [];
+ 
+<!-- IF S_USER_PM_POPUP and S_NEW_PM -->
+    var url = '{UA_POPUP_PM}';
+    window.open(url.replace(/&amp;/g, '&'), '_phpbbprivmsg', 'height=225,resizable=yes,scrollbars=yes, width=400');
+<!-- ENDIF -->
+
+/**
+* Find a member
+*/
+function find_username(url)
+{
+	popup(url, 760, 570, '_usersearch');
+	return false;
+}
+/**
+* Updated pentapenguin's function for handling multiple calls to window.onload and window.unload 05/02/2024
+*/
+const initFunctions = {
+    onload: [],
+    onunload: []
+};
+	 
+const executeFunctions = (functions) => {
+    functions.forEach(func => {
+	  eval(func);
+    });
+};
+	 
+window.addEventListener('load', () => {
+    executeFunctions(initFunctions.onload);
+});
+	 
+window.addEventListener('unload', () => {
+    executeFunctions(initFunctions.onunload);
+});
+	
+function updatemenu() {
+    if (document.getElementsByClassName('responsive-menu').checked == true) {
+	    document.getElementsByClassName('menu').style.borderBottomRightRadius = '0';
+	    document.getElementsByClassName('menu').style.borderBottomLeftRadius = '0';
+    }else{
+	    document.getElementsByClassName('menu').style.borderRadius = '0px';
+    }
+}
+
+
+	let showDelay = 300, hideDelay = 800;
+	let menuEnterTimer, menuLeaveTimer;
+	let allMenuItems = document.querySelectorAll('.menu .menu-item');
+
+	for (let i = 0; i < allMenuItems.length; i++) {
+		allMenuItems[i].addEventListener('mouseenter', function() {
+			let thisItem = this;
+			clearTimeout(menuLeaveTimer);
+
+			for (let j = 0; j < allMenuItems.length; j++) {
+				allMenuItems[j].classList.remove('active');
+			}
+			menuEnterTimer = setTimeout(function() {
+				thisItem.classList.add('active');
+			}, showDelay);
+		});
+
+		allMenuItems[i].addEventListener('mouseleave', function() {
+			let thisItem = this;
+			clearTimeout(menuEnterTimer);
+			menuLeaveTimer = setTimeout(function() {
+				thisItem.classList.remove('active');
+			}, hideDelay);
+		});
+	}
+	
+// ]]>
+</script>
+<script src="{ROOT_PATH}assets/js/styleswitch.js"></script>
+<script src="{ROOT_PATH}assets/js/forum_fn.js"></script>
+<script src="{ROOT_PATH}assets/js/jquery/jquery-3.6.0.min.js"></script>
+<script src="{ROOT_PATH}assets/js/jquery/jquery.hoverIntent.minified.js"></script>
+
+<!-- Font Awesome 6.4.2 -->
+<script defer src="{ROOT_PATH}assets/js/all-custom.js"></script>
+<link href="{T_THEME_PATH}/print.css" rel="stylesheet" type="text/css" media="print" title="printonly" />
+<link href="{T_STYLESHEET_LINK}" rel="stylesheet" type="text/css" media="screen, projection" />
+
+<link href="{T_THEME_PATH}/dark.css" rel="stylesheet" type="text/css" title="dark" id="theme" />
+
+<!-- IF S_CONTENT_DIRECTION eq 'rtl' -->
+	<link href="{T_THEME_PATH}/bidi.css" rel="stylesheet" type="text/css" media="screen, projection" />
+<!-- ENDIF -->
+</head>
+
+<body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION} {BODY_CLASS}">
+
+<div id="wrap">
+	<a id="top" name="top" accesskey="t"></a>
+	<div id="page-header">
+        <div id="header"><a href="{U_INDEX}" title="{L_INDEX}" id="logo"><span class="font-phpbb_logo"></span></a></div>
+		<!-- INCLUDE nav_menu.html -->
+		<br />
+        
+        <div id="breadcrumbs">
+			<span class="icon-home"><a href="{U_INDEX}" accesskey="h">{L_INDEX}</a> <!-- BEGIN navlinks --> <strong>&#8249;</strong> <a href="{navlinks.U_VIEW_FORUM}">{navlinks.FORUM_NAME}</a><!-- END navlinks --> <!-- BEGIN dl_nav --> <strong>&#8249;</strong> <a href="{dl_nav.U_DOWNLOAD}">{dl_nav.L_DOWNLOAD}</a><!-- END dl_nav --></span>
+        </div>
+
+		<ul class="thread-icons">
+          <!-- IF U_EMAIL_TOPIC --><li class="rightside"><a href="{U_EMAIL_TOPIC}" title="{L_EMAIL_TOPIC}" class="sendemail">{L_EMAIL_TOPIC}</a></li><!-- ENDIF -->
+          <!-- IF U_EMAIL_PM --><li class="rightside"><a href="{U_EMAIL_PM}" title="{L_EMAIL_PM}" class="sendemail">{L_EMAIL_PM}</a></li><!-- ENDIF -->
+          <!-- IF U_PRINT_TOPIC --><li class="rightside"><a href="{U_PRINT_TOPIC}" title="{L_PRINT_TOPIC}" accesskey="p" class="print">{L_PRINT_TOPIC}</a></li><!-- ENDIF -->
+          <!-- IF U_PRINT_PM --><li class="rightside"><a href="{U_PRINT_PM}" title="{L_PRINT_PM}" accesskey="p" class="print">{L_PRINT_PM}</a></li><!-- ENDIF -->
+		</ul>
+		
+			<ul class="linklist leftside">
+				<li>
+				    <!-- IF not S_IS_BOT and not S_USER_LOGGED_IN and S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) -->
+				    <a href="{U_REGISTER}" title="{L_REGISTER}"><i class="fa-regular fa-handshake fa-lg"></i> {L_REGISTER}</a>
+				    <!-- ENDIF -->
+				    <!-- IF not S_IS_BOT and not S_USER_LOGGED_IN --> 
+				    <a href="{U_LOGIN_LOGOUT}" title="{L_LOGIN_LOGOUT}" accesskey="x"><i class="fa-solid fa-power-off fa-lg"></i> {L_LOGIN_LOGOUT}</a>
+				    <!-- ENDIF -->	
+					<!-- IF S_DISPLAY_PM --> <a href="{U_PRIVATEMSGS}"><i class="fa-regular fa-message fa-lg"></i> {PRIVATE_MESSAGE_INFO}</a> &bull; <!-- ENDIF -->
+                    <a href="{U_SEARCH_NEW}">{L_NEW_POST}</a> &bull;
+					<!-- IF U_RESTORE_PERMISSIONS --> &bull;
+					<a href="{U_RESTORE_PERMISSIONS}">{L_RESTORE_PERMISSIONS}</a>
+					<!-- ENDIF -->
+					<!-- IF U_USER_FLAG_NEW --> &bull;
+					<a href="{U_USER_FLAG_NEW}" style="color: red; font-weight: bold;">{L_USER_FLAG_NEW}</a>
+					<!-- ENDIF -->
+				</li>
+			</ul>
+			<ul class="linklist rightside">
+				<li>
+					<!-- IF not S_IS_BOT and U_MARK_FORUMS -->
+					<a href="{U_MARK_FORUMS}" accesskey="m">{L_MARK_FORUMS_READ}</a>
+					<!-- ENDIF -->				
+				</li>
+			</ul>				
+	</div>
+	
+	<a name="start_here"></a>
+
+	<div id="page-body">
+	
+		<!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN and (U_MCP or U_ACP) -->
+		<div id="information" class="rules">
+				<strong>{L_INFORMATION}:</strong> {L_BOARD_DISABLED}
+		</div>
+		<!-- ENDIF -->

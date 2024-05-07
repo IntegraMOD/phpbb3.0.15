@@ -73,7 +73,7 @@ class dbal
 	/**
 	* Constructor
 	*/
-	function dbal()
+	function __construct()
 	{
 		$this->num_queries = array(
 			'cached'		=> 0,
@@ -424,7 +424,7 @@ class dbal
 	*/
 	function sql_in_set($field, $array, $negate = false, $allow_empty_set = false)
 	{
-		if (!sizeof($array))
+		if (empty($array))
 		{
 			if (!$allow_empty_set)
 			{
@@ -717,7 +717,7 @@ class dbal
 			// The DEBUG_EXTRA constant is for development only!
 			if ((isset($auth) && $auth->acl_get('a_')) || defined('IN_INSTALL') || defined('DEBUG_EXTRA'))
 			{
-				$message .= ($sql) ? '<br /><br />SQL<br /><br />' . htmlspecialchars($sql) : '';
+				$message .= ($sql) ? '<br /><br />SQL<br /><br />' . htmlspecialchars($sql, ENT_COMPAT) : '';
 			}
 			else
 			{
@@ -731,7 +731,7 @@ class dbal
 				{
 					if (!empty($config['board_contact']))
 					{
-						$message .= '<br /><br />' . sprintf($user->lang['SQL_ERROR_OCCURRED'], '<a href="mailto:' . htmlspecialchars($config['board_contact']) . '">', '</a>');
+						$message .= '<br /><br />' . sprintf($user->lang['SQL_ERROR_OCCURRED'], '<a href="mailto:' . htmlspecialchars($config['board_contact'], ENT_COMPAT) . '">', '</a>');
 					}
 					else
 					{
@@ -851,7 +851,7 @@ class dbal
 					</thead>
 					<tbody>
 					<tr>
-						<td class="row3"><textarea style="font-family:\'Courier New\',monospace;width:99%" rows="5" cols="10">' . preg_replace('/\t(AND|OR)(\W)/', "\$1\$2", htmlspecialchars(preg_replace('/[\s]*[\n\r\t]+[\n\r\s\t]*/', "\n", $query))) . '</textarea></td>
+						<td class="row3"><textarea style="font-family:\'Courier New\',monospace;width:99%" rows="5" cols="10">' . preg_replace('/\t(AND|OR)(\W)/', "\$1\$2", htmlspecialchars(preg_replace('/[\s]*[\n\r\t]+[\n\r\s\t]*/', "\n", $query), ENT_COMPAT)) . '</textarea></td>
 					</tr>
 					</tbody>
 					</table>
@@ -872,7 +872,7 @@ class dbal
 				else
 				{
 					$error = $this->sql_error();
-					$this->sql_report .= '<b style="color: red">FAILED</b> - ' . $this->sql_layer . ' Error ' . $error['code'] . ': ' . htmlspecialchars($error['message']);
+					$this->sql_report .= '<b style="color: red">FAILED</b> - ' . $this->sql_layer . ' Error ' . $error['code'] . ': ' . htmlspecialchars($error['message'], ENT_COMPAT);
 				}
 
 				$this->sql_report .= '</p><br /><br />';
@@ -937,7 +937,7 @@ class dbal
 				$color = ($time_db > $time_cache) ? 'green' : 'red';
 
 				$this->sql_report .= '<table cellspacing="1"><thead><tr><th>Query results obtained from the cache</th></tr></thead><tbody><tr>';
-				$this->sql_report .= '<td class="row3"><textarea style="font-family:\'Courier New\',monospace;width:99%" rows="5" cols="10">' . preg_replace('/\t(AND|OR)(\W)/', "\$1\$2", htmlspecialchars(preg_replace('/[\s]*[\n\r\t]+[\n\r\s\t]*/', "\n", $query))) . '</textarea></td></tr></tbody></table>';
+				$this->sql_report .= '<td class="row3"><textarea style="font-family:\'Courier New\',monospace;width:99%" rows="5" cols="10">' . preg_replace('/\t(AND|OR)(\W)/', "\$1\$2", htmlspecialchars(preg_replace('/[\s]*[\n\r\t]+[\n\r\s\t]*/', "\n", $query), ENT_COMPAT)) . '</textarea></td></tr></tbody></table>';
 				$this->sql_report .= '<p style="text-align: center;">';
 				$this->sql_report .= 'Before: ' . sprintf('%.5f', $this->curtime - $starttime) . 's | After: ' . sprintf('%.5f', $endtime - $starttime) . 's | Elapsed [cache]: <b style="color: ' . $color . '">' . sprintf('%.5f', ($time_cache)) . 's</b> | Elapsed [db]: <b>' . sprintf('%.5f', $time_db) . 's</b></p><br /><br />';
 
@@ -996,5 +996,3 @@ class dbal
 * This variable holds the class name to use later
 */
 $sql_db = (!empty($dbms)) ? 'dbal_' . basename($dbms) : 'dbal';
-
-?>

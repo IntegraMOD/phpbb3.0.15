@@ -282,8 +282,11 @@ class diff_engine
 				$matches = $ymatches[$line];
 
 				reset($matches);
-				while (list(, $y) = each($matches))
+				while (!is_null(key($matches))
 				{
+					$y = current($matches);
+					next($matches);
+
 					if (empty($this->in_seq[$y]))
 					{
 						$k = $this->_lcs_pos($y);
@@ -293,8 +296,11 @@ class diff_engine
 				}
 
 				// no reset() here
-				while (list(, $y) = each($matches))
+				while (!is_null(key($matches))
 				{
+					$y = current($matches);
+					next($matches);
+
 					if ($y > $this->seq[$k - 1])
 					{
 						// Optimization: this is a common case: next match is just replacing previous match.
@@ -550,5 +556,3 @@ class diff_engine
 		}
 	}
 }
-
-?>

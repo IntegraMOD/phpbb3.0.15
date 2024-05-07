@@ -153,7 +153,7 @@ class ucp_profile
 							$messenger->anti_abuse_headers($config, $user);
 
 							$messenger->assign_vars(array(
-								'USERNAME'		=> htmlspecialchars_decode($data['username']),
+								'USERNAME'		=> htmlspecialchars_decode($data['username'], ENT_COMPAT),
 								'U_ACTIVATE'	=> "$server_url/ucp.$phpEx?mode=activate&u={$user->data['user_id']}&k=$user_actkey")
 							);
 
@@ -185,7 +185,7 @@ class ucp_profile
 									$messenger->im($row['user_jabber'], $row['username']);
 
 									$messenger->assign_vars(array(
-										'USERNAME'			=> htmlspecialchars_decode($data['username']),
+										'USERNAME'			=> htmlspecialchars_decode($data['username'], ENT_COMPAT),
 										'U_USER_DETAILS'	=> "$server_url/memberlist.$phpEx?mode=viewprofile&u={$user->data['user_id']}",
 										'U_ACTIVATE'		=> "$server_url/ucp.$phpEx?mode=activate&u={$user->data['user_id']}&k=$user_actkey")
 									);
@@ -235,7 +235,7 @@ class ucp_profile
 					}
 
 					// Replace "error" strings with their real, localised form
-					$error = preg_replace('#^([A-Z_]+)$#e', "(!empty(\$user->lang['\\1'])) ? \$user->lang['\\1'] : '\\1'", $error);
+					$error = array_map(array($user, 'lang'), $error);
 				}
 
 				$template->assign_vars(array(
@@ -382,7 +382,7 @@ class ucp_profile
 					}
 
 					// Replace "error" strings with their real, localised form
-					$error = preg_replace('#^([A-Z_]+)$#e', "(!empty(\$user->lang['\\1'])) ? \$user->lang['\\1'] : '\\1'", $error);
+					$error = array_map(array($user, 'lang'), $error);
 				}
 
 				if ($config['allow_birthdays'])
@@ -507,7 +507,7 @@ class ucp_profile
 					}
 
 					// Replace "error" strings with their real, localised form
-					$error = preg_replace('#^([A-Z_]+)$#e', "(!empty(\$user->lang['\\1'])) ? \$user->lang['\\1'] : '\\1'", $error);
+					$error = array_map(array($user, 'lang'), $error);
 				}
 
 				$signature_preview = '';
@@ -581,7 +581,7 @@ class ucp_profile
 						$error[] = 'FORM_INVALID';
 					}
 					// Replace "error" strings with their real, localised form
-					$error = preg_replace('#^([A-Z_]+)$#e', "(!empty(\$user->lang['\\1'])) ? \$user->lang['\\1'] : '\\1'", $error);
+					$error = array_map(array($user, 'lang'), $error);
 				}
 
 				if (!$config['allow_avatar'] && $user->data['user_avatar_type'])
@@ -642,5 +642,3 @@ class ucp_profile
 		$this->page_title = 'UCP_PROFILE_' . strtoupper($mode);
 	}
 }
-
-?>

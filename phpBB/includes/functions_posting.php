@@ -1341,10 +1341,10 @@ function user_notification($mode, $subject, $topic_title, $forum_name, $forum_id
 				$messenger->im($addr['jabber'], $addr['name']);
 
 				$messenger->assign_vars(array(
-					'USERNAME'		=> htmlspecialchars_decode($addr['name']),
-					'TOPIC_TITLE'	=> htmlspecialchars_decode($topic_title),
-					'FORUM_NAME'	=> htmlspecialchars_decode($forum_name),
-					'AUTHOR_NAME'	=> htmlspecialchars_decode($author_name),
+					'USERNAME'		=> htmlspecialchars_decode($addr['name'], ENT_COMPAT),
+					'TOPIC_TITLE'	=> htmlspecialchars_decode($topic_title, ENT_COMPAT),
+					'FORUM_NAME'	=> htmlspecialchars_decode($forum_name, ENT_COMPAT),
+					'AUTHOR_NAME'	=> htmlspecialchars_decode($author_name, ENT_COMPAT),
 
 					'U_FORUM'				=> generate_board_url() . "/viewforum.$phpEx?f=$forum_id",
 					'U_TOPIC'				=> generate_board_url() . "/viewtopic.$phpEx?f=$forum_id&t=$topic_id",
@@ -2739,5 +2739,3 @@ function phpbb_bump_topic($forum_id, $topic_id, $post_data, $bump_time = false)
 
 	return $url;
 }
-
-?>

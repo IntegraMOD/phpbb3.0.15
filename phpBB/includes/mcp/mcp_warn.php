@@ -26,7 +26,7 @@ class mcp_warn
 	var $p_master;
 	var $u_action;
 
-	function mcp_warn(&$p_master)
+	function __construct(&$p_master)
 	{
 		$this->p_master = &$p_master;
 	}
@@ -40,7 +40,7 @@ class mcp_warn
 
 		if (is_array($action))
 		{
-			list($action, ) = each($action);
+			$action = key($action);
 		}
 
 		$this->page_title = 'MCP_WARN';
@@ -507,5 +507,3 @@ function add_warning($user_row, $warning, $send_pm = true, $post_id = 0)
 
 	add_log('mod', $row['forum_id'], $row['topic_id'], 'LOG_USER_WARNING', $user_row['username']);
 }
-
-?>

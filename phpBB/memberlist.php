@@ -342,16 +342,16 @@ switch ($mode)
 						$messenger = new messenger(false);
 
 						$messenger->template('profile_send_im', $row['user_lang']);
-						$messenger->subject(htmlspecialchars_decode($subject));
+						$messenger->subject(htmlspecialchars_decode($subject, ENT_COMPAT));
 
 						$messenger->replyto($user->data['user_email']);
 						$messenger->im($row['user_jabber'], $row['username']);
 
 						$messenger->assign_vars(array(
 							'BOARD_CONTACT'	=> $config['board_contact'],
-							'FROM_USERNAME'	=> htmlspecialchars_decode($user->data['username']),
-							'TO_USERNAME'	=> htmlspecialchars_decode($row['username']),
-							'MESSAGE'		=> htmlspecialchars_decode($message))
+							'FROM_USERNAME'	=> htmlspecialchars_decode($user->data['username'], ENT_COMPAT),
+							'TO_USERNAME'	=> htmlspecialchars_decode($row['username'], ENT_COMPAT),
+							'MESSAGE'		=> htmlspecialchars_decode($message, ENT_COMPAT))
 						);
 
 						$messenger->send(NOTIFY_IM);
@@ -499,9 +499,10 @@ switch ($mode)
 
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
-		$foe = ($row['foe']) ? true : false;
-		$friend = ($row['friend']) ? true : false;
 		$db->sql_freeresult($result);
+
+		$foe = !empty($row['foe']);
+		$friend = !empty($row['friend']);
 
 		if ($config['load_onlinetrack'])
 		{
@@ -632,8 +633,8 @@ switch ($mode)
 			'S_USER_NOTES'		=> ($user_notes_enabled) ? true : false,
 			'S_WARN_USER'		=> ($warn_user_enabled) ? true : false,
 			'S_ZEBRA'			=> ($user->data['user_id'] != $user_id && $user->data['is_registered'] && $zebra_enabled) ? true : false,
-			'U_ADD_FRIEND'		=> (!$friend && !$foe && $friends_enabled) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=zebra&amp;add=' . urlencode(htmlspecialchars_decode($member['username']))) : '',
-			'U_ADD_FOE'			=> (!$friend && !$foe && $foes_enabled) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=zebra&amp;mode=foes&amp;add=' . urlencode(htmlspecialchars_decode($member['username']))) : '',
+			'U_ADD_FRIEND'		=> (!$friend && !$foe && $friends_enabled) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=zebra&amp;add=' . urlencode(htmlspecialchars_decode($member['username'], ENT_COMPAT))) : '',
+			'U_ADD_FOE'			=> (!$friend && !$foe && $foes_enabled) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=zebra&amp;mode=foes&amp;add=' . urlencode(htmlspecialchars_decode($member['username'], ENT_COMPAT))) : '',
 			'U_REMOVE_FRIEND'	=> ($friend && $friends_enabled) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=zebra&amp;remove=1&amp;usernames[]=' . $user_id) : '',
 			'U_REMOVE_FOE'		=> ($foe && $foes_enabled) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=zebra&amp;remove=1&amp;mode=foes&amp;usernames[]=' . $user_id) : '',
 		));
@@ -885,7 +886,7 @@ switch ($mode)
 
 					if ($user_id)
 					{
-						$messenger->subject(htmlspecialchars_decode($subject));
+						$messenger->subject(htmlspecialchars_decode($subject, ENT_COMPAT));
 						$messenger->im($row['user_jabber'], $row['username']);
 						$notify_type = $row['user_notify_type'];
 					}
@@ -898,15 +899,15 @@ switch ($mode)
 
 					$messenger->assign_vars(array(
 						'BOARD_CONTACT'	=> $config['board_contact'],
-						'TO_USERNAME'	=> htmlspecialchars_decode($row['to_name']),
-						'FROM_USERNAME'	=> htmlspecialchars_decode($user->data['username']),
-						'MESSAGE'		=> htmlspecialchars_decode($message))
+						'TO_USERNAME'	=> htmlspecialchars_decode($row['to_name'], ENT_COMPAT),
+						'FROM_USERNAME'	=> htmlspecialchars_decode($user->data['username'], ENT_COMPAT),
+						'MESSAGE'		=> htmlspecialchars_decode($message, ENT_COMPAT))
 					);
 
 					if ($topic_id)
 					{
 						$messenger->assign_vars(array(
-							'TOPIC_NAME'	=> htmlspecialchars_decode($row['topic_title']),
+							'TOPIC_NAME'	=> htmlspecialchars_decode($row['topic_title'], ENT_COMPAT),
 							'U_TOPIC'		=> generate_board_url() . "/viewtopic.$phpEx?f=" . $row['forum_id'] . "&t=$topic_id")
 						);
 					}
@@ -1759,5 +1760,3 @@ function _sort_last_active($first, $second)
 		return $lesser_than * (int) ($id_cache[$first]['last_visit'] - $id_cache[$second]['last_visit']);
 	}
 }
-
-?>

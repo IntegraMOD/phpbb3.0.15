@@ -30,6 +30,22 @@ hr.dashed {
 	border-top-color: #CCCCCC;
 }
 
+#site-description a {
+	color: #FFFFFF;
+}
+
+#site-description a:hover {
+	color: #CADCEB;
+}
+	
+#phpbb_logo, a#phpbb_logo {
+    color: #FFFFFF;
+}
+
+#site-description a#phpbb_logo:hover {
+	color: #105289;
+}
+
 /* Search box
 --------------------------------------------- */
 
@@ -48,23 +64,26 @@ hr.dashed {
 /* Round cornered boxes and backgrounds
 ---------------------------------------- */
 .headerbar {
-	background-color: #12A3EB;
-	background-image: url("{T_THEME_PATH}/images/bg_header.gif");
 	color: #FFFFFF;
 }
 
-.navbar {
-	background-color: #cadceb;
+.headerbar, .forumbg {
+	background-color: #12A3EB;
+	background-image: -webkit-linear-gradient(top, #6ACEFF 0%, #0076B1 2px, #12A3EB 92px, #12A3EB 100%);
+	background-image: linear-gradient(to bottom, #6ACEFF 0%,#0076B1 2px,#12A3EB 92px,#12A3EB 100%);
+	background-repeat: repeat-x;
 }
 
 .forabg {
-	background-color: #0076b1;
-	background-image: url("{T_THEME_PATH}/images/bg_list.gif");
+	background-color: #0076B1;
+	background-image: -webkit-linear-gradient(top, #6ACEFF 0%, #12A3EB 2px, #0076B1 92px, #0076B1 100%);
+	background-image: linear-gradient(to bottom, #6ACEFF 0%,#12A3EB 2px,#0076B1 92px,#0076B1 100%);
+	background-repeat: repeat-x;
 }
 
-.forumbg {
-	background-color: #12A3EB;
-	background-image: url("{T_THEME_PATH}/images/bg_header.gif");
+
+.navbar {
+	background-color: #CADCEB;
 }
 
 .panel {
@@ -92,21 +111,13 @@ hr.dashed {
 	background-color: #E7E8EA;
 }
 
-span.corners-top {
-	background-image: url("{T_THEME_PATH}/images/corners_left.png");
-}
+span.corners-top {}
 
-span.corners-top span {
-	background-image: url("{T_THEME_PATH}/images/corners_right.png");
-}
+span.corners-top span {}
 
-span.corners-bottom {
-	background-image: url("{T_THEME_PATH}/images/corners_left.png");
-}
+span.corners-bottom {}
 
-span.corners-bottom span {
-	background-image: url("{T_THEME_PATH}/images/corners_right.png");
-}
+span.corners-bottom span {}
 
 /* Horizontal lists
 ----------------------------------------*/
@@ -314,6 +325,19 @@ a.topictitle:active {
 	background-color: transparent;
 }
 
+/* Post Tools links */
+.posttools a:link, .posttools a:visited {
+	color: #105289;
+}
+
+.posttools a:hover, .posttools {
+	color: #D31141;
+}
+
+.posttools a:active {
+	color: #105289;
+}
+
 /* Profile links */
 .postprofile a:link, .postprofile a:visited, .postprofile dt.author a {
 	color: #105289;
@@ -370,8 +394,10 @@ Colours and backgrounds for content.css
 -------------------------------------------------------------- */
 
 ul.forums {
-	background-color: #eef5f9;
-	background-image: url("{T_THEME_PATH}/images/gradient.gif");
+	background-color: #EEF5F9; /* Old browsers */ /* FF3.6+ */
+	background-image: -webkit-linear-gradient(top, #D2E0EB 0%, #EEF5F9 100%);
+	background-image: linear-gradient(to bottom, #D2E0EB 0%,#EEF5F9 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#D2E0EB', endColorstr='#EEF5F9',GradientType=0 ); /* IE6-9 */
 }
 
 ul.topiclist li {
@@ -383,7 +409,7 @@ ul.topiclist dd {
 }
 
 .rtl ul.topiclist dd {
-	border-right-color: #fff;
+	border-right-color: #FFFFFF;
 	border-left-color: transparent;
 }
 
@@ -655,18 +681,54 @@ fieldset.polls dd div {
 	background-image: url("{IMG_ICON_USER_ONLINE_SRC}");
 }
 
+
 /*
 --------------------------------------------------------------
 Colours and backgrounds for buttons.css
 -------------------------------------------------------------- */
+.button {
+	border-color: #C7C3BF;
+	background-color: #E9E9E9; /* Old browsers */ /* FF3.6+ */
+	background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #E9E9E9 100%);
+	background-image: linear-gradient(to bottom, #FFFFFF 0%,#E9E9E9 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#E9E9E9',GradientType=0 ); /* IE6-9 */
+	box-shadow: 0 0 0 1px #FFFFFF inset;
+	-webkit-box-shadow: 0 0 0 1px #FFFFFF inset;
+	color: #D31141;
+}
 
-/* Big button images */
-.reply-icon span	{ background-image: url("{IMG_BUTTON_TOPIC_REPLY_SRC}"); }
-.post-icon span		{ background-image: url("{IMG_BUTTON_TOPIC_NEW_SRC}"); }
-.locked-icon span	{ background-image: url("{IMG_BUTTON_TOPIC_LOCKED_SRC}"); }
-.pmreply-icon span	{ background-image: url("{IMG_BUTTON_PM_REPLY_SRC}"); }
-.newpm-icon span	{ background-image: url("{IMG_BUTTON_PM_NEW_SRC}"); }
-.forwardpm-icon span	{ background-image: url("{IMG_BUTTON_PM_FORWARD_SRC}"); }
+.button:hover,
+.button:focus {
+	border-color: #0A8ED0;
+	background-color: #FFFFFF; /* Old browsers */ /* FF3.6+ */
+	background-image: -webkit-linear-gradient(top, #E9E9E9 0%, #FFFFFF 100%);
+	background-image: linear-gradient(to bottom, #E9E9E9 0%,#FFFFFF 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E9E9E9', endColorstr='#FFFFFF',GradientType=0 ); /* IE6-9 */
+	text-shadow: 1px 1px 0 #FFFFFF, -1px -1px 0 #FFFFFF, -1px -1px 0 rgba(188, 42, 77, 0.2);
+}
+
+.button .icon,
+.button-secondary {
+	color: #8f8f8f;
+}
+
+.button-secondary:focus,
+.button-secondary:hover,
+.button:focus .icon,
+.button:hover .icon {
+	color: #0A8ED0;
+}
+
+.button-search:hover,
+.button-search-end:hover {
+	border-color: #C7C3BF;
+}
+
+.caret	{ border-color: #DADADA; }
+.caret	{ border-color: #C7C3BF; }
+
+.contact-icons a	{ border-color: #DCDCDC; }
+.contact-icons a:hover	{ background-color: #F2F6F9; }
 
 a.print {
 	background-image: url("{T_THEME_PATH}/images/icon_print.gif");
@@ -676,44 +738,46 @@ a.sendemail {
 	background-image: url("{T_THEME_PATH}/images/icon_sendemail.gif");
 }
 
-a.fontsize {
-	background-image: url("{T_THEME_PATH}/images/icon_fontsize.gif");
-}
-
 /* Icon images
 ---------------------------------------- */
-.sitehome						{ background-image: url("{T_THEME_PATH}/images/icon_home.gif"); }
-.icon-faq						{ background-image: url("{T_THEME_PATH}/images/icon_faq.gif"); }
-.icon-members					{ background-image: url("{T_THEME_PATH}/images/icon_members.gif"); }
-.icon-home						{ background-image: url("{T_THEME_PATH}/images/icon_home.gif"); }
-.icon-ucp						{ background-image: url("{T_THEME_PATH}/images/icon_ucp.gif"); }
-.icon-register					{ background-image: url("{T_THEME_PATH}/images/icon_register.gif"); }
-.icon-logout					{ background-image: url("{T_THEME_PATH}/images/icon_logout.gif"); }
 .icon-bookmark					{ background-image: url("{T_THEME_PATH}/images/icon_bookmark.gif"); }
 .icon-bump						{ background-image: url("{T_THEME_PATH}/images/icon_bump.gif"); }
 .icon-subscribe					{ background-image: url("{T_THEME_PATH}/images/icon_subscribe.gif"); }
 .icon-unsubscribe				{ background-image: url("{T_THEME_PATH}/images/icon_unsubscribe.gif"); }
 .icon-pages						{ background-image: url("{T_THEME_PATH}/images/icon_pages.gif"); }
-.icon-search					{ background-image: url("{T_THEME_PATH}/images/icon_search.gif"); }
 
-/* Profile & navigation icons */
-.email-icon, .email-icon a		{ background-image: url("{IMG_ICON_CONTACT_EMAIL_SRC}"); }
-.aim-icon, .aim-icon a			{ background-image: url("{IMG_ICON_CONTACT_AIM_SRC}"); }
-.yahoo-icon, .yahoo-icon a		{ background-image: url("{IMG_ICON_CONTACT_YAHOO_SRC}"); }
-.web-icon, .web-icon a			{ background-image: url("{IMG_ICON_CONTACT_WWW_SRC}"); }
-.msnm-icon, .msnm-icon a			{ background-image: url("{IMG_ICON_CONTACT_MSNM_SRC}"); }
-.icq-icon, .icq-icon a			{ background-image: url("{IMG_ICON_CONTACT_ICQ_SRC}"); }
-.jabber-icon, .jabber-icon a		{ background-image: url("{IMG_ICON_CONTACT_JABBER_SRC}"); }
-.pm-icon, .pm-icon a				{ background-image: url("{IMG_ICON_CONTACT_PM_SRC}"); }
-.quote-icon, .quote-icon a		{ background-image: url("{IMG_ICON_POST_QUOTE_SRC}"); }
 
-/* Moderator icons */
-.report-icon, .report-icon a		{ background-image: url("{IMG_ICON_POST_REPORT_SRC}"); }
-.edit-icon, .edit-icon a			{ background-image: url("{IMG_ICON_POST_EDIT_SRC}"); }
-.delete-icon, .delete-icon a		{ background-image: url("{IMG_ICON_POST_DELETE_SRC}"); }
-.info-icon, .info-icon a			{ background-image: url("{IMG_ICON_POST_INFO_SRC}"); }
-.warn-icon, .warn-icon a			{ background-image: url("{IMG_ICON_USER_WARN_SRC}"); } /* Need updated warn icon */
 
+div.buttons div.locked-icon a, div.buttons div.post-icon a, div.buttons div.reply-icon a, div.buttons div.upload-icon a, div.buttons div.qreply-icon a, .postbody ul.profile-icons li.edit-icon a, .postbody ul.profile-icons li.quote-icon a, div.buttons div.pmreply-icon a, div.buttons div.newpm-icon a, div.buttons div.forwardpm-icon a {
+	color : #BC2A4D;
+}
+div.buttons div.locked-icon, div.buttons div.post-icon, div.buttons div.reply-icon, div.buttons div.upload-icon, div.buttons div.qreply-icon, div.buttons div.pmreply-icon, div.buttons div.newpm-icon, div.buttons div.forwardpm-icon {
+	border : #C4C1BD solid 1px;
+	background-color : #FBFBFB;
+	background-image : linear-gradient(to bottom, #FBFBFB, #E6E6E6);
+}
+div.buttons div.locked-icon:hover, div.buttons div.post-icon:hover, div.buttons div.reply-icon:hover, div.buttons div.upload-icon:hover, div.buttons div.qreply-icon:hover, div.buttons div.pmreply-icon:hover, div.buttons div.newpm-icon:hover, div.buttons div.forwardpm-icon:hover {
+	border : #4386CC solid 1px;
+	background-color : #E6E6E6;
+	background-image : linear-gradient(to bottom, #E6E6E6, #FBFBFB);
+}
+.postbody ul.profile-icons li.edit-icon, .postbody ul.profile-icons li.quote-icon {
+	border : #C4C1BD solid 1px;
+	background-color : #FBFBFB;
+	background-image : linear-gradient(to bottom, #FBFBFB, #E6E6E6);
+}
+.postbody ul.profile-icons li.edit-icon:hover, .postbody ul.profile-icons li.quote-icon:hover {
+	border : #4386CC solid 1px;
+	background-color : #E6E6E6;
+	background-image : linear-gradient(to bottom, #E6E6E6, #FBFBFB);
+}
+ul.profile-icons li.pm-icon:hover {
+	color : #243D5B;
+	text-shadow : -1px -1px 0 #FBFFCB;
+	border : #B2B2B2 solid 1px;
+	background-color : #D6D6D2;
+	background-image : linear-gradient(to bottom, #D6D6D2, #E0E0DB);
+}
 /*
 --------------------------------------------------------------
 Colours and backgrounds for cp.css
@@ -835,38 +899,22 @@ ul.cplist {
 	background-color: #FFFFFF;
 }
 
-#cp-main span.corners-top, #cp-menu span.corners-top {
-	background-image: url("{T_THEME_PATH}/images/corners_left2.gif");
-}
+#cp-main span.corners-top, #cp-menu span.corners-top {}
 
-#cp-main span.corners-top span, #cp-menu span.corners-top span {
-	background-image: url("{T_THEME_PATH}/images/corners_right2.gif");
-}
+#cp-main span.corners-top span, #cp-menu span.corners-top span {}
 
-#cp-main span.corners-bottom, #cp-menu span.corners-bottom {
-	background-image: url("{T_THEME_PATH}/images/corners_left2.gif");
-}
+#cp-main span.corners-bottom, #cp-menu span.corners-bottom {}
 
-#cp-main span.corners-bottom span, #cp-menu span.corners-bottom span {
-	background-image: url("{T_THEME_PATH}/images/corners_right2.gif");
-}
+#cp-main span.corners-bottom span, #cp-menu span.corners-bottom span {}
 
 /* Topicreview */
-#cp-main .panel #topicreview span.corners-top, #cp-menu .panel #topicreview span.corners-top {
-	background-image: url("{T_THEME_PATH}/images/corners_left.gif");
-}
+#cp-main .panel #topicreview span.corners-top, #cp-menu .panel #topicreview span.corners-top {}
 
-#cp-main .panel #topicreview span.corners-top span, #cp-menu .panel #topicreview span.corners-top span {
-	background-image: url("{T_THEME_PATH}/images/corners_right.gif");
-}
+#cp-main .panel #topicreview span.corners-top span, #cp-menu .panel #topicreview span.corners-top span {}
 
-#cp-main .panel #topicreview span.corners-bottom, #cp-menu .panel #topicreview span.corners-bottom {
-	background-image: url("{T_THEME_PATH}/images/corners_left.gif");
-}
+#cp-main .panel #topicreview span.corners-bottom, #cp-menu .panel #topicreview span.corners-bottom {}
 
-#cp-main .panel #topicreview span.corners-bottom span, #cp-menu .panel #topicreview span.corners-bottom span {
-	background-image: url("{T_THEME_PATH}/images/corners_right.gif");
-}
+#cp-main .panel #topicreview span.corners-bottom span, #cp-menu .panel #topicreview span.corners-bottom span {}
 
 /* Friends list */
 .cp-mini {
@@ -1021,3 +1069,7 @@ input.search {
 input.disabled {
 	color: #666666;
 }
+
+.lightstyle { display:none; }
+.darkstyle { display:block; }
+

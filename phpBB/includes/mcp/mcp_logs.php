@@ -26,7 +26,7 @@ class mcp_logs
 	var $u_action;
 	var $p_master;
 
-	function mcp_logs(&$p_master)
+	function __construct(&$p_master)
 	{
 		$this->p_master = &$p_master;
 	}
@@ -42,7 +42,7 @@ class mcp_logs
 
 		if (is_array($action))
 		{
-			list($action, ) = each($action);
+			$action = key($action);
 		}
 		else
 		{
@@ -165,7 +165,7 @@ class mcp_logs
 		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$keywords = utf8_normalize_nfc(request_var('keywords', '', true));
-		$keywords_param = !empty($keywords) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords)) : '';
+		$keywords_param = !empty($keywords) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords, ENT_COMPAT)) : '';
 
 		// Grab log data
 		$log_data = array();
@@ -214,5 +214,3 @@ class mcp_logs
 		}
 	}
 }
-
-?>

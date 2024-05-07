@@ -1,5 +1,10 @@
 <?php
 /**
+ * Patched for compatibility with PHP 8.1
+ * @copyright (c) 2023 Dion Designs
+ */
+
+/**
 *
 * @package install
 * @version $Id$
@@ -317,7 +322,7 @@ class module
 			$module = $this->filename;
 			if (!class_exists($module))
 			{
-				$this->error('Module "' . htmlspecialchars($module) . '" not accessible.', __LINE__, __FILE__);
+				$this->error('Module "' . htmlspecialchars($module, ENT_COMPAT) . '" not accessible.', __LINE__, __FILE__);
 			}
 			$this->module = new $module($this);
 
@@ -543,8 +548,8 @@ class module
 			return;
 		}
 
-		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
-		echo '<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">';
+		echo '<!DOCTYPE html>';
+		echo '<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">';
 		echo '<head>';
 		echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
 		echo '<title>' . $lang['INST_ERR_FATAL'] . '</title>';
@@ -569,7 +574,7 @@ class module
 		echo '		</div>';
 		echo '	</div>';
 		echo '	<div id="page-footer">';
-		echo '		Powered by <a href="https://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Group';
+		echo '		Forum powered by <a href="https://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Group';
 		echo '	</div>';
 		echo '</div>';
 		echo '</body>';
@@ -726,5 +731,3 @@ class module
 		return $user_select;
 	}
 }
-
-?>

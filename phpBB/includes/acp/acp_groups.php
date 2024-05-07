@@ -833,4 +833,3 @@ class acp_groups
 	}
 }
 
-?>

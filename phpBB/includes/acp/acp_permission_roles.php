@@ -25,7 +25,7 @@ class acp_permission_roles
 
 	function main($id, $mode)
 	{
-		global $db, $user, $auth, $template, $cache;
+		global $db, $user, $auth, $template, $cache, $auth_admin;
 		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
 
 		include_once($phpbb_root_path . 'includes/functions_user.' . $phpEx);
@@ -456,14 +456,14 @@ class acp_permission_roles
 	*/
 	function display_auth_options($auth_options)
 	{
-		global $template, $user;
+		global $template, $user, $auth_admin;
 
 		$content_array = $categories = array();
 		$key_sort_array = array(0);
 		$auth_options = array(0 => $auth_options);
 
 		// Making use of auth_admin method here (we do not really want to change two similar code fragments)
-		auth_admin::build_permission_array($auth_options, $content_array, $categories, $key_sort_array);
+		$auth_admin->build_permission_array($auth_options, $content_array, $categories, $key_sort_array);
 
 		$content_array = $content_array[0];
 
@@ -567,5 +567,3 @@ class acp_permission_roles
 		$auth_admin->acl_clear_prefetch();
 	}
 }
-
-?>

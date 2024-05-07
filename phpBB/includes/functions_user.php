@@ -41,13 +41,13 @@ function user_get_id_name(&$user_id_ary, &$username_ary, $user_type = false)
 
 	$which_ary = ($user_id_ary) ? 'user_id_ary' : 'username_ary';
 
-	if ($$which_ary && !is_array($$which_ary))
+	if (${$which_ary} && !is_array(${$which_ary}))
 	{
-		$$which_ary = array($$which_ary);
+		${$which_ary} = array(${$which_ary});
 	}
 
-	$sql_in = ($which_ary == 'user_id_ary') ? array_map('intval', $$which_ary) : array_map('utf8_clean_string', $$which_ary);
-	unset($$which_ary);
+	$sql_in = ($which_ary == 'user_id_ary') ? array_map('intval', ${$which_ary}) : array_map('utf8_clean_string', ${$which_ary});
+	unset(${$which_ary});
 
 	$user_id_ary = $username_ary = array();
 
@@ -1231,7 +1231,7 @@ function user_ipwhois($ip)
 		$ipwhois = (empty($buffer)) ? $ipwhois : $buffer;
 	}
 
-	$ipwhois = htmlspecialchars($ipwhois);
+	$ipwhois = htmlspecialchars($ipwhois, ENT_COMPAT);
 
 	// Magic URL ;)
 	return trim(make_clickable($ipwhois, false, ''));
@@ -1284,11 +1284,11 @@ function validate_string($string, $optional = false, $min = 0, $max = 0)
 		return false;
 	}
 
-	if ($min && utf8_strlen(htmlspecialchars_decode($string)) < $min)
+	if ($min && utf8_strlen(htmlspecialchars_decode($string, ENT_COMPAT)) < $min)
 	{
 		return 'TOO_SHORT';
 	}
-	else if ($max && utf8_strlen(htmlspecialchars_decode($string)) > $max)
+	else if ($max && utf8_strlen(htmlspecialchars_decode($string, ENT_COMPAT)) > $max)
 	{
 		return 'TOO_LONG';
 	}
@@ -3137,8 +3137,8 @@ function group_user_attributes($action, $group_id, $user_id_ary = false, $userna
 				$messenger->im($row['user_jabber'], $row['username']);
 
 				$messenger->assign_vars(array(
-					'USERNAME'		=> htmlspecialchars_decode($row['username']),
-					'GROUP_NAME'	=> htmlspecialchars_decode($group_name),
+					'USERNAME'		=> htmlspecialchars_decode($row['username'], ENT_COMPAT),
+					'GROUP_NAME'	=> htmlspecialchars_decode($group_name, ENT_COMPAT),
 					'U_GROUP'		=> generate_board_url() . "/ucp.$phpEx?i=groups&mode=membership")
 				);
 
@@ -3627,5 +3627,3 @@ function phpbb_get_banned_user_ids($user_ids = array())
 
 	return $banned_ids_list;
 }
-
-?>

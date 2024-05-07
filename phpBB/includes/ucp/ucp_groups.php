@@ -125,7 +125,7 @@ class ucp_groups
 							{
 								trigger_error($user->lang['NOT_MEMBER_OF_GROUP'] . $return_page);
 							}
-							list(, $row) = each($row);
+							$row = current($row);
 
 							$sql = 'SELECT group_type
 								FROM ' . GROUPS_TABLE . '
@@ -216,8 +216,8 @@ class ucp_groups
 										$messenger->im($row['user_jabber'], $row['username']);
 
 										$messenger->assign_vars(array(
-											'USERNAME'			=> htmlspecialchars_decode($row['username']),
-											'GROUP_NAME'		=> htmlspecialchars_decode($group_row[$group_id]['group_name']),
+											'USERNAME'			=> htmlspecialchars_decode($row['username'], ENT_COMPAT),
+											'GROUP_NAME'		=> htmlspecialchars_decode($group_row[$group_id]['group_name'], ENT_COMPAT),
 											'REQUEST_USERNAME'	=> $user->data['username'],
 
 											'U_PENDING'		=> generate_board_url() . "/ucp.$phpEx?i=groups&mode=manage&action=list&g=$group_id",
@@ -255,7 +255,7 @@ class ucp_groups
 							{
 								trigger_error($user->lang['NOT_MEMBER_OF_GROUP'] . $return_page);
 							}
-							list(, $row) = each($row);
+							$row = current($row);
 
 							if (!$row['group_leader'])
 							{
@@ -467,7 +467,7 @@ class ucp_groups
 						{
 							trigger_error($user->lang['NOT_MEMBER_OF_GROUP'] . $return_page);
 						}
-						list(, $row) = each($row);
+						$row = current($row);
 
 						if (!$row['group_leader'])
 						{
@@ -755,7 +755,7 @@ class ucp_groups
 						{
 							trigger_error($user->lang['NOT_MEMBER_OF_GROUP'] . $return_page);
 						}
-						list(, $row) = each($row);
+						$row = current($row);
 
 						if (!$row['group_leader'])
 						{
@@ -876,7 +876,7 @@ class ucp_groups
 						{
 							trigger_error($user->lang['NOT_MEMBER_OF_GROUP'] . $return_page);
 						}
-						list(, $row) = each($row);
+						$row = current($row);
 
 						if (!$row['group_leader'])
 						{
@@ -903,7 +903,7 @@ class ucp_groups
 						{
 							trigger_error($user->lang['NOT_MEMBER_OF_GROUP'] . $return_page);
 						}
-						list(, $row) = each($row);
+						$row = current($row);
 
 						if (!$row['group_leader'])
 						{
@@ -982,7 +982,7 @@ class ucp_groups
 						{
 							trigger_error($user->lang['NOT_MEMBER_OF_GROUP'] . $return_page);
 						}
-						list(, $row) = each($row);
+						$row = current($row);
 
 						if (!$row['group_leader'])
 						{
@@ -1043,7 +1043,7 @@ class ucp_groups
 						{
 							trigger_error($user->lang['NOT_MEMBER_OF_GROUP'] . $return_page);
 						}
-						list(, $row) = each($row);
+						$row = current($row);
 
 						if (!$row['group_leader'])
 						{
@@ -1117,5 +1117,3 @@ class ucp_groups
 		$this->tpl_name = 'ucp_groups_' . $mode;
 	}
 }
-
-?>

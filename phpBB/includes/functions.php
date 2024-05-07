@@ -84,14 +84,16 @@ function request_var($var_name, $default, $multibyte = false, $cookie = false)
 	}
 	else
 	{
-		list($key_type, $type) = each($default);
+		$key_type = key($default);
+		$type = current($default);
 		$type = gettype($type);
 		$key_type = gettype($key_type);
 		if ($type == 'array')
 		{
 			reset($default);
 			$default = current($default);
-			list($sub_key_type, $sub_type) = each($default);
+			$sub_key_type = key($default);
+			$sub_type = current($default);
 			$sub_type = gettype($sub_type);
 			$sub_type = ($sub_type == 'array') ? 'NULL' : $sub_type;
 			$sub_key_type = gettype($sub_key_type);
@@ -3151,7 +3153,7 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 					$user->lang[$result['error_msg']],
 					($config['email_enable']) ? '<a href="' . append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=sendpassword') . '">' : '',
 					($config['email_enable']) ? '</a>' : '',
-					($config['board_contact']) ? '<a href="mailto:' . htmlspecialchars($config['board_contact']) . '">' : '',
+					($config['board_contact']) ? '<a href="mailto:' . htmlspecialchars($config['board_contact'], ENT_COMPAT) . '">' : '',
 					($config['board_contact']) ? '</a>' : ''
 				);
 			break;
@@ -3163,7 +3165,7 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 				// Assign admin contact to some error messages
 				if ($result['error_msg'] == 'LOGIN_ERROR_USERNAME' || $result['error_msg'] == 'LOGIN_ERROR_PASSWORD')
 				{
-					$err = (!$config['board_contact']) ? sprintf($user->lang[$result['error_msg']], '', '') : sprintf($user->lang[$result['error_msg']], '<a href="mailto:' . htmlspecialchars($config['board_contact']) . '">', '</a>');
+					$err = (!$config['board_contact']) ? sprintf($user->lang[$result['error_msg']], '', '') : sprintf($user->lang[$result['error_msg']], '<a href="mailto:' . htmlspecialchars($config['board_contact'], ENT_COMPAT) . '">', '</a>');
 				}
 
 			break;
@@ -3373,7 +3375,7 @@ function parse_cfg_file($filename, $lines = false)
 		}
 
 		// Determine first occurrence, since in values the equal sign is allowed
-		$key = htmlspecialchars(strtolower(trim(substr($line, 0, $delim_pos))));
+		$key = htmlspecialchars(strtolower(trim(substr($line, 0, $delim_pos))), ENT_COMPAT);
 		$value = trim(substr($line, $delim_pos + 1));
 
 		if (in_array($value, array('off', 'false', '0')))
@@ -3390,11 +3392,11 @@ function parse_cfg_file($filename, $lines = false)
 		}
 		else if (($value[0] == "'" && $value[sizeof($value) - 1] == "'") || ($value[0] == '"' && $value[sizeof($value) - 1] == '"'))
 		{
-			$value = htmlspecialchars(substr($value, 1, sizeof($value)-2));
+			$value = htmlspecialchars(substr($value, 1, sizeof($value)-2), ENT_COMPAT);
 		}
 		else
 		{
-			$value = htmlspecialchars($value);
+			$value = htmlspecialchars($value, ENT_COMPAT);
 		}
 
 		$parsed_items[$key] = $value;
@@ -3493,7 +3495,7 @@ function get_backtrace()
 	foreach ($backtrace as $trace)
 	{
 		// Strip the current directory from path
-		$trace['file'] = (empty($trace['file'])) ? '(not given by php)' : htmlspecialchars(phpbb_filter_root_path($trace['file']));
+		$trace['file'] = (empty($trace['file'])) ? '(not given by php)' : htmlspecialchars(phpbb_filter_root_path($trace['file']), ENT_COMPAT);
 		$trace['line'] = (empty($trace['line'])) ? '(not given by php)' : $trace['line'];
 
 		// Only show function arguments for include etc.
@@ -3501,7 +3503,7 @@ function get_backtrace()
 		$argument = '';
 		if (!empty($trace['args'][0]) && in_array($trace['function'], array('include', 'require', 'include_once', 'require_once')))
 		{
-			$argument = htmlspecialchars(phpbb_filter_root_path($trace['args'][0]));
+			$argument = htmlspecialchars(phpbb_filter_root_path($trace['args'][0]), ENT_COMPAT);
 		}
 
 		$trace['class'] = (!isset($trace['class'])) ? '' : $trace['class'];
@@ -3511,7 +3513,7 @@ function get_backtrace()
 		$output .= '<b>FILE:</b> ' . $trace['file'] . '<br />';
 		$output .= '<b>LINE:</b> ' . ((!empty($trace['line'])) ? $trace['line'] : '') . '<br />';
 
-		$output .= '<b>CALL:</b> ' . htmlspecialchars($trace['class'] . $trace['type'] . $trace['function']);
+		$output .= '<b>CALL:</b> ' . htmlspecialchars($trace['class'] . $trace['type'] . $trace['function'], ENT_COMPAT);
 		$output .= '(' . (($argument !== '') ? "'$argument'" : '') . ')<br />';
 	}
 	$output .= '</div>';
@@ -3536,8 +3538,8 @@ function get_preg_expression($mode)
 		case 'bbcode_htm':
 			return array(
 				'#<!\-\- e \-\-><a href="mailto:(.*?)">.*?</a><!\-\- e \-\->#',
-				'#<!\-\- l \-\-><a (?:class="[\w-]+" )?href="(.*?)(?:(&amp;|\?)sid=[0-9a-f]{32})?">.*?</a><!\-\- l \-\->#',
-				'#<!\-\- ([mw]) \-\-><a (?:class="[\w-]+" )?href="(.*?)">.*?</a><!\-\- \1 \-\->#',
+				'#<!\-\- l \-\-><a (?:class="[\w\- ]+" )?href="(.*?)(?:(&amp;|\?)sid=[0-9a-f]{32})?">.*?</a><!\-\- l \-\->#',
+				'#<!\-\- ([mw]) \-\-><a (?:class="[\w\- ]+" )?href="(.*?)">.*?</a><!\-\- \1 \-\->#',
 				'#<!\-\- s(.*?) \-\-><img src="\{SMILIES_PATH\}\/.*? \/><!\-\- s\1 \-\->#',
 				'#<!\-\- .*? \-\->#s',
 				'#<.*?>#s',
@@ -3861,7 +3863,7 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 	global $phpEx, $phpbb_root_path, $msg_title, $msg_long_text;
 
 	// Do not display notices if we suppress them via @
-	if (error_reporting() == 0 && $errno != E_USER_ERROR && $errno != E_USER_WARNING && $errno != E_USER_NOTICE)
+	if (!(error_reporting() & $errno) && $errno != E_USER_ERROR && $errno != E_USER_WARNING && $errno != E_USER_NOTICE)
 	{
 		return;
 	}
@@ -3876,6 +3878,8 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 	{
 		define('E_DEPRECATED', 8192);
 	}
+
+	$error_log = $phpbb_root_path . '/store/php_error.log';
 
 	switch ($errno)
 	{
@@ -3962,8 +3966,8 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 
 			// Try to not call the adm page data...
 
-			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
-			echo '<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">';
+			echo '<!DOCTYPE html>';
+			echo '<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">';
 			echo '<head>';
 			echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
 			echo '<title>' . $msg_title . '</title>';
@@ -3995,7 +3999,7 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 			echo '	</div>';
 			echo '	</div>';
 			echo '	<div id="page-footer">';
-			echo '		Powered by <a href="https://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Group';
+			echo '		Forum powered by <a href="https://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Group';
 			echo '	</div>';
 			echo '</div>';
 			echo '</body>';
@@ -4609,6 +4613,76 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 	$board_url = generate_board_url() . '/';
 	$web_path = (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? $board_url : $phpbb_root_path;
 
+    //
+    // + new posts since last visit & you post number
+    //
+    if ($user->data['is_registered'])
+    {
+        $ex_fid_ary = array_unique(array_merge(array_keys($auth->acl_getf('!f_read', true)), array_keys($auth->acl_getf('!f_search', true))));
+        
+        if ($auth->acl_get('m_approve'))
+        {
+         $m_approve_fid_ary = array(-1);
+         $m_approve_fid_sql = '';
+        }
+        else if ($auth->acl_getf_global('m_approve'))
+        {
+         $m_approve_fid_ary = array_diff(array_keys($auth->acl_getf('!m_approve', true)), $ex_fid_ary);
+         $m_approve_fid_sql = ' AND (p.post_approved = 1' . ((sizeof($m_approve_fid_ary)) ? ' OR ' . $db->sql_in_set('p.forum_id', $m_approve_fid_ary, true) : '') . ')';
+        }
+        else
+        {
+         $m_approve_fid_ary = array();
+         $m_approve_fid_sql = ' AND p.post_approved = 1';
+        }
+
+        $sql = 'SELECT COUNT(distinct t.topic_id) as total
+             FROM ' . TOPICS_TABLE . ' t
+             WHERE t.topic_last_post_time > ' . $user->data['user_lastvisit'] . '
+               AND t.topic_moved_id = 0
+               ' . str_replace(array('p.', 'post_'), array('t.', 'topic_'), $m_approve_fid_sql) . '
+               ' . ((sizeof($ex_fid_ary)) ? 'AND ' . $db->sql_in_set('t.forum_id', $ex_fid_ary, true) : '');
+        $result = $db->sql_query($sql);
+        $new_posts_count = (int) $db->sql_fetchfield('total');
+
+        // your post number
+        $sql = "SELECT user_posts
+         FROM " . USERS_TABLE . "
+         WHERE user_id = " . $user->data['user_id'];
+        $result = $db->sql_query($sql);
+        $you_posts_count = (int) $db->sql_fetchfield('user_posts');
+        
+        // unread posts
+        $sql_where = 'AND t.topic_moved_id = 0
+               ' . str_replace(array('p.', 'post_'), array('t.', 'topic_'), $m_approve_fid_sql) . '
+               ' . ((sizeof($ex_fid_ary)) ? 'AND ' . $db->sql_in_set('t.forum_id', $ex_fid_ary, true) : '');
+        $unread_list = array();
+        $unread_list = get_unread_topics($user->data['user_id'], $sql_where, 'ORDER BY t.topic_id DESC');
+        
+        if (!empty($unread_list))
+        {
+         $sql = 'SELECT COUNT(distinct t.topic_id) as total
+           FROM ' . TOPICS_TABLE . ' t
+           WHERE ' . $db->sql_in_set('t.topic_id', array_keys($unread_list));
+         $result = $db->sql_query($sql);
+         $unread_posts_count = (int) $db->sql_fetchfield('total');
+        }
+        else
+        {
+         $unread_posts_count = 0;
+        }
+
+       $template->assign_vars(array(
+            'L_NEW_POST'        => '<span class="badge text-bg-light rounded-pill align-text-bottom"><strong>' . $new_posts_count . '</strong></span>&nbsp;' . $user->lang['SEARCH_NEW'],
+            'L_NEW_POSTS'        => $user->lang['SEARCH_NEW'] . '&nbsp;<span class="badge text-bg-light rounded-pill align-text-bottom"><strong>' . $new_posts_count . '</strong></span>',
+            'L_UNREAD_POSTS'=>   $user->lang['SEARCH_UNREAD'] . '&nbsp;<span class="badge text-bg-light rounded-pill align-text-bottom"><strong>' . $unread_posts_count . '</strong></span>',
+            'L_SELF_POSTS'        => '<span class="badge text-bg-light rounded-pill align-text-bottom"><strong>' . $you_posts_count . '</strong></span>&nbsp;' . $user->lang['SEARCH_SELF'],
+            ));
+    }
+    //
+    // - new posts since last visit & you post number
+    //
+	
 	// Which timezone?
 	$tz = ($user->data['user_id'] != ANONYMOUS) ? strval(doubleval($user->data['user_timezone'])) : strval(doubleval($config['board_timezone']));
 
@@ -4674,6 +4748,7 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 		'U_SEARCH'				=> append_sid("{$phpbb_root_path}search.$phpEx"),
 		'U_REGISTER'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=register'),
 		'U_PROFILE'				=> append_sid("{$phpbb_root_path}ucp.$phpEx"),
+		'U_OWN_PROFILE'			=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=viewprofile&amp;u=' . $user->data['user_id']),
 		'U_MODCP'				=> append_sid("{$phpbb_root_path}mcp.$phpEx", false, true, $user->session_id),
 		'U_FAQ'					=> append_sid("{$phpbb_root_path}faq.$phpEx"),
 		'U_SEARCH_SELF'			=> append_sid("{$phpbb_root_path}search.$phpEx", 'search_id=egosearch'),
@@ -4949,5 +5024,3 @@ function phpbb_user_session_handler()
 
 	return;
 }
-
-?>

@@ -1305,9 +1305,9 @@ function rebuild_header($check_ary)
 		$_types = array('u', 'g');
 		foreach ($_types as $type)
 		{
-			if (sizeof($$type))
+			if (sizeof(${$type}))
 			{
-				foreach ($$type as $id)
+				foreach (${$type} as $id)
 				{
 					$address[$type][$id] = $check_type;
 				}
@@ -1872,9 +1872,9 @@ function pm_notification($mode, $author, $recipients, $subject, $message, $msg_i
 		$messenger->im($addr['jabber'], $addr['name']);
 
 		$messenger->assign_vars(array(
-			'SUBJECT'		=> htmlspecialchars_decode($subject),
-			'AUTHOR_NAME'	=> htmlspecialchars_decode($author),
-			'USERNAME'		=> htmlspecialchars_decode($addr['name']),
+			'SUBJECT'		=> htmlspecialchars_decode($subject, ENT_COMPAT),
+			'AUTHOR_NAME'	=> htmlspecialchars_decode($author, ENT_COMPAT),
+			'USERNAME'		=> htmlspecialchars_decode($addr['name'], ENT_COMPAT),
 
 			'U_INBOX'			=> generate_board_url() . "/ucp.$phpEx?i=pm&folder=inbox",
 			'U_VIEW_MESSAGE'	=> generate_board_url() . "/ucp.$phpEx?i=pm&mode=view&p=$msg_id",
@@ -2176,5 +2176,3 @@ function get_recipient_strings($pm_by_id)
 
 	return $address_list;
 }
-
-?>

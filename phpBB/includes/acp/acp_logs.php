@@ -106,7 +106,7 @@ class acp_logs
 		$sql_sort = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
 
 		$keywords = utf8_normalize_nfc(request_var('keywords', '', true));
-		$keywords_param = !empty($keywords) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords)) : '';
+		$keywords_param = !empty($keywords) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords, ENT_COMPAT)) : '';
 
 		$l_title = $user->lang['ACP_' . strtoupper($mode) . '_LOGS'];
 		$l_title_explain = $user->lang['ACP_' . strtoupper($mode) . '_LOGS_EXPLAIN'];
@@ -172,5 +172,3 @@ class acp_logs
 		}
 	}
 }
-
-?>

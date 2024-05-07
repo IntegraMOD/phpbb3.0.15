@@ -1,0 +1,194 @@
+.lightstyle { display:none; }
+.darkstyle { display:block !important; }
+
+/* nav menu */
+.menue {
+	background: #2E3539;
+	height: 45px;
+	padding-left: 18px;
+	border-radius: 1px;
+}
+.menue ul, .menue li {
+	margin: 0 auto;
+	padding: 0;
+	list-style: none
+}
+.menue ul {
+	width: 100%;
+	text-align: left;
+}
+.menue li {
+	display: inline-block;
+	position: relative;
+}
+.menue a {
+	display: block;
+	line-height: 45px;
+	padding: 0 14px;
+	text-decoration: none;
+	color: #FFFFFF;
+	font-size: 16px;
+}
+.menue a.dropdown-arrow:after {
+	content: "\25BF";
+	margin-left: 5px;
+}
+.menue li a:hover {
+	color: #43A6DF;
+	background: #494C4D;
+}
+.menue input {
+	display: none;
+	margin: 0;
+	padding: 0;
+	height: 45px;
+	width: 100%;
+	opacity: 0;
+	cursor: pointer
+}
+.menue label {
+	display: none;
+	line-height: 45px;
+	text-align: center;
+	position: absolute;
+	left: 35px
+}
+.menue label:before {
+	font-size: 1.6em;
+	color: #FFFFFF;
+	content: "\2261"; 
+	margin-left: 20px;
+}
+.menue ul.sub-menus{
+	height: auto;
+	overflow: hidden;
+	width: 200px;
+	background: #E9E9EF;
+	position: absolute;
+	z-index: 99;
+	display: none;
+}
+.menue ul.sub-menus li {
+	display: block;
+	text-align: left;
+	width: 100%;
+}
+.menue ul.sub-menus a {
+	color: #444444;
+	font-size: 16px;
+}
+.menue li:hover ul.sub-menus {
+	display: block
+}
+.menue ul.sub-menus a:hover{
+	background: #5A5A5A;
+	color: #FFFFFF;
+}
+@media screen and (max-width: 800px){
+	.menue {position:relative}
+	.menue ul {background:#E9E9EF;position:absolute;top:100%;right:0;left:0;z-index:3;height:auto;display:none;text-align:left;}
+	.menue ul.sub-menus {width:100%;position:static;}
+	.menue ul.sub-menus a {padding-left:30px;}
+	.menue li {display:block;float:none;width:auto;}
+	.menue input, .menue label {position:absolute;top:0;left:0;display:block}
+	.menue input {z-index:4}
+	.menue input:checked + label {color:#FFFFFF}
+	.menue input:checked + label:before {content:"\00d7"}
+	.menue input:checked ~ ul {display:block}
+}
+
+.activetab a {
+	color: #2598DA !important;
+	background: #494C4D;	
+}
+
+.uname {
+	color: #DA2E2B !important;
+}
+	
+.img-span {
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+h6 {
+	display : inline-block;
+	font-size : 12px;
+	font-family : helvetica, sans-serif;
+	font-weight : 800;
+}
+
+h6, h6:hover {
+	font-weight : 800;
+}
+
+.badge {
+	background-color: #06B0F3;
+	color: #ffffff;	
+	border-radius: 10px;
+	opacity: 0.8;
+	text-align: center;
+	white-space: nowrap;
+	font-size: 10px;
+	line-height: 1;
+	display: inline-block;
+	margin-left: 3px;
+	vertical-align: 3px;
+	position: relative;
+	top: 3px;
+	padding: 4px 6px;
+}
+
+.badge.hidden {
+	display: none;
+}
+
+
+
+
+
+.rb { 
+	font-size: 1.5em;
+    border: 4px solid #DCE0D8;
+    border-radius: 8px;
+    background:#F5F1EE;
+	padding:1em;
+}
+
+.column_resp p, .column_rev p, .column_home p {
+	margin: 6px;
+}
+
+ /* For mobile phones: */
+
+.row_resp, .row_rev, .row_home {
+	display:flex;
+	flex-wrap: wrap;
+}
+
+ [class*="column_"] {
+    width: 100%;
+ }
+
+
+@media only screen and (min-width: 768px) {
+	.column_resp, .column_home {
+		width: 47%;
+		margin: 2px;
+	}
+
+	.column_chat {
+		width: 67%;
+		margin: 2px;
+	}
+
+	.column_cal {
+		width: 32%;
+		margin: 2px;
+	}	
+	.column_rev {
+		width: 23%;
+		margin: .5em;
+	}
+}

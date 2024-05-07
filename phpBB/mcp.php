@@ -34,7 +34,7 @@ $id = request_var('i', '');
 if (isset($_REQUEST['mode']) && is_array($_REQUEST['mode']))
 {
 	$mode = request_var('mode', array(''));
-	list($mode, ) = each($mode);
+	$mode = key($mode);
 }
 else
 {
@@ -62,9 +62,9 @@ if ($forum_action !== '' && !empty($_POST['sort']))
 	$action = $forum_action;
 }
 
-if (sizeof($action_ary))
+if (count($action_ary))
 {
-	list($action, ) = each($action_ary);
+	$action = key($action_ary);
 }
 unset($action_ary);
 

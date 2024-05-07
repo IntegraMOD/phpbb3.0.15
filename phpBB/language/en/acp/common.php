@@ -37,6 +37,9 @@ if (empty($lang) || !is_array($lang))
 
 // Common
 $lang = array_merge($lang, array(
+	'ACP_FILE_BACKUP'			=> 'File backup',
+	'LOG_ERROR_EMAIL'			=> '<strong>E-mail error</strong><br />» %s',
+
 	'ACP_ADMINISTRATORS'		=> 'Administrators',
 	'ACP_ADMIN_LOGS'			=> 'Admin log',
 	'ACP_ADMIN_ROLES'			=> 'Admin roles',
@@ -151,6 +154,7 @@ $lang = array_merge($lang, array(
 
 	'ACP_FEED'					=> 'Feed management',
 	'ACP_FEED_SETTINGS'			=> 'Feed settings',
+	'ACP_FILES'					=> 'Files',
 
 	'ACP_SEARCH'				=> 'Search configuration',
 	'ACP_SEARCH_INDEX'			=> 'Search index',
@@ -748,5 +752,3 @@ $lang = array_merge($lang, array(
 	'LOG_WORD_DELETE'		=> '<strong>Deleted word censor</strong><br />» %s',
 	'LOG_WORD_EDIT'			=> '<strong>Edited word censor</strong><br />» %s',
 ));
-
-?>

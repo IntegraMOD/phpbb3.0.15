@@ -203,7 +203,7 @@ class ucp_register
 			}
 
 			// Replace "error" strings with their real, localised form
-			$error = preg_replace('#^([A-Z_]+)$#e', "(!empty(\$user->lang['\\1'])) ? \$user->lang['\\1'] : '\\1'", $error);
+			$error = array_map(array($user, 'lang'), $error);
 
 			if ($config['enable_confirm'])
 			{
@@ -353,9 +353,9 @@ class ucp_register
 					$messenger->anti_abuse_headers($config, $user);
 
 					$messenger->assign_vars(array(
-						'WELCOME_MSG'	=> htmlspecialchars_decode(sprintf($user->lang['WELCOME_SUBJECT'], $config['sitename'])),
-						'USERNAME'		=> htmlspecialchars_decode($data['username']),
-						'PASSWORD'		=> htmlspecialchars_decode($data['new_password']),
+						'WELCOME_MSG'	=> htmlspecialchars_decode(sprintf($user->lang['WELCOME_SUBJECT'], $config['sitename']), ENT_COMPAT),
+						'USERNAME'		=> htmlspecialchars_decode($data['username'], ENT_COMPAT),
+						'PASSWORD'		=> htmlspecialchars_decode($data['new_password'], ENT_COMPAT),
 						'U_ACTIVATE'	=> "$server_url/ucp.$phpEx?mode=activate&u=$user_id&k=$user_actkey")
 					);
 
@@ -396,7 +396,7 @@ class ucp_register
 							$messenger->im($row['user_jabber'], $row['username']);
 
 							$messenger->assign_vars(array(
-								'USERNAME'			=> htmlspecialchars_decode($data['username']),
+								'USERNAME'			=> htmlspecialchars_decode($data['username'], ENT_COMPAT),
 								'U_USER_DETAILS'	=> "$server_url/memberlist.$phpEx?mode=viewprofile&u=$user_id",
 								'U_ACTIVATE'		=> "$server_url/ucp.$phpEx?mode=activate&u=$user_id&k=$user_actkey")
 							);
@@ -482,5 +482,3 @@ class ucp_register
 		$this->page_title = 'UCP_REGISTRATION';
 	}
 }
-
-?>

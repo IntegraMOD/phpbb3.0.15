@@ -26,7 +26,7 @@ class mcp_notes
 	var $p_master;
 	var $u_action;
 
-	function mcp_notes(&$p_master)
+	function __construct(&$p_master)
 	{
 		$this->p_master = &$p_master;
 	}
@@ -40,7 +40,7 @@ class mcp_notes
 
 		if (is_array($action))
 		{
-			list($action, ) = each($action);
+			$action = key($action);
 		}
 
 		$this->page_title = 'MCP_NOTES';
@@ -194,7 +194,7 @@ class mcp_notes
 		$sql_sort = $sort_by_sql[$sk] . ' ' . (($sd == 'd') ? 'DESC' : 'ASC');
 
 		$keywords = utf8_normalize_nfc(request_var('keywords', '', true));
-		$keywords_param = !empty($keywords) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords)) : '';
+		$keywords_param = !empty($keywords) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords, ENT_COMPAT)) : '';
 
 		$log_data = array();
 		$log_count = 0;
@@ -247,5 +247,3 @@ class mcp_notes
 	}
 
 }
-
-?>

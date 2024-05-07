@@ -197,12 +197,12 @@ class acp_email
 
 					$messenger->anti_abuse_headers($config, $user);
 
-					$messenger->subject(htmlspecialchars_decode($subject));
+					$messenger->subject(htmlspecialchars_decode($subject, ENT_COMPAT));
 					$messenger->set_mail_priority($priority);
 
 					$messenger->assign_vars(array(
 						'CONTACT_EMAIL' => $config['board_contact'],
-						'MESSAGE'		=> htmlspecialchars_decode($message))
+						'MESSAGE'		=> htmlspecialchars_decode($message, ENT_COMPAT))
 					);
 
 					if (!($messenger->send($used_method)))
@@ -281,5 +281,3 @@ class acp_email
 
 	}
 }
-
-?>

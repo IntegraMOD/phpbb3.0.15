@@ -54,7 +54,7 @@ function init_ldap()
 
 	if ($config['ldap_user'] || $config['ldap_password'])
 	{
-		if (!@ldap_bind($ldap, htmlspecialchars_decode($config['ldap_user']), htmlspecialchars_decode($config['ldap_password'])))
+		if (!@ldap_bind($ldap, htmlspecialchars_decode($config['ldap_user'], ENT_COMPAT), htmlspecialchars_decode($config['ldap_password'], ENT_COMPAT)))
 		{
 			return $user->lang['LDAP_INCORRECT_USER_PASSWORD'];
 		}
@@ -63,11 +63,11 @@ function init_ldap()
 	// ldap_connect only checks whether the specified server is valid, so the connection might still fail
 	$search = @ldap_search(
 		$ldap,
-		htmlspecialchars_decode($config['ldap_base_dn']),
+		htmlspecialchars_decode($config['ldap_base_dn'], ENT_COMPAT),
 		ldap_user_filter($user->data['username']),
 		(empty($config['ldap_email'])) ?
-			array(htmlspecialchars_decode($config['ldap_uid'])) :
-			array(htmlspecialchars_decode($config['ldap_uid']), htmlspecialchars_decode($config['ldap_email'])),
+			array(htmlspecialchars_decode($config['ldap_uid'], ENT_COMPAT)) :
+			array(htmlspecialchars_decode($config['ldap_uid'], ENT_COMPAT), htmlspecialchars_decode($config['ldap_email'], ENT_COMPAT)),
 		0,
 		1
 	);
@@ -87,7 +87,7 @@ function init_ldap()
 		return sprintf($user->lang['LDAP_NO_IDENTITY'], $user->data['username']);
 	}
 
-	if (!empty($config['ldap_email']) && !isset($result[0][htmlspecialchars_decode($config['ldap_email'])]))
+	if (!empty($config['ldap_email']) && !isset($result[0][htmlspecialchars_decode($config['ldap_email'], ENT_COMPAT)]))
 	{
 		return $user->lang['LDAP_NO_EMAIL'];
 	}
@@ -154,7 +154,7 @@ function login_ldap(&$username, &$password)
 
 	if ($config['ldap_user'] || $config['ldap_password'])
 	{
-		if (!@ldap_bind($ldap, htmlspecialchars_decode($config['ldap_user']), htmlspecialchars_decode($config['ldap_password'])))
+		if (!@ldap_bind($ldap, htmlspecialchars_decode($config['ldap_user'], ENT_COMPAT), htmlspecialchars_decode($config['ldap_password'], ENT_COMPAT)))
 		{
 			return array(
 				'status'		=> LOGIN_ERROR_EXTERNAL_AUTH,
@@ -166,11 +166,11 @@ function login_ldap(&$username, &$password)
 
 	$search = @ldap_search(
 		$ldap,
-		htmlspecialchars_decode($config['ldap_base_dn']),
+		htmlspecialchars_decode($config['ldap_base_dn'], ENT_COMPAT),
 		ldap_user_filter($username),
 		(empty($config['ldap_email'])) ?
-			array(htmlspecialchars_decode($config['ldap_uid'])) :
-			array(htmlspecialchars_decode($config['ldap_uid']), htmlspecialchars_decode($config['ldap_email'])),
+			array(htmlspecialchars_decode($config['ldap_uid'], ENT_COMPAT)) :
+			array(htmlspecialchars_decode($config['ldap_uid'], ENT_COMPAT), htmlspecialchars_decode($config['ldap_email'], ENT_COMPAT)),
 		0,
 		1
 	);
@@ -179,7 +179,7 @@ function login_ldap(&$username, &$password)
 
 	if (is_array($ldap_result) && sizeof($ldap_result) > 1)
 	{
-		if (@ldap_bind($ldap, $ldap_result[0]['dn'], htmlspecialchars_decode($password)))
+		if (@ldap_bind($ldap, $ldap_result[0]['dn'], htmlspecialchars_decode($password, ENT_COMPAT)))
 		{
 			@ldap_close($ldap);
 
@@ -282,7 +282,7 @@ function ldap_user_filter($username)
 {
 	global $config;
 
-	$filter = '(' . $config['ldap_uid'] . '=' . phpbb_ldap_escape(htmlspecialchars_decode($username)) . ')';
+	$filter = '(' . $config['ldap_uid'] . '=' . phpbb_ldap_escape(htmlspecialchars_decode($username, ENT_COMPAT)) . ')';
 	if ($config['ldap_user_filter'])
 	{
 		$_filter = ($config['ldap_user_filter'][0] == '(' && substr($config['ldap_user_filter'], -1) == ')') ? $config['ldap_user_filter'] : "({$config['ldap_user_filter']})";
@@ -349,5 +349,3 @@ function acp_ldap(&$new)
 		'config'	=> array('ldap_server', 'ldap_port', 'ldap_base_dn', 'ldap_uid', 'ldap_user_filter', 'ldap_email', 'ldap_user', 'ldap_password')
 	);
 }
-
-?>

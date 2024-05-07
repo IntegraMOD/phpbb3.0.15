@@ -101,8 +101,8 @@ class ucp_remind
 			$messenger->anti_abuse_headers($config, $user);
 
 			$messenger->assign_vars(array(
-				'USERNAME'		=> htmlspecialchars_decode($user_row['username']),
-				'PASSWORD'		=> htmlspecialchars_decode($user_password),
+				'USERNAME'		=> htmlspecialchars_decode($user_row['username'], ENT_COMPAT),
+				'PASSWORD'		=> htmlspecialchars_decode($user_password, ENT_COMPAT),
 				'U_ACTIVATE'	=> "$server_url/ucp.$phpEx?mode=activate&u={$user_row['user_id']}&k=$user_actkey")
 			);
 
@@ -124,5 +124,3 @@ class ucp_remind
 		$this->page_title = 'UCP_REMIND';
 	}
 }
-
-?>

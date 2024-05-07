@@ -26,7 +26,7 @@ class mcp_queue
 	var $p_master;
 	var $u_action;
 
-	function mcp_queue(&$p_master)
+	function __construct(&$p_master)
 	{
 		$this->p_master = &$p_master;
 	}
@@ -641,9 +641,9 @@ function approve_post($post_id_list, $id, $mode)
 				$messenger->im($post_data['user_jabber'], $post_data['username']);
 
 				$messenger->assign_vars(array(
-					'USERNAME'		=> htmlspecialchars_decode($post_data['username']),
-					'POST_SUBJECT'	=> htmlspecialchars_decode(censor_text($post_data['post_subject'])),
-					'TOPIC_TITLE'	=> htmlspecialchars_decode(censor_text($post_data['topic_title'])),
+					'USERNAME'		=> htmlspecialchars_decode($post_data['username'], ENT_COMPAT),
+					'POST_SUBJECT'	=> htmlspecialchars_decode(censor_text($post_data['post_subject']), ENT_COMPAT),
+					'TOPIC_TITLE'	=> htmlspecialchars_decode(censor_text($post_data['topic_title']), ENT_COMPAT),
 
 					'U_VIEW_TOPIC'	=> generate_board_url() . "/viewtopic.$phpEx?f={$post_data['forum_id']}&t={$post_data['topic_id']}&e=0",
 					'U_VIEW_POST'	=> generate_board_url() . "/viewtopic.$phpEx?f={$post_data['forum_id']}&t={$post_data['topic_id']}&p=$post_id&e=$post_id")
@@ -929,10 +929,10 @@ function disapprove_post($post_id_list, $id, $mode)
 				$messenger->im($post_data['user_jabber'], $post_data['username']);
 
 				$messenger->assign_vars(array(
-					'USERNAME'		=> htmlspecialchars_decode($post_data['username']),
-					'REASON'		=> htmlspecialchars_decode($email_disapprove_reason),
-					'POST_SUBJECT'	=> htmlspecialchars_decode(censor_text($post_data['post_subject'])),
-					'TOPIC_TITLE'	=> htmlspecialchars_decode(censor_text($post_data['topic_title'])))
+					'USERNAME'		=> htmlspecialchars_decode($post_data['username'], ENT_COMPAT),
+					'REASON'		=> htmlspecialchars_decode($email_disapprove_reason, ENT_COMPAT),
+					'POST_SUBJECT'	=> htmlspecialchars_decode(censor_text($post_data['post_subject']), ENT_COMPAT),
+					'TOPIC_TITLE'	=> htmlspecialchars_decode(censor_text($post_data['topic_title']), ENT_COMPAT))
 				);
 
 				$messenger->send($post_data['user_notify_type']);
@@ -997,5 +997,3 @@ function disapprove_post($post_id_list, $id, $mode)
 		trigger_error($user->lang[$success_msg] . '<br /><br />' . sprintf($user->lang['RETURN_PAGE'], "<a href=\"$redirect\">", '</a>'));
 	}
 }
-
-?>

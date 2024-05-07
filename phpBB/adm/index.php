@@ -634,5 +634,3 @@ function validate_range($value_ary, &$error)
 		}
 	}
 }
-
-?>

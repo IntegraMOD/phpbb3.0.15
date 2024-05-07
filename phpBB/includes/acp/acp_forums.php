@@ -1945,5 +1945,3 @@ class acp_forums
 	}
 
 }
-
-?>

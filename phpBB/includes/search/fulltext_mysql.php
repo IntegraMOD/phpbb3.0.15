@@ -36,7 +36,7 @@ class fulltext_mysql extends search_backend
 	var $pcre_properties = false;
 	var $mbstring_regex = false;
 
-	function fulltext_mysql(&$error)
+	public function __construct(&$error)
 	{
 		global $config;
 
@@ -136,7 +136,7 @@ class fulltext_mysql extends search_backend
 		}
 
 		// Filter out as above
-		$split_keywords = preg_replace("#[\n\r\t]+#", ' ', trim(htmlspecialchars_decode($keywords)));
+		$split_keywords = preg_replace("#[\n\r\t]+#", ' ', trim(htmlspecialchars_decode($keywords, ENT_COMPAT)));
 
 		// Split words
 		if ($this->pcre_properties)
@@ -473,7 +473,7 @@ class fulltext_mysql extends search_backend
 
 		$sql = "SELECT $sql_select
 			FROM $sql_from$sql_sort_table" . POSTS_TABLE . " p
-			WHERE MATCH ($sql_match) AGAINST ('" . $db->sql_escape(htmlspecialchars_decode($this->search_query)) . "' IN BOOLEAN MODE)
+			WHERE MATCH ($sql_match) AGAINST ('" . $db->sql_escape(htmlspecialchars_decode($this->search_query, ENT_COMPAT)) . "' IN BOOLEAN MODE)
 				$sql_where_options
 			ORDER BY $sql_sort";
 		$result = $db->sql_query_limit($sql, $config['search_block_size'], $start);
@@ -939,5 +939,3 @@ class fulltext_mysql extends search_backend
 		);
 	}
 }
-
-?>

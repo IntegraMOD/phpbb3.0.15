@@ -366,5 +366,3 @@ class dbal_sqlite extends dbal
 		}
 	}
 }
-
-?>

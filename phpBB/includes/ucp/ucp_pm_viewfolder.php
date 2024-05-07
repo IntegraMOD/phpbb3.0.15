@@ -552,5 +552,3 @@ function get_pm_from($folder_id, $folder, $user_id)
 		'rowset'	=> $rowset
 	);
 }
-
-?>

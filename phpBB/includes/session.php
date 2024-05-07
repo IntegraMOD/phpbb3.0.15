@@ -84,7 +84,7 @@ class session
 
 		// basenamed page name (for example: index.php)
 		$page_name = (substr($script_name, -1, 1) == '/') ? '' : basename($script_name);
-		$page_name = urlencode(htmlspecialchars($page_name));
+		$page_name = urlencode(htmlspecialchars($page_name, ENT_COMPAT));
 
 		// current directory within the phpBB root (for example: adm)
 		$root_dirs = explode('/', str_replace('\\', '/', phpbb_realpath($root_path)));
@@ -128,8 +128,8 @@ class session
 			'page_dir'			=> $page_dir,
 
 			'query_string'		=> $query_string,
-			'script_path'		=> str_replace(' ', '%20', htmlspecialchars($script_path)),
-			'root_script_path'	=> str_replace(' ', '%20', htmlspecialchars($root_script_path)),
+			'script_path'		=> str_replace(' ', '%20', htmlspecialchars($script_path, ENT_COMPAT)),
+			'root_script_path'	=> str_replace(' ', '%20', htmlspecialchars($root_script_path, ENT_COMPAT)),
 
 			'page'				=> $page,
 			'forum'				=> $forum_id,
@@ -213,9 +213,9 @@ class session
 		$this->time_now				= time();
 		$this->cookie_data			= array('u' => 0, 'k' => '');
 		$this->update_session_page	= $update_session_page;
-		$this->browser				= (!empty($_SERVER['HTTP_USER_AGENT'])) ? htmlspecialchars((string) $_SERVER['HTTP_USER_AGENT']) : '';
-		$this->referer				= (!empty($_SERVER['HTTP_REFERER'])) ? htmlspecialchars((string) $_SERVER['HTTP_REFERER']) : '';
-		$this->forwarded_for		= (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) ? htmlspecialchars((string) $_SERVER['HTTP_X_FORWARDED_FOR']) : '';
+		$this->browser				= (!empty($_SERVER['HTTP_USER_AGENT'])) ? htmlspecialchars(strval($_SERVER['HTTP_USER_AGENT']), ENT_COMPAT) : '';
+		$this->referer				= (!empty($_SERVER['HTTP_REFERER'])) ? htmlspecialchars(strval($_SERVER['HTTP_REFERER']), ENT_COMPAT) : '';
+		$this->forwarded_for		= (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) ? htmlspecialchars(strval($_SERVER['HTTP_X_FORWARDED_FOR']), ENT_COMPAT) : '';
 
 		$this->host					= $this->extract_current_hostname();
 		$this->page					= $this->extract_current_page($phpbb_root_path);
@@ -463,7 +463,7 @@ class session
 					{
 						if ($referer_valid)
 						{
-							add_log('critical', 'LOG_IP_BROWSER_FORWARDED_CHECK', $u_ip, $s_ip, $u_browser, $s_browser, htmlspecialchars($u_forwarded_for), htmlspecialchars($s_forwarded_for));
+							add_log('critical', 'LOG_IP_BROWSER_FORWARDED_CHECK', $u_ip, $s_ip, $u_browser, $s_browser, htmlspecialchars($u_forwarded_for, ENT_COMPAT), htmlspecialchars($s_forwarded_for, ENT_COMPAT));
 						}
 						else
 						{
@@ -622,7 +622,7 @@ class session
 		// User does not exist
 		// User is inactive
 		// User is bot
-		if (!sizeof($this->data) || !is_array($this->data))
+		if (!is_array($this->data) || !count($this->data))
 		{
 			$this->cookie_data['k'] = '';
 			$this->cookie_data['u'] = ($bot) ? $bot : ANONYMOUS;
@@ -1465,7 +1465,7 @@ class session
 			return true;
 		}
 
-		$host = htmlspecialchars($this->host);
+		$host = htmlspecialchars($this->host, ENT_COMPAT);
 		$ref = substr($this->referer, strpos($this->referer, '://') + 3);
 
 		if (!(stripos($ref, $host) === 0) && (!$config['force_server_vars'] || !(stripos($ref, $config['server_name']) === 0)))
@@ -1532,7 +1532,7 @@ class user extends session
 	/**
 	* Constructor to set the lang path
 	*/
-	function user()
+	function __construct()
 	{
 		global $phpbb_root_path;
 
@@ -1696,7 +1696,7 @@ class user extends session
 
 			if (is_string($default_value))
 			{
-				$this->theme[$key] = htmlspecialchars($this->theme[$key]);
+				$this->theme[$key] = htmlspecialchars($this->theme[$key], ENT_COMPAT);
 			}
 		}
 
@@ -2469,5 +2469,3 @@ class user extends session
 		return $forum_ids;
 	}
 }
-
-?>

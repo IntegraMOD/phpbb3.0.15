@@ -25,7 +25,7 @@ class auth_admin extends auth
 	/**
 	* Init auth settings
 	*/
-	function auth_admin()
+	function __construct()
 	{
 		global $db, $cache;
 
@@ -182,7 +182,7 @@ class auth_admin extends auth
 		}
 
 		// Defining the user-function here to save some memory
-		$return_acl_fill = create_function('$value', 'return ' . $acl_fill . ';');
+		$return_acl_fill = function() use ($acl_fill) {return $acl_fill;};
 
 		// Actually fill the gaps
 		if (sizeof($hold_ary))
@@ -458,16 +458,22 @@ class auth_admin extends auth
 				);
 
 				@reset($content_array);
-				while (list($ug_id, $ug_array) = each($content_array))
+				while (!is_null($ug_id = key($content_array)))
 				{
+					$ug_array = current($content_array);
+					next($content_array);
+
 					// Build role dropdown options
 					$current_role_id = (isset($cur_roles[$ug_id][$forum_id])) ? $cur_roles[$ug_id][$forum_id] : 0;
 
 					$s_role_options = '';
 
 					@reset($roles);
-					while (list($role_id, $role_row) = each($roles))
+					while (!is_null($role_id = key($roles)))
 					{
+						$role_row = current($roles);
+						next($roles);
+
 						$role_description = (!empty($user->lang[$role_row['role_description']])) ? $user->lang[$role_row['role_description']] : nl2br($role_row['role_description']);
 						$role_name = (!empty($user->lang[$role_row['role_name']])) ? $user->lang[$role_row['role_name']] : $role_row['role_name'];
 
@@ -477,7 +483,7 @@ class auth_admin extends auth
 
 					if ($s_role_options)
 					{
-						$s_role_options = '<option value="0"' . ((!$current_role_id) ? ' selected="selected"' : '') . ' title="' . htmlspecialchars($user->lang['NO_ROLE_ASSIGNED_EXPLAIN']) . '">' . $user->lang['NO_ROLE_ASSIGNED'] . '</option>' . $s_role_options;
+						$s_role_options = '<option value="0"' . ((!$current_role_id) ? ' selected="selected"' : '') . ' title="' . htmlspecialchars($user->lang['NO_ROLE_ASSIGNED_EXPLAIN'], ENT_COMPAT) . '">' . $user->lang['NO_ROLE_ASSIGNED'] . '</option>' . $s_role_options;
 					}
 
 					if (!$current_role_id && $mode != 'view')
@@ -544,16 +550,22 @@ class auth_admin extends auth
 				);
 
 				@reset($content_array);
-				while (list($forum_id, $forum_array) = each($content_array))
+				while (!is_null($forum_id = key($content_array)))
 				{
+					$forum_array = current($content_array);
+					next($content_array);
+
 					// Build role dropdown options
 					$current_role_id = (isset($cur_roles[$ug_id][$forum_id])) ? $cur_roles[$ug_id][$forum_id] : 0;
 
 					$s_role_options = '';
 
 					@reset($roles);
-					while (list($role_id, $role_row) = each($roles))
+					while (!is_null($role_id = key($roles)))
 					{
+						$role_row = current($roles);
+						next($roles);
+
 						$role_description = (!empty($user->lang[$role_row['role_description']])) ? $user->lang[$role_row['role_description']] : nl2br($role_row['role_description']);
 						$role_name = (!empty($user->lang[$role_row['role_name']])) ? $user->lang[$role_row['role_name']] : $role_row['role_name'];
 
@@ -563,7 +575,7 @@ class auth_admin extends auth
 
 					if ($s_role_options)
 					{
-						$s_role_options = '<option value="0"' . ((!$current_role_id) ? ' selected="selected"' : '') . ' title="' . htmlspecialchars($user->lang['NO_ROLE_ASSIGNED_EXPLAIN']) . '">' . $user->lang['NO_ROLE_ASSIGNED'] . '</option>' . $s_role_options;
+						$s_role_options = '<option value="0"' . ((!$current_role_id) ? ' selected="selected"' : '') . ' title="' . htmlspecialchars($user->lang['NO_ROLE_ASSIGNED_EXPLAIN'], ENT_COMPAT) . '">' . $user->lang['NO_ROLE_ASSIGNED'] . '</option>' . $s_role_options;
 					}
 
 					if (!$current_role_id && $mode != 'view')
@@ -787,7 +799,7 @@ class auth_admin extends auth
 
 		// Because we just changed the options and also purged the options cache, we instantly update/regenerate it for later calls to succeed.
 		$this->acl_options = array();
-		$this->auth_admin();
+		parent::__construct();
 
 		return true;
 	}
@@ -1099,13 +1111,16 @@ class auth_admin extends auth
 	* Assign category to template
 	* used by display_mask()
 	*/
-	function assign_cat_array(&$category_array, $tpl_cat, $tpl_mask, $ug_id, $forum_id, $show_trace = false, $s_view)
+	function assign_cat_array(&$category_array, $tpl_cat, $tpl_mask, $ug_id, $forum_id, $show_trace = false, $s_view = false)
 	{
 		global $template, $user, $phpbb_admin_path, $phpEx;
 
 		@reset($category_array);
-		while (list($cat, $cat_array) = each($category_array))
+		while (!is_null($cat = key($category_array)))
 		{
+			$cat_array = current($category_array);
+			next($category_array);
+
 			$template->assign_block_vars($tpl_cat, array(
 				'S_YES'		=> ($cat_array['S_YES'] && !$cat_array['S_NEVER'] && !$cat_array['S_NO']) ? true : false,
 				'S_NEVER'	=> ($cat_array['S_NEVER'] && !$cat_array['S_YES'] && !$cat_array['S_NO']) ? true : false,
@@ -1117,7 +1132,7 @@ class auth_admin extends auth
 			/*	Sort permissions by name (more naturaly and user friendly than sorting by a primary key)
 			*	Commented out due to it's memory consumption and time needed
 			*
-			$key_array = array_intersect(array_keys($user->lang), array_map(create_function('$a', 'return "acl_" . $a;'), array_keys($cat_array['permissions'])));
+			$key_array = array_intersect(array_keys($user->lang), array_map(function($a){return "acl_$a";}, array_keys($cat_array['permissions'])));
 			$values_array = $cat_array['permissions'];
 
 			$cat_array['permissions'] = array();
@@ -1130,8 +1145,11 @@ class auth_admin extends auth
 			unset($key_array, $values_array);
 */
 			@reset($cat_array['permissions']);
-			while (list($permission, $allowed) = each($cat_array['permissions']))
+			while (!is_null($permission = key($cat_array['permissions'])))
 			{
+				$allowed = current($cat_array['permissions']);
+				next($cat_array['permissions']);
+
 				if ($s_view)
 				{
 					$template->assign_block_vars($tpl_cat . '.' . $tpl_mask, array(
@@ -1190,8 +1208,11 @@ class auth_admin extends auth
 			ksort($permissions);
 
 			@reset($permissions);
-			while (list($permission, $auth_setting) = each($permissions))
+			while (!is_null($permission = key($permissions)))
 			{
+				$auth_setting = current($permissions);
+				next($permissions);
+
 				if (!isset($user->lang['acl_' . $permission]))
 				{
 					$user->lang['acl_' . $permission] = array(
@@ -1281,5 +1302,3 @@ class auth_admin extends auth
 		return true;
 	}
 }
-
-?>

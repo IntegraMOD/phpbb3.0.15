@@ -682,11 +682,9 @@ class template
 		if (!file_exists($file))
 		{
 			// trigger_error cannot be used here, as the output already started
-			echo 'template->_php_include(): File ' . htmlspecialchars($file) . ' does not exist or is empty';
+			echo 'template->_php_include(): File ' . htmlspecialchars($file, ENT_COMPAT) . ' does not exist or is empty';
 			return;
 		}
 		include($file);
 	}
 }
-
-?>

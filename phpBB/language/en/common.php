@@ -53,6 +53,9 @@ $lang = array_merge($lang, array(
 	'6_MONTHS'		=> '6 months',
 	'7_DAYS'		=> '7 days',
 
+	'QUOTE' 					=> 'quote',
+	'EDIT' 						=> 'edit',
+
 	'ACCOUNT_ALREADY_ACTIVATED'		=> 'Your account has already been activated.',
 	'ACCOUNT_DEACTIVATED'			=> 'Your account has been manually deactivated and is only able to be reactivated by an administrator.',
 	'ACCOUNT_NOT_ACTIVATED'			=> 'Your account has not been activated yet.',
@@ -301,6 +304,7 @@ $lang = array_merge($lang, array(
 	'LDAP_NO_SERVER_CONNECTION'			=> 'Could not connect to LDAP server.',
 	'LDAP_SEARCH_FAILED'				=> 'An error occurred while searching the LDAP directory.',
 	'LEGEND'							=> 'Legend',
+	'LINKS'                             => 'Links',
 	'LOCATION'							=> 'Location',
 	'LOCK_POST'							=> 'Lock post',
 	'LOCK_POST_EXPLAIN'					=> 'Prevent editing',
@@ -353,8 +357,8 @@ $lang = array_merge($lang, array(
 	'NEWEST_USER'				=> 'Our newest member <strong>%s</strong>',
 	'NEW_MESSAGE'				=> 'New message',
 	'NEW_MESSAGES'				=> 'New messages',
-	'NEW_PM'					=> '<strong>%d</strong> new message',
-	'NEW_PMS'					=> '<strong>%d</strong> new messages',
+	'NEW_PM'					=> '<span class="badge text-bg-light rounded-pill align-text-bottom"><strong>%d</strong></span> new message',
+	'NEW_PMS'					=> '<span class="badge text-bg-light rounded-pill align-text-bottom"><strong>%d</strong></span> new messages',
 	'NEW_POST'					=> 'New post',	// Not used anymore
 	'NEW_POSTS'					=> 'New posts',	// Not used anymore
 	'NEXT'						=> 'Next',		// Used in pagination
@@ -388,7 +392,7 @@ $lang = array_merge($lang, array(
 	'NO_MODE'					=> 'No mode specified.',
 	'NO_MODERATORS'				=> 'There are no moderators.',
 	'NO_NEW_MESSAGES'			=> 'No new messages',
-	'NO_NEW_PM'					=> '<strong>0</strong> new messages',
+	'NO_NEW_PM'					=> '<span class="badge text-bg-light rounded-pill align-text-bottom"><strong>0</strong></span> new messages',
 	'NO_NEW_POSTS'				=> 'No new posts',	// Not used anymore
 	'NO_ONLINE_USERS'			=> 'No registered users',
 	'NO_POSTS'					=> 'No posts',
@@ -456,7 +460,7 @@ $lang = array_merge($lang, array(
 	'POST_TIME'				=> 'Post time',
 	'POST_TOPIC'			=> 'Post a new topic',
 	'POST_UNAPPROVED'		=> 'This post is waiting for approval',
-	'POWERED_BY'			=> 'Powered by %s',
+	'POWERED_BY'		=> 'Forum powered by %s',
 	'PREVIEW'				=> 'Preview',
 	'PREVIOUS'				=> 'Previous',		// Used in pagination
 	'PREVIOUS_STEP'			=> 'Previous',
@@ -569,6 +573,8 @@ $lang = array_merge($lang, array(
 	'START_WATCHING_TOPIC'		=> 'Subscribe topic',
 	'STOP_WATCHING_FORUM'		=> 'Unsubscribe forum',
 	'STOP_WATCHING_TOPIC'		=> 'Unsubscribe topic',
+	'STYLE_LIGHT'				=> 'Light Style',
+	'STYLE_DARK'				=> 'Dark Style',
 	'SUBFORUM'					=> 'Subforum',
 	'SUBFORUMS'					=> 'Subforums',
 	'SUBJECT'					=> 'Subject',
@@ -899,5 +905,3 @@ $lang = array_merge($lang, array(
 	'default_dateformat'	=> 'D M d, Y g:i a', // Mon Jan 01, 2007 1:37 pm
 
 ));
-
-?>

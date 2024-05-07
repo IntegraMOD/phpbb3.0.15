@@ -32,6 +32,7 @@ class mcp_ban
 
 		// Include the admin banning interface...
 		include($phpbb_root_path . 'includes/acp/acp_ban.' . $phpEx);
+		$acp_ban = new acp_ban;
 
 		$bansubmit		= (isset($_POST['bansubmit'])) ? true : false;
 		$unbansubmit	= (isset($_POST['unbansubmit'])) ? true : false;
@@ -134,7 +135,7 @@ class mcp_ban
 			break;
 		}
 
-		acp_ban::display_ban_options($mode);
+		$acp_ban->display_ban_options($mode);
 
 		$template->assign_vars(array(
 			'L_TITLE'				=> $this->page_title,
@@ -215,5 +216,3 @@ class mcp_ban
 		}
 	}
 }
-
-?>
