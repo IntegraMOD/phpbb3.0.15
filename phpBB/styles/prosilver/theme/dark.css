@@ -1077,7 +1077,7 @@ input.disabled {
 	color: #666666;
 }
 
-.lightstyle { display:block; }
+.lightstyle { display:block !important; }
 .darkstyle { display:none !important; }
 
 

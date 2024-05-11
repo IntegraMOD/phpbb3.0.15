@@ -668,19 +668,15 @@ class fulltext_native extends search_backend
 			{
 				case 'mysql4':
 				case 'mysqli':
-
-					// 3.x does not support SQL_CALC_FOUND_ROWS
-					// $sql_array['SELECT'] = 'SQL_CALC_FOUND_ROWS ' . $sql_array['SELECT'];
+//					$sql_array['SELECT'] = 'SQL_CALC_FOUND_ROWS ' . $sql_array['SELECT'];
 					$is_mysql = true;
-
 				break;
 
 				case 'sqlite':
 					$sql_array_count['SELECT'] = ($type == 'posts') ? 'DISTINCT p.post_id' : 'DISTINCT p.topic_id';
 					$sql = 'SELECT COUNT(' . (($type == 'posts') ? 'post_id' : 'topic_id') . ') as total_results
 							FROM (' . $db->sql_build_query('SELECT', $sql_array_count) . ')';
-
-				// no break
+//				break;
 
 				default:
 					$sql_array_count['SELECT'] = ($type == 'posts') ? 'COUNT(DISTINCT p.post_id) AS total_results' : 'COUNT(DISTINCT p.topic_id) AS total_results';
@@ -915,7 +911,7 @@ class fulltext_native extends search_backend
 						if ($db->sql_layer == 'sqlite')
 						{
 							$sql = 'SELECT COUNT(topic_id) as total_results
-								FROM (SELECT DISTINCT t.topic_id';
+								FROM (ANY_VALUE t.topic_id';
 						}
 						else
 						{
@@ -988,7 +984,7 @@ class fulltext_native extends search_backend
 		if (!$total_results && $is_mysql)
 		{
 			// Count rows for the executed queries. Replace $select within $sql with SQL_CALC_FOUND_ROWS, and run it.
-			$sql = str_replace('SELECT ' . $select, 'SELECT DISTINCT SQL_CALC_FOUND_ROWS p.post_id', $sql);
+//			$sql = str_replace('SELECT ' . $select, 'ANY_VALUE SQL_CALC_FOUND_ROWS p.post_id', $sql);
 
 			$result = $db->sql_query($sql);
 			$db->sql_freeresult($result);
