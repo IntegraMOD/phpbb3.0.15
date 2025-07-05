@@ -73,6 +73,9 @@ INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_domain', ''
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_name', 'phpbb3');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_path', '/');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_secure', '0');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_samesite', 'Strict');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_partitioned', '1');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_secure_admin', '1');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('coppa_enable', '0');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('coppa_fax', '');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('coppa_mail', '');

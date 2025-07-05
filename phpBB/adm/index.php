@@ -50,6 +50,39 @@ $file_uploads	= (@ini_get('file_uploads') == '1' || strtolower(@ini_get('file_up
 $module_id		= request_var('i', '');
 $mode			= request_var('mode', '');
 
+
+/**
+* Add cookie security configuration to admin panel
+*/
+
+if ($mode == 'cookie')
+{
+    $display_vars = array(
+        'title' => 'ACP_COOKIE_SETTINGS',
+        'vars'  => array(
+            'legend1'               => 'ACP_COOKIE_SETTINGS',
+            'cookie_domain'         => array('lang' => 'COOKIE_DOMAIN', 'validate' => 'string', 'type' => 'text:40:100', 'explain' => true),
+            'cookie_name'           => array('lang' => 'COOKIE_NAME', 'validate' => 'string', 'type' => 'text:16:16', 'explain' => true),
+            'cookie_path'           => array('lang' => 'COOKIE_PATH', 'validate' => 'string', 'type' => 'text:40:100', 'explain' => true),
+            'cookie_secure'         => array('lang' => 'COOKIE_SECURE', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true),
+            'cookie_httponly'       => array('lang' => 'COOKIE_HTTPONLY', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true),
+            'cookie_samesite'       => array('lang' => 'COOKIE_SAMESITE', 'validate' => 'string', 'type' => 'select', 'method' => 'select_samesite', 'explain' => true),
+            'cookie_partitioned'    => array('lang' => 'COOKIE_PARTITIONED', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true),
+        )
+    );
+    
+    // Add SameSite selection method
+    function select_samesite($value, $key)
+    {
+        $samesite_options = array(
+            'Strict' => 'COOKIE_SAMESITE_STRICT',
+            'Lax' => 'COOKIE_SAMESITE_LAX',
+            'None' => 'COOKIE_SAMESITE_NONE'
+        );
+        
+        return h_radio('config[cookie_samesite]', $samesite_options, $value, $key);
+    }
+}
 // Set custom template for admin area
 $template->set_custom_template($phpbb_admin_path . 'style', 'admin');
 $template->assign_var('T_TEMPLATE_PATH', $phpbb_admin_path . 'style');

@@ -457,23 +457,15 @@ class auth_admin extends auth
 					'S_GROUP_MODE'	=> ($user_mode == 'group') ? true : false)
 				);
 
-				@reset($content_array);
-				while (!is_null($ug_id = key($content_array)))
+				foreach ($content_array as $ug_id => $ug_array)
 				{
-					$ug_array = current($content_array);
-					next($content_array);
-
 					// Build role dropdown options
 					$current_role_id = (isset($cur_roles[$ug_id][$forum_id])) ? $cur_roles[$ug_id][$forum_id] : 0;
 
 					$s_role_options = '';
 
-					@reset($roles);
-					while (!is_null($role_id = key($roles)))
+					foreach ($roles as $role_id => $role_row)
 					{
-						$role_row = current($roles);
-						next($roles);
-
 						$role_description = (!empty($user->lang[$role_row['role_description']])) ? $user->lang[$role_row['role_description']] : nl2br($role_row['role_description']);
 						$role_name = (!empty($user->lang[$role_row['role_name']])) ? $user->lang[$role_row['role_name']] : $role_row['role_name'];
 
@@ -549,23 +541,15 @@ class auth_admin extends auth
 					'S_GROUP_MODE'	=> ($user_mode == 'group') ? true : false)
 				);
 
-				@reset($content_array);
-				while (!is_null($forum_id = key($content_array)))
+				foreach ($content_array as $forum_id => $forum_array)
 				{
-					$forum_array = current($content_array);
-					next($content_array);
-
 					// Build role dropdown options
 					$current_role_id = (isset($cur_roles[$ug_id][$forum_id])) ? $cur_roles[$ug_id][$forum_id] : 0;
 
 					$s_role_options = '';
 
-					@reset($roles);
-					while (!is_null($role_id = key($roles)))
+					foreach ($roles as $role_id => $role_row)
 					{
-						$role_row = current($roles);
-						next($roles);
-
 						$role_description = (!empty($user->lang[$role_row['role_description']])) ? $user->lang[$role_row['role_description']] : nl2br($role_row['role_description']);
 						$role_name = (!empty($user->lang[$role_row['role_name']])) ? $user->lang[$role_row['role_name']] : $role_row['role_name'];
 
@@ -696,8 +680,7 @@ class auth_admin extends auth
 	*	'local'		=> array('option1', 'option2', ...),
 	*	'global'	=> array('optionA', 'optionB', ...)
 	* );
-	*/
-	function acl_add_option($options)
+	*/function acl_add_option($options)
 	{
 		global $db, $cache;
 
@@ -1034,7 +1017,7 @@ class auth_admin extends auth
 			// Get permission type
 			$sql = 'SELECT auth_option, auth_option_id
 				FROM ' . ACL_OPTIONS_TABLE . "
-				WHERE auth_option " . $db->sql_like_expression($permission_type . $db->any_char);
+				WHERE auth_option " . $db->sql_like_expression($permission_type . $db->get_any_char());
 			$result = $db->sql_query($sql);
 
 			$auth_id_ary = array();
@@ -1111,16 +1094,12 @@ class auth_admin extends auth
 	* Assign category to template
 	* used by display_mask()
 	*/
-	function assign_cat_array(&$category_array, $tpl_cat, $tpl_mask, $ug_id, $forum_id, $show_trace = false, $s_view = false)
+	function assign_cat_array(&$category_array, $tpl_cat, $tpl_mask, $ug_id,$forum_id, $show_trace = false, $s_view = false)
 	{
 		global $template, $user, $phpbb_admin_path, $phpEx;
 
-		@reset($category_array);
-		while (!is_null($cat = key($category_array)))
+		foreach ($category_array as $cat => $cat_array)
 		{
-			$cat_array = current($category_array);
-			next($category_array);
-
 			$template->assign_block_vars($tpl_cat, array(
 				'S_YES'		=> ($cat_array['S_YES'] && !$cat_array['S_NEVER'] && !$cat_array['S_NO']) ? true : false,
 				'S_NEVER'	=> ($cat_array['S_NEVER'] && !$cat_array['S_YES'] && !$cat_array['S_NO']) ? true : false,
@@ -1129,27 +1108,8 @@ class auth_admin extends auth
 				'CAT_NAME'	=> $user->lang['permission_cat'][$cat])
 			);
 
-			/*	Sort permissions by name (more naturaly and user friendly than sorting by a primary key)
-			*	Commented out due to it's memory consumption and time needed
-			*
-			$key_array = array_intersect(array_keys($user->lang), array_map(function($a){return "acl_$a";}, array_keys($cat_array['permissions'])));
-			$values_array = $cat_array['permissions'];
-
-			$cat_array['permissions'] = array();
-
-			foreach ($key_array as $key)
+			foreach ($cat_array['permissions'] as $permission => $allowed)
 			{
-				$key = str_replace('acl_', '', $key);
-				$cat_array['permissions'][$key] = $values_array[$key];
-			}
-			unset($key_array, $values_array);
-*/
-			@reset($cat_array['permissions']);
-			while (!is_null($permission = key($cat_array['permissions'])))
-			{
-				$allowed = current($cat_array['permissions']);
-				next($cat_array['permissions']);
-
 				if ($s_view)
 				{
 					$template->assign_block_vars($tpl_cat . '.' . $tpl_mask, array(
@@ -1207,12 +1167,8 @@ class auth_admin extends auth
 			$permissions = $permission_row[$forum_id];
 			ksort($permissions);
 
-			@reset($permissions);
-			while (!is_null($permission = key($permissions)))
+			foreach ($permissions as $permission => $auth_setting)
 			{
-				$auth_setting = current($permissions);
-				next($permissions);
-
 				if (!isset($user->lang['acl_' . $permission]))
 				{
 					$user->lang['acl_' . $permission] = array(

@@ -293,10 +293,13 @@ class acp_board
 					'title'	=> 'ACP_COOKIE_SETTINGS',
 					'vars'	=> array(
 						'legend1'		=> 'ACP_COOKIE_SETTINGS',
-						'cookie_domain'	=> array('lang' => 'COOKIE_DOMAIN',	'validate' => 'string',	'type' => 'text::255', 'explain' => false),
-						'cookie_name'	=> array('lang' => 'COOKIE_NAME',	'validate' => 'string',	'type' => 'text::16', 'explain' => false),
-						'cookie_path'	=> array('lang'	=> 'COOKIE_PATH',	'validate' => 'string',	'type' => 'text::255', 'explain' => false),
-						'cookie_secure'	=> array('lang' => 'COOKIE_SECURE',	'validate' => 'bool',	'type' => 'radio:disabled_enabled', 'explain' => true)
+						'cookie_domain'			=> array('lang' => 'COOKIE_DOMAIN',			'validate' => 'string',	'type' => 'text::255', 'explain' => false),
+						'cookie_name'			=> array('lang' => 'COOKIE_NAME',			'validate' => 'string',	'type' => 'text::16', 'explain' => false),
+						'cookie_path'			=> array('lang'	=> 'COOKIE_PATH',			'validate' => 'string',	'type' => 'text::255', 'explain' => false),
+						'cookie_secure'			=> array('lang' => 'COOKIE_SECURE',			'validate' => 'bool',	'type' => 'radio:disabled_enabled', 'explain' => true),
+						'cookie_samesite'		=> array('lang' => 'COOKIE_SAMESITE',		'validate' => 'string',	'type' => 'select', 'function' => 'samesite_select', 'explain' => true),
+						'cookie_partitioned'	=> array('lang' => 'COOKIE_PARTITIONED',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'cookie_secure_admin'	=> array('lang' => 'COOKIE_SECURE_ADMIN',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true)
 					)
 				);
 			break;
@@ -680,6 +683,44 @@ class acp_board
 				}
 			}
 		}
+	}
+
+	/**
+	 * Select SameSite cookie attribute
+	 */
+	function samesite_select($value, $key)
+	{
+		$samesite_options = array(
+			'None'		=> 'COOKIE_SAMESITE_NONE',
+			'Lax'		=> 'COOKIE_SAMESITE_LAX',
+			'Strict'	=> 'COOKIE_SAMESITE_STRICT',
+		);
+
+		$samesite_select = '';
+		foreach ($samesite_options as $option => $lang)
+		{
+			$selected = ($value == $option) ? ' selected="selected"' : '';
+			$samesite_select .= '<option value="' . $option . '"' . $selected . '>' . $lang . '</option>';
+		}
+
+		return $samesite_select;
+	}
+
+	/**
+	 * Build select field options in acp_board
+	 */
+	function build_select($option_ary, $option_default = false)
+	{
+		global $user;
+
+		$html = '';
+		foreach ($option_ary as $value => $title)
+		{
+			$selected = ($value == $option_default) ? ' selected="selected"' : '';
+			$html .= '<option value="' . $value . '"' . $selected . '>' . ((isset($user->lang[$title])) ? $user->lang[$title] : $title) . '</option>';
+		}
+
+		return $html;
 	}
 
 	/**
