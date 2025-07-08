@@ -780,18 +780,18 @@ a.fontsize {
 /* Icon images
 ---------------------------------------- */
 .sitehome						{ background-image: url("{T_THEME_PATH}/images/icon_home.png"); }
-/*.icon-faq						{ background-image: url("{T_THEME_PATH}/images/icon_faq.gif"); }*/
-/*.icon-members					{ background-image: url("{T_THEME_PATH}/images/icon_members.gif"); }*/
+/*.icon-faq						{ background-image: url("{T_THEME_PATH}/images/icon_faq.gif"); } */
+/*.icon-members					{ background-image: url("{T_THEME_PATH}/images/icon_members.gif"); } */
 .icon-home						{ background-image: url("{T_THEME_PATH}/images/icon_home.png"); }
-/*.icon-ucp						{ background-image: url("{T_THEME_PATH}/images/icon_ucp.gif"); }*/
-/*.icon-register					{ background-image: url("{T_THEME_PATH}/images/icon_register.gif"); }*/
-/*.icon-logout					{ background-image: url("{T_THEME_PATH}/images/icon_logout.gif"); }*/
+/*.icon-ucp						{ background-image: url("{T_THEME_PATH}/images/icon_ucp.gif"); } */
+/*.icon-register				{ background-image: url("{T_THEME_PATH}/images/icon_register.gif"); } */
+/*.icon-logout					{ background-image: url("{T_THEME_PATH}/images/icon_logout.gif"); } */
 .icon-bookmark					{ background-image: url("{T_THEME_PATH}/images/icon_bookmark.png"); }
 .icon-bump						{ background-image: url("{T_THEME_PATH}/images/icon_bump.gif"); }
 .icon-subscribe					{ background-image: url("{T_THEME_PATH}/images/icon_subscribe.png"); }
 .icon-unsubscribe				{ background-image: url("{T_THEME_PATH}/images/icon_unsubscribe.png"); }
-/*.icon-pages						{ background-image: url("{T_THEME_PATH}/images/icon_pages.gif"); }*/
-/*.icon-search					{ background-image: url("{T_THEME_PATH}/images/icon_search.gif"); }*/
+/*.icon-pages					{ background-image: url("{T_THEME_PATH}/images/icon_pages.gif"); } */
+/*.icon-search					{ background-image: url("{T_THEME_PATH}/images/icon_search.gif"); } */
 
 /* Profile & navigation icons */
 .email-icon, .email-icon a		{ background-image: url("{IMG_ICON_CONTACT_EMAIL_SRC}"); }

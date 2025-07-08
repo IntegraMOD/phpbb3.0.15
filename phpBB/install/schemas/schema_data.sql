@@ -76,6 +76,16 @@ INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_secure', '0
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_samesite', 'Strict');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_partitioned', '1');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_secure_admin', '1');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_consent_enabled', '1');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_consent_text', 'This website uses cookies to improve your experience.');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_consent_confirm', 'Accept Cookies');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_consent_decline', 'Decline Cookies');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_consent_enable', '1');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_consent_title', 'Cookie Notice');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_consent_message', 'This website uses cookies to ensure you get the best experience on our website. By continuing to use this site, you agree to our use of cookies.');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_consent_accept_text', 'Accept All Cookies');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_consent_decline_text', 'Decline All Cookies');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('cookie_consent_position', '1');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('coppa_enable', '0');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('coppa_fax', '');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('coppa_mail', '');

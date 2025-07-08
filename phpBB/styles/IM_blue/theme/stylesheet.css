@@ -3,7 +3,7 @@
 	Style name:			IM Blue
 	Based on style:		prosilver
 	Original author:	Tom Beddard ( http://www.subblue.com/ )
-	Modified by:		
+	Modified by:		HelterSkelter ( https://integramod.com/ ) ( https://forumimages.net/ )
     --------------------------------------------------------------
 */
 
@@ -16,3 +16,4 @@
 @import url("tweaks.css");
 @import url("colours.css");
 @import url("responsive.css");
+@import url("cookie_consent.css");

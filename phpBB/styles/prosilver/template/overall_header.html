@@ -80,6 +80,41 @@ window.addEventListener('load', () => {
 window.addEventListener('unload', () => {
     executeFunctions(initFunctions.onunload);
 });
+
+// Cookie Consent Functions
+function setCookie(name, value, days) {
+	var expires = "";
+	if (days) {
+	var date = new Date();
+		date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+	expires = "; expires=" + date.toUTCString();
+	}
+	document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+function getCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for (var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+	while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+	}
+	return null;
+}
+
+function acceptCookies() {
+	setCookie('cookie_consent', 'accepted', 365);
+	document.getElementById('cookie-consent-modal').style.display = 'none';
+}
+
+function checkCookieConsent() {
+	if (!getCookie('cookie_consent')) {
+	document.getElementById('cookie-consent-modal').style.display = 'block';
+	}
+}
+
+onload_functions.push('checkCookieConsent()');
 // ]]>
 </script>
 <script src="{ROOT_PATH}assets/js/styleswitch.js"></script>
@@ -97,6 +132,10 @@ window.addEventListener('unload', () => {
 </head>
 
 <body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION}">
+
+<!-- IF S_COOKIE_CONSENT_ENABLE -->
+<!-- INCLUDE cookie_consent.html -->
+<!-- ENDIF -->
 
 <div id="wrap">
 	<a id="top" name="top" accesskey="t"></a>

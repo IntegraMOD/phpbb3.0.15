@@ -55,6 +55,65 @@ function set_var(&$result, $var, $type, $multibyte = false)
 	}
 }
 
+/**
+* Set template variables for cookie consent modal
+*/
+function assign_cookie_consent_vars()
+{
+	global $config, $template;
+
+	if (!empty($config['cookie_consent_enable']))
+	{
+		// Fallbacks
+		$cookie_consent_title        = !empty($config['cookie_consent_title'])        ? $config['cookie_consent_title']        : 'Cookie Notice';
+		$cookie_consent_message      = !empty($config['cookie_consent_message'])      ? $config['cookie_consent_message']      : 'This website uses cookies to ensure you get the best experience on our website.';
+		$cookie_consent_accept_text  = !empty($config['cookie_consent_accept_text'])  ? $config['cookie_consent_accept_text']  : 'Accept';
+		$cookie_consent_decline_text = !empty($config['cookie_consent_decline_text']) ? $config['cookie_consent_decline_text'] : 'Decline';
+		$cookie_consent_position     = isset($config['cookie_consent_position'])      ? (int) $config['cookie_consent_position'] : 1;
+
+		// Position map
+		$position_map = array(
+			0 => 'top',
+			1 => 'bottom',
+			2 => 'center'
+		);
+
+		$position_string = isset($position_map[$cookie_consent_position]) ? $position_map[$cookie_consent_position] : 'bottom';
+
+		// Assign all vars
+		$template->assign_vars(array(
+			'S_COOKIE_CONSENT_ENABLE'    => true,
+			'COOKIE_CONSENT_TITLE'       => $cookie_consent_title,
+			'COOKIE_CONSENT_MESSAGE'     => $cookie_consent_message,
+			'COOKIE_CONSENT_ACCEPT_TEXT' => $cookie_consent_accept_text,
+			'COOKIE_CONSENT_DECLINE_TEXT'=> $cookie_consent_decline_text,
+			'COOKIE_CONSENT_POSITION'    => $position_string,
+		));
+	}
+}
+
+
+/**
+* Check if user has given cookie consent
+*/
+function has_cookie_consent()
+{
+	global $config;
+
+	if (empty($config['cookie_consent_enable']))
+	{
+		return true; // If consent is disabled, assume consent is given
+	}
+
+	// Check if user has already given consent
+	$cookie_name = 'cookie_consent';
+	if (isset($_COOKIE[$cookie_name]))
+	{
+		return $_COOKIE[$cookie_name] === 'accepted';
+	}
+
+	return false;
+}
 
 /**
 * Set a cookie with SameSite and Partitioned attributes
@@ -4900,6 +4959,7 @@ function page_header($page_title = '', $display_online_list = true, $item_id = 0
 		}
 	}
 
+    assign_cookie_consent_vars();
 	// The following assigns all _common_ variables that may be used at any point in a template.
 	$template->assign_vars(array(
 		'SITENAME'						=> $config['sitename'],

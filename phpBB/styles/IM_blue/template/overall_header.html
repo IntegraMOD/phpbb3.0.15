@@ -92,37 +92,72 @@ function updatemenu() {
 }
 
 
-	let showDelay = 300, hideDelay = 800;
-	let menuEnterTimer, menuLeaveTimer;
-	let allMenuItems = document.querySelectorAll('.menu .menu-item');
+let showDelay = 300, hideDelay = 800;
+let menuEnterTimer, menuLeaveTimer;
+let allMenuItems = document.querySelectorAll('.menu .menu-item');
 
-	for (let i = 0; i < allMenuItems.length; i++) {
-		allMenuItems[i].addEventListener('mouseenter', function() {
-			let thisItem = this;
-			clearTimeout(menuLeaveTimer);
+for (let i = 0; i < allMenuItems.length; i++) {
+	allMenuItems[i].addEventListener('mouseenter', function() {
+		let thisItem = this;
+		clearTimeout(menuLeaveTimer);
 
-			for (let j = 0; j < allMenuItems.length; j++) {
-				allMenuItems[j].classList.remove('active');
-			}
-			menuEnterTimer = setTimeout(function() {
-				thisItem.classList.add('active');
-			}, showDelay);
-		});
+		for (let j = 0; j < allMenuItems.length; j++) {
+			allMenuItems[j].classList.remove('active');
+		}
+		menuEnterTimer = setTimeout(function() {
+			thisItem.classList.add('active');
+		}, showDelay);
+	});
 
-		allMenuItems[i].addEventListener('mouseleave', function() {
-			let thisItem = this;
-			clearTimeout(menuEnterTimer);
-			menuLeaveTimer = setTimeout(function() {
-				thisItem.classList.remove('active');
-			}, hideDelay);
-		});
+	allMenuItems[i].addEventListener('mouseleave', function() {
+		let thisItem = this;
+		clearTimeout(menuEnterTimer);
+		menuLeaveTimer = setTimeout(function() {
+			thisItem.classList.remove('active');
+		}, hideDelay);
+	});
+}
+
+// Cookie Consent Functions
+function setCookie(name, value, days) {
+	var expires = "";
+	if (days) {
+	var date = new Date();
+		date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+	expires = "; expires=" + date.toUTCString();
 	}
-	
+	document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+function getCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for (var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+	while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+	}
+	return null;
+}
+
+function acceptCookies() {
+	setCookie('cookie_consent', 'accepted', 365);
+	document.getElementById('cookie-consent-modal').style.display = 'none';
+}
+
+function checkCookieConsent() {
+	if (!getCookie('cookie_consent')) {
+	document.getElementById('cookie-consent-modal').style.display = 'block';
+	}
+}
+
+onload_functions.push('checkCookieConsent()');
+
 // ]]>
 </script>
 <script src="{ROOT_PATH}assets/js/styleswitch.js"></script>
 <script src="{ROOT_PATH}assets/js/forum_fn.js"></script>
-<script src="{ROOT_PATH}assets/js/jquery/jquery-3.6.0.min.js"></script>
+<script src="{ROOT_PATH}assets/js/jquery/jquery-3.7.1.js"></script>
 <script src="{ROOT_PATH}assets/js/jquery/jquery.hoverIntent.minified.js"></script>
 
 <!-- Font Awesome 6.4.2 -->
@@ -135,6 +170,10 @@ function updatemenu() {
 </head>
 
 <body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION} {BODY_CLASS}">
+
+<!-- IF S_COOKIE_CONSENT_ENABLE -->
+<!-- INCLUDE cookie_consent.html -->
+<!-- ENDIF -->
 
 <div id="wrap">
 	<a id="top" name="top" accesskey="t"></a>
