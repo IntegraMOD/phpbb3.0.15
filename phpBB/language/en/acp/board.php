@@ -331,6 +331,7 @@ $lang = array_merge($lang, array(
 // Cookie Settings
 $lang = array_merge($lang, array(
 	'ACP_COOKIE_SETTINGS_EXPLAIN'		=> 'These details define the data used to send cookies to your users browsers. In most cases the default values for the cookie settings should be sufficient. If you do need to change any do so with care, incorrect settings can prevent users logging in.',
+	'COOKIE_HTTPONLY'			    => 'Cookie HTTP only',
 	'COOKIE_DOMAIN'					=> 'Cookie domain',
 	'COOKIE_DOMAIN_EXPLAIN'			=> 'In most cases the cookie domain is optional. Leave it blank if you are unsure.<br />In the case where you have integrated phpBB with other software or have multiple domains, then to determine the cookie domain you need to know the following. If you have a site like <i>example.com</i> and your board is at <i>www.example.com</i>, or your board is at <i>board.example.com</i>, set the cookie domain to <i>.example.com</i>. The period/dot before the domain name is required for the cookie domain.',
 	'COOKIE_NAME'					=> 'Cookie name',
@@ -350,8 +351,8 @@ $lang = array_merge($lang, array(
 	'COOKIE_PARTITIONED_EXPLAIN'	=> 'Enable partitioned cookies for enhanced privacy in third-party contexts. This is useful for embedded content and prevents cross-site tracking. Requires the Secure flag to be enabled.',
 	'COOKIE_SECURE_ADMIN'			=> 'Force secure cookies for admin',
 	'COOKIE_SECURE_ADMIN_EXPLAIN'	=> 'Forces all admin panel cookies to use the secure flag, regardless of the global secure setting. This adds an extra layer of security for administrative functions.',
-	'ONLINE_LENGTH'				=> 'View online time span',
-	'ONLINE_LENGTH_EXPLAIN'		=> 'Number of minutes after which inactive users will not appear in “Who is online” listings. The higher this value the greater is the processing required to generate the listing.',
+	'ONLINE_LENGTH'				    => 'View online time span',
+	'ONLINE_LENGTH_EXPLAIN'		    => 'Number of minutes after which inactive users will not appear in “Who is online” listings. The higher this value the greater is the processing required to generate the listing.',
 	'SESSION_GC'					=> 'Session garbage collection',
 	'SESSION_GC_EXPLAIN'			=> 'The system will clean out old sessions every x seconds.',
 	'SESSION_LENGTH'				=> 'Session length',
@@ -360,6 +361,20 @@ $lang = array_merge($lang, array(
 	'ACTIVE_SESSIONS_EXPLAIN'		=> 'Number of active sessions within the last %s minutes',
 
 ));
+
+// Cookie Consent Settings
+$lang = array_merge($lang, [
+   'COOKIE_CONSENT_SETTINGS' => 'Cookie Consent Settings',
+   'COOKIE_CONSENT_ENABLE' => 'Enable Cookie Consent Modal',
+   'COOKIE_CONSENT_TEXT' => 'Consent Modal Text',
+   'COOKIE_CONSENT_CONFIRM' => 'Confirm Button Text',
+   'COOKIE_CONSENT_ACCEPT_TEXT' => 'Accept Cookies Button Text',
+   'COOKIE_CONSENT_DECLINE_TEXT' => 'Decline Cookies Button Text',
+   'COOKIE_CONSENT_POSITION'    => 'Position of the Cookie Consent Modal',
+   'COOKIE_CONSENT_POSITION_TOP'    => 'Top',
+   'COOKIE_CONSENT_POSITION_BOTTOM' => 'Bottom',
+   'COOKIE_CONSENT_POSITION_CENTER' => 'Center',
+]);
 
 // Load Settings
 $lang = array_merge($lang, array(
@@ -570,3 +585,4 @@ $lang = array_merge($lang, array(
 	'JAB_VERIFY_PEER_NAME'			=> 'Verify Jabber peer name',
 	'JAB_VERIFY_PEER_NAME_EXPLAIN'	=> 'Require verification of peer name for Jabber servers using SSL / TLS connections.<em><strong>Warning:</strong> Connecting to unverified peers may cause security implications.</em>',
 ));
+
