@@ -8,9 +8,6 @@
 *
 */
 
-/**
-*/
-
 if (!defined('IN_INSTALL'))
 {
 	// Someone has tried to access the file direct. This is not a good idea, so exit

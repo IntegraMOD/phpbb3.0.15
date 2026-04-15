@@ -1,10 +1,5 @@
 <?php
 /**
- * Patched for compatibility with PHP 8.1
- * @copyright (c) 2023 Dion Designs
- */
-
-/**
 *
 * @package install
 * @version $Id$
@@ -13,13 +8,14 @@
 *
 */
 
-/**
-*/
 if (!defined('IN_INSTALL'))
 {
 	// Someone has tried to access the file direct. This is not a good idea, so exit
 	exit;
 }
+
+ini_set("mbstring.http_input", "pass");
+ini_set("mbstring.http_output", "pass");
 
 if (!empty($setmodules))
 {
@@ -58,7 +54,7 @@ class install_install extends module
 
 	function main($mode, $sub)
 	{
-		global $lang, $template, $language, $phpbb_root_path, $cache;
+		global $lang, $template, $language, $phpbb_root_path, $phpEx, $cache;
 
 		switch ($sub)
 		{
@@ -1769,7 +1765,7 @@ class install_install extends module
 				}
 
 				$valid_localized = array(
-					'icon_back_top', 'icon_contact_aim', 'icon_contact_email', 'icon_contact_icq', 'icon_contact_jabber', 'icon_contact_msnm', 'icon_contact_pm', 'icon_contact_yahoo', 'icon_contact_www', 'icon_post_delete', 'icon_post_edit', 'icon_post_info', 'icon_post_quote', 'icon_post_report', 'icon_user_online', 'icon_user_offline', 'icon_user_profile', 'icon_user_search', 'icon_user_warn', 'button_pm_forward', 'button_pm_new', 'button_pm_reply', 'button_topic_locked', 'button_topic_new', 'button_topic_reply',
+					'icon_back_top', 'icon_contact_fb', 'icon_contact_ig', 'icon_contact_pt', 'icon_contact_twr', 'icon_contact_skp', 'icon_contact_tg', 'icon_contact_li', 'icon_contact_tt', 'icon_contact_dc', 'icon_contact_aim', 'icon_contact_email', 'icon_contact_icq', 'icon_contact_jabber', 'icon_contact_msnm', 'icon_contact_pm', 'icon_contact_yahoo', 'icon_contact_www', 'icon_post_delete', 'icon_post_edit', 'icon_post_info', 'icon_post_quote', 'icon_post_report', 'icon_user_online', 'icon_user_offline', 'icon_user_profile', 'icon_user_search', 'icon_user_warn', 'button_pm_forward', 'button_pm_new', 'button_pm_reply', 'button_topic_locked', 'button_topic_new', 'button_topic_reply',
 				);
 
 				$sql_ary = array();
@@ -2200,32 +2196,61 @@ class install_install extends module
 	* 'Xaldon [Spider]'				'Xaldon WebSpider'
 	*/
 	var $bot_list = array(
-		'Ahrefs [Bot]'				=> array('AhrefsBot/', ''),
-		'Alexa [Bot]'				=> array('ia_archiver', ''),
+		'AdsBot [Google]'			=> array('AdsBot-Google', ''),
+		'Ahrefs [Bot]'			    => array('AhrefsBot/', ''),
+		'Alexa [Bot]'			    => array('ia_archiver', ''),
 		'Alta Vista [Bot]'			=> array('Scooter/', ''),
-		'Amazon [Bot]'				=> array('Amazonbot/', ''),
+		'Amazon [Bot]'			    => array('Amazonbot/', ''),
+		'Ask Jeeves [Bot]'			=> array('Ask Jeeves', ''),
 		'Baidu [Spider]'			=> array('Baiduspider', ''),
-		'Bing [Bot]'				=> array('bingbot/', ''),
+		'Bing [Bot]'			    => array('bingbot/', ''),
 		'DuckDuckGo [Bot]'			=> array('DuckDuckBot/', ''),
-		'Exabot [Bot]'				=> array('Exabot/', ''),
-		'Gigabot [Bot]'				=> array('Gigabot/', ''),
-		'Google Adsense [Bot]'		=> array('Mediapartners-Google', ''),
+		'Exabot [Bot]'			    => array('Exabot/', ''),
+		'FAST Enterprise [Crawler]'	=> array('FAST Enterprise Crawler', ''),
+		'FAST WebCrawler [Crawler]'	=> array('FAST-WebCrawler/', ''),
+		'Francis [Bot]'       	    => array('http://www.neomo.de/', ''),
+		'Gigabot [Bot]'	            => array('Gigabot/', ''),
+		'Google Adsense [Bot]'	    => array('Mediapartners-Google', ''),
+		'Google Desktop'			=> array('Google Desktop', ''),
 		'Google Feedfetcher'		=> array('Feedfetcher-Google', ''),
-		'Google [Bot]'				=> array('Googlebot', ''),
+		'Google [Bot]'		        => array('Googlebot', ''),
+		'Heise IT-Markt [Crawler]'	=> array('heise-IT-Markt-Crawler', ''),
+		'Heritrix [Crawler]'		=> array('heritrix/1.', ''),
+		'IBM Research [Bot]'		=> array('ibm.com/cs/crawler', ''),
 		'ICCrawler - ICjobs'		=> array('ICCrawler - ICjobs', ''),
-		'Majestic-12 [Bot]'			=> array('MJ12bot/', ''),
-		'Nutch [Bot]'				=> array('http://lucene.apache.org/nutch/', ''),
-		'NutchCVS [Bot]'			=> array('NutchCVS/', ''),
+		'ichiro [Crawler]'		    => array('ichiro/', ''),
+		'Majestic-12 [Bot]'		    => array('MJ12bot/', ''),
+		'Metager [Bot]'		        => array('MetagerBot/', ''),
+		'MSN NewsBlogs'		        => array('msnbot-NewsBlogs/', ''),
+		'MSN [Bot]'		            => array('msnbot/', ''),
+		'MSNbot Media'		        => array('msnbot-media/', ''),
+		'NG-Search [Bot]'		    => array('NG-Search/', ''),
+		'Nutch [Bot]'		        => array('http://lucene.apache.org/nutch/', ''),
+		'Nutch/CVS [Bot]'		    => array('NutchCVS/', ''),
 		'OmniExplorer [Bot]'		=> array('OmniExplorer_Bot/', ''),
-		'psbot [Picsearch]'			=> array('psbot/0', ''),
-		'Semrush [Bot]'				=> array('SemrushBot/', ''),
-		'SEO Crawler'				=> array('SEO search Crawler/', ''),
-		'Seoma [Crawler]'			=> array('Seoma [SEO Crawler]', ''),
+		'Online link [Validator]'	=> array('online link validator', ''),
+		'psbot [Picsearch]'		    => array('psbot/0', ''),
+		'Seekport [Bot]'		    => array('Seekbot/', ''),
+		'Semrush [Bot]'		        => array('SemrushBot/', ''),
+		'Sensis [Crawler]'		    => array('Sensis Web Crawler', ''),
+		'SEO Crawler'		        => array('SEO search Crawler/', ''),
+		'Seoma [Crawler]'		    => array('Seoma [SEO Crawler]', ''),
 		'SEOSearch [Crawler]'		=> array('SEOsearch/', ''),
-		'Snappy [Bot]'				=> array('Snappy/1.1 ( http://www.urltrends.com/ )', ''),
-		'Voyager [Bot]'				=> array('voyager/', ''),
-		'Yahoo Slurp [Bot]'			=> array('Yahoo! DE Slurp', ''),
-		'Yahoo [Bot]'				=> array('Yahoo! Slurp', ''),
+		'Snappy [Bot]'		        => array('Snappy/1.1 ( http://www.urltrends.com/ )', ''),
+		'Steeler [Crawler]'		    => array('http://www.tkl.iis.u-tokyo.ac.jp/~crawler/', ''),
+		'Synoo [Bot]'		        => array('SynooBot/', ''),
+		'Telekom [Bot]'		        => array('crawleradmin.t-info@telekom.de', ''),
+		'TurnitinBot [Bot]'		    => array('TurnitinBot/', ''),
+		'Voyager [Bot]'		        => array('voyager/', ''),
+		'W3 [Sitesearch]'		    => array('W3 SiteSearch Crawler', ''),
+		'W3C [Linkcheck]'		    => array('W3C-checklink/', ''),
+		'W3C [Validator]'		    => array('W3C_*Validator', ''),
+		'WiseNut [Bot]'		        => array('http://www.WISEnutbot.com', ''),
+		'YaCy [Bot]'		        => array('yacybot', ''),
+		'Yahoo MMCrawler [Bot]'		=> array('Yahoo-MMCrawler/', ''),
+		'Yahoo Slurp [Bot]'		    => array('Yahoo! DE Slurp', ''),
+		'Yahoo [Bot]'		        => array('Yahoo! Slurp', ''),
+		'YahooSeeker [Bot]'		    => array('YahooSeeker/', ''),
 	);
 
 	/**

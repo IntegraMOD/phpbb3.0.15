@@ -1,10 +1,5 @@
 <?php
 /**
- * Patched for compatibility with PHP 8.1
- * @copyright (c) 2023 Dion Designs
- */
-
-/**
 *
 * @package install
 * @version $Id$
@@ -13,9 +8,6 @@
 *
 */
 
-/**#@+
-* @ignore
-*/
 define('IN_PHPBB', true);
 define('IN_INSTALL', true);
 /**#@-*/
