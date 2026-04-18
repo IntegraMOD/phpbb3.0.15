@@ -2340,14 +2340,53 @@ function avatar_process_user(&$error, $custom_userdata = false, $can_upload = nu
 		$can_upload = ($config['allow_avatar_upload'] && file_exists($phpbb_root_path . $config['avatar_path']) && phpbb_is_writable($phpbb_root_path . $config['avatar_path']) && $change_avatar && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 	}
 
-	if ((!empty($_FILES['uploadfile']['name']) || $data['uploadurl']) && $can_upload)
-	{
-		list($sql_ary['user_avatar_type'], $sql_ary['user_avatar'], $sql_ary['user_avatar_width'], $sql_ary['user_avatar_height']) = avatar_upload($data, $error);
-	}
-	else if ($data['remotelink'] && $change_avatar && $config['allow_avatar_remote'])
-	{
-		list($sql_ary['user_avatar_type'], $sql_ary['user_avatar'], $sql_ary['user_avatar_width'], $sql_ary['user_avatar_height']) = avatar_remote($data, $error);
-	}
+
+
+    if ((!empty($_FILES['uploadfile']['name']) || $data['uploadurl']) && $can_upload)
+    {
+        $avatar = avatar_upload($data, $error);
+    
+        if (!is_array($avatar))
+        {
+            // handle failure: $error should contain a message set by avatar_upload
+            // Example: set defaults, log, or add an error to $error array
+            $sql_ary['user_avatar_type']   = 0;
+            $sql_ary['user_avatar']        = '';
+            $sql_ary['user_avatar_width']  = 0;
+            $sql_ary['user_avatar_height'] = 0;
+        }
+        else
+        {
+            list(
+                $sql_ary['user_avatar_type'],
+                $sql_ary['user_avatar'],
+                $sql_ary['user_avatar_width'],
+                $sql_ary['user_avatar_height']
+            ) = $avatar;
+        }
+    }
+    else if ($data['remotelink'] && $change_avatar && $config['allow_avatar_remote'])
+    {
+        $avatar = avatar_remote($data, $error);
+    
+        if (!is_array($avatar))
+        {
+            // handle failure similarly
+            $sql_ary['user_avatar_type']   = 0;
+            $sql_ary['user_avatar']        = '';
+            $sql_ary['user_avatar_width']  = 0;
+            $sql_ary['user_avatar_height'] = 0;
+        }
+        else
+        {
+            list(
+                $sql_ary['user_avatar_type'],
+                $sql_ary['user_avatar'],
+                $sql_ary['user_avatar_width'],
+                $sql_ary['user_avatar_height']
+            ) = $avatar;
+        }
+    }
 	else if ($avatar_select && $change_avatar && $config['allow_avatar_local'])
 	{
 		$category = basename(request_var('category', ''));
@@ -2634,16 +2673,15 @@ function group_correct_avatar($group_id, $old_entry)
 {
 	global $config, $db, $phpbb_root_path;
 
-	$group_id		= (int)$group_id;
-	$ext 			= substr(strrchr($old_entry, '.'), 1);
-	$old_filename 	= get_avatar_filename($old_entry);
-	$new_filename 	= $config['avatar_salt'] . "_g$group_id.$ext";
-	$new_entry 		= 'g' . $group_id . '_' . substr(time(), -5) . ".$ext";
+    $group_id		= (int)$group_id;
+    $ext 			= substr(strrchr((string) $old_entry, '.'), 1);
+    $old_filename 	= get_avatar_filename($old_entry);
+    $new_filename 	= $config['avatar_salt'] . "_g$group_id.$ext";
+    $new_entry 		= 'g' . $group_id . '_' . substr(time(), -5) . ".$ext";
 
-	$avatar_path = $phpbb_root_path . $config['avatar_path'];
-	if (@rename($avatar_path . '/'. $old_filename, $avatar_path . '/' . $new_filename))
-	{
-		$sql = 'UPDATE ' . GROUPS_TABLE . '
+    $avatar_path = $phpbb_root_path . $config['avatar_path'];
+    if (@rename($avatar_path . '/'. $old_filename, $avatar_path . '/' . $new_filename)) {
+        $sql = 'UPDATE ' . GROUPS_TABLE . '
 			SET group_avatar = \'' . $db->sql_escape($new_entry) . "'
 			WHERE group_id = $group_id";
 		$db->sql_query($sql);
@@ -3137,9 +3175,9 @@ function group_user_attributes($action, $group_id, $user_id_ary = false, $userna
 				$messenger->im($row['user_jabber'], $row['username']);
 
 				$messenger->assign_vars(array(
-					'USERNAME'		=> htmlspecialchars_decode($row['username'], ENT_COMPAT),
-					'GROUP_NAME'	=> htmlspecialchars_decode($group_name, ENT_COMPAT),
-					'U_GROUP'		=> generate_board_url() . "/ucp.$phpEx?i=groups&mode=membership")
+                    'USERNAME'		=> htmlspecialchars_decode((string) $row['username'], ENT_COMPAT),
+                    'GROUP_NAME'	=> htmlspecialchars_decode((string) $group_name, ENT_COMPAT),
+                    'U_GROUP'		=> generate_board_url() . "/ucp.$phpEx?i=groups&mode=membership")
 				);
 
 				$messenger->send($row['user_notify_type']);
