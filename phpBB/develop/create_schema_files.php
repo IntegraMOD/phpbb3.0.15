@@ -704,7 +704,7 @@ foreach ($supported_dbms as $dbms)
 					case 'oracle':
 						if ($key_data[0] == 'UNIQUE')
 						{
-							continue;
+							continue 2;
 						}
 
 						$line .= ($key_data[0] == 'INDEX') ? 'CREATE INDEX' : '';
@@ -1905,6 +1905,15 @@ function get_schema_struct()
 			'user_sig_bbcode_uid'		=> array('VCHAR:8', ''),
 			'user_sig_bbcode_bitfield'	=> array('VCHAR:255', ''),
 			'user_from'					=> array('VCHAR_UNI:100', ''),
+			'user_fb'					=> array('VCHAR_UNI', ''),
+			'user_ig'					=> array('VCHAR_UNI', ''),
+			'user_pt'					=> array('VCHAR_UNI', ''),
+			'user_twr'					=> array('VCHAR_UNI', ''),
+			'user_skp'					=> array('VCHAR_UNI', ''),
+			'user_tg'					=> array('VCHAR_UNI', ''),
+			'user_li'					=> array('VCHAR_UNI', ''),
+			'user_tt'					=> array('VCHAR_UNI', ''),
+			'user_dc'					=> array('VCHAR_UNI', ''),
 			'user_icq'					=> array('VCHAR:15', ''),
 			'user_aim'					=> array('VCHAR_UNI', ''),
 			'user_yim'					=> array('VCHAR_UNI', ''),
