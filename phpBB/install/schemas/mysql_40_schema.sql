@@ -703,6 +703,7 @@ CREATE TABLE phpbb_sessions (
 	PRIMARY KEY (session_id),
 	KEY session_time (session_time),
 	KEY session_user_id (session_user_id),
+	KEY session_user_id_ip (session_user_id, session_ip),
 	KEY session_fid (session_forum_id)
 );
 
