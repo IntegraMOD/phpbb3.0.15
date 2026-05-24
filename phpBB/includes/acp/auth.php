@@ -680,7 +680,8 @@ class auth_admin extends auth
 	*	'local'		=> array('option1', 'option2', ...),
 	*	'global'	=> array('optionA', 'optionB', ...)
 	* );
-	*/function acl_add_option($options)
+	*/
+	function acl_add_option($options)
 	{
 		global $db, $cache;
 
