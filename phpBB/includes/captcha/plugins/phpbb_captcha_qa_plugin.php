@@ -72,7 +72,7 @@ class phpbb_captcha_qa
 		$db->sql_freeresult($result);
 
 		// fallback to the board default lang
-		if (!sizeof($this->question_ids))
+		if (empty($this->question_ids))
 		{
 			$this->question_lang = $config['default_lang'];
 
@@ -87,7 +87,7 @@ class phpbb_captcha_qa
 			}
 			$db->sql_freeresult($result);
 		}
-	
+			
 		// okay, if there is a confirm_id, we try to load that confirm's state. If not, we try to find one
 		if (!$this->load_answer() && (!$this->load_confirm_id() || !$this->load_answer()))
 		{
@@ -265,7 +265,7 @@ class phpbb_captcha_qa
 			}
 			while ($row = $db->sql_fetchrow($result));
 
-			if (sizeof($sql_in))
+			if (!empty($sql_in))
 			{
 				$sql = 'DELETE FROM ' . CAPTCHA_QA_CONFIRM_TABLE . '
 					WHERE ' . $db->sql_in_set('confirm_id', $sql_in);
@@ -356,7 +356,7 @@ class phpbb_captcha_qa
 
 		$error = '';
 		
-		if (!sizeof($this->question_ids))
+		if (empty($this->question_ids))
 		{
 			return false;
 		}
@@ -399,10 +399,11 @@ class phpbb_captcha_qa
 	{
 		global $db, $user;
 
-		if (!sizeof($this->question_ids))
+		if (empty($this->question_ids))
 		{
 			return false;
 		}
+
 		$this->confirm_id = md5(unique_id($user->ip));
 		$this->question = (int) array_rand($this->question_ids);
 
