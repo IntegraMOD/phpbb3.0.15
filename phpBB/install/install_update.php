@@ -51,22 +51,28 @@ if (!empty($setmodules))
 */
 class install_update extends module
 {
-	var $p_master;
-	var $update_info;
+	public $p_master;
+	public $update_info;
 
-	var $old_location;
-	var $new_location;
-	var $latest_version;
-	var $current_version;
+	public $old_location;
+	public $new_location;
+	public $latest_version;
+	public $current_version;
 
-	var $update_to_version;
+	public $update_to_version;
 
 	// Set to false
-	var $test_update = false;
+	public $test_update = false;
 
-	function install_update(&$p_master)
+	public function __construct(&$p_master)
 	{
 		$this->p_master = &$p_master;
+	}
+
+	// Keep a fallback in case legacy module handlers attempt a direct call
+	public function install_update(&$p_master)
+	{
+		$this->__construct($p_master);
 	}
 
 	function main($mode, $sub)
@@ -360,8 +366,8 @@ class install_update extends module
 
 				// We are directly within an update. To make sure our update list is correct we check its status.
 				$update_list = (!empty($_POST['check_again'])) ? false : $cache->get('_update_list');
-				$modified = ($update_list !== false) ? @filemtime($cache->cache_dir . 'data_update_list.' . $phpEx) : 0;
-
+				$cache_file = $cache->cache_dir . 'data_update_list.' . $phpEx;
+				$modified = ($update_list !== false && file_exists($cache_file)) ? filemtime($cache_file) : 0;
 				// Make sure the list is up-to-date
 				if ($update_list !== false)
 				{
@@ -414,7 +420,7 @@ class install_update extends module
 					return;
 				}
 
-				if (sizeof($update_list['no_update']))
+				if (!empty($update_list['no_update']))
 				{
 					$template->assign_vars(array(
 						'S_NO_UPDATE_FILES'		=> true,
@@ -427,7 +433,7 @@ class install_update extends module
 				// Now assign the list to the template
 				foreach ($update_list as $status => $filelist)
 				{
-					if ($status == 'no_update' || !sizeof($filelist) || $status == 'status')
+					if ($status == 'no_update' || empty($filelist) || $status == 'status')
 					{
 						continue;
 					}
@@ -494,7 +500,7 @@ class install_update extends module
 				$all_up_to_date = true;
 				foreach ($update_list as $status => $filelist)
 				{
-					if ($status != 'up_to_date' && $status != 'custom' && $status != 'status' && sizeof($filelist))
+					if ($status != 'up_to_date' && $status != 'custom' && $status != 'status' && !empty($filelist))
 					{
 						$all_up_to_date = false;
 						break;
@@ -732,14 +738,10 @@ class install_update extends module
 								return;
 							}
 
-							if (file_exists($phpbb_root_path . $file_struct['filename']))
-							{
-								$contents = file_get_contents($phpbb_root_path . $file_struct['filename']);
-								if (isset($expected_files[$file_struct['filename']]) && md5($contents) == $expected_files[$file_struct['filename']])
-								{
-									continue;
-								}
-							}
+							// Added string casts to both md5() and base64_encode()
+							$expected_files[$file_struct['filename']] = md5((string) $contents);
+							$file_list[$file_struct['filename']] = '_file_' . md5($file_struct['filename']);
+							$cache->put($file_list[$file_struct['filename']], base64_encode((string) $contents));
 
 							$original_filename = ($file_struct['custom']) ? $file_struct['original'] : $file_struct['filename'];
 
@@ -767,9 +769,9 @@ class install_update extends module
 										break;
 									}
 
-									$expected_files[$file_struct['filename']] = md5($contents);
+									$expected_files[$file_struct['filename']] = md5((string) $contents);
 									$file_list[$file_struct['filename']] = '_file_' . md5($file_struct['filename']);
-									$cache->put($file_list[$file_struct['filename']], base64_encode($contents));
+									$cache->put($file_list[$file_struct['filename']], base64_encode((string) $contents));
 
 									$file_list['status']++;
 									$processed++;
@@ -813,9 +815,9 @@ class install_update extends module
 										break;
 									}
 
-									$expected_files[$file_struct['filename']] = md5($contents);
+									$expected_files[$file_struct['filename']] = md5((string) $contents);
 									$file_list[$file_struct['filename']] = '_file_' . md5($file_struct['filename']);
-									$cache->put($file_list[$file_struct['filename']], base64_encode($contents));
+									$cache->put($file_list[$file_struct['filename']], base64_encode((string) $contents));
 
 									$file_list['status']++;
 									$processed++;
