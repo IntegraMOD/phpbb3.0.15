@@ -745,6 +745,15 @@ a.sendemail {
 .icon-subscribe					{ background-image: url("{T_THEME_PATH}/images/icon_subscribe.gif"); }
 .icon-unsubscribe				{ background-image: url("{T_THEME_PATH}/images/icon_unsubscribe.gif"); }
 .icon-pages						{ background-image: url("{T_THEME_PATH}/images/icon_pages.gif"); }
+.fb-icon, .fb-icon a			{ background-image: url("{IMG_ICON_CONTACT_FB_SRC}"); }
+.ig-icon, .ig-icon a			{ background-image: url("{IMG_ICON_CONTACT_IG_SRC}"); }
+.pt-icon, .pt-icon a			{ background-image: url("{IMG_ICON_CONTACT_PT_SRC}"); }
+.twr-icon, .twr-icon a			{ background-image: url("{IMG_ICON_CONTACT_TWR_SRC}"); }
+.skp-icon, .skp-icon a			{ background-image: url("{IMG_ICON_CONTACT_SKP_SRC}"); }
+.tg-icon, .tg-icon a			{ background-image: url("{IMG_ICON_CONTACT_TG_SRC}"); }
+.li-icon, .li-icon a			{ background-image: url("{IMG_ICON_CONTACT_LI_SRC}"); }
+.tt-icon, .tt-icon a			{ background-image: url("{IMG_ICON_CONTACT_TT_SRC}"); }
+.dc-icon, .dc-icon a			{ background-image: url("{IMG_ICON_CONTACT_DC_SRC}"); }
 
 
 

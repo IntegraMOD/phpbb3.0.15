@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}" data-style-color="blue" data-bs-theme="light">
+<head>
+
+<meta http-equiv="content-type" content="text/html; charset={S_CONTENT_ENCODING}" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="content-style-type" content="text/css" />
+<meta http-equiv="content-language" content="{S_USER_LANG}" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="resource-type" content="document" />
+<meta name="distribution" content="global" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+{META}
+<title>{SITENAME} &bull; <!-- IF S_IN_MCP -->{L_MCP} &bull; <!-- ELSEIF S_IN_UCP -->{L_UCP} &bull; <!-- ENDIF -->{PAGE_TITLE}</title>
+<link rel="icon" type="image/x-icon" href="{ROOT_PATH}images/favicon.ico">
+<script src="{ROOT_PATH}assets/js/integra_theme_bootstrap.js"></script>
+
+<!-- IF S_ENABLE_FEEDS -->
+	<!-- IF S_ENABLE_FEEDS_OVERALL --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {SITENAME}" href="{U_FEED}" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_NEWS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_NEWS}" href="{U_FEED}?mode=news" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_FORUMS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_ALL_FORUMS}" href="{U_FEED}?mode=forums" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPICS --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_NEW}" href="{U_FEED}?mode=topics" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPICS_ACTIVE --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FEED_TOPICS_ACTIVE}" href="{U_FEED}?mode=topics_active" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_FORUM and S_FORUM_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FORUM} - {FORUM_NAME}" href="{U_FEED}?f={S_FORUM_ID}" /><!-- ENDIF -->
+	<!-- IF S_ENABLE_FEEDS_TOPIC and S_TOPIC_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_TOPIC} - {TOPIC_TITLE}" href="{U_FEED}?f={S_FORUM_ID}&amp;t={S_TOPIC_ID}" /><!-- ENDIF -->
+<!-- ENDIF -->
+
+<!--
+	phpBB style name: IntegraStyle (this is the default IntegraMOD style)
+	Original author:  HelterSkelter ( https://www.forumimages.net/ )
+	Modified by:
+-->
+
+<link href="{T_STYLESHEET_LINK}" rel="stylesheet" type="text/css" media="screen, projection" />
+<link href="{T_THEME_PATH}/colors.css" rel="stylesheet" type="text/css" />
+<link href="{T_THEME_PATH}/cookie_consent.css" rel="stylesheet" type="text/css" />
+
+<script src="{ROOT_PATH}assets/js/jquery/jquery-3.6.0.js"></script>
+<script src="{ROOT_PATH}assets/js/jquery/jquery-migrate-3.5.2.js"></script>
+
+<meta name="integra-jump-page" content="{LA_JUMP_PAGE}:" />
+<meta name="integra-on-page" content="{ON_PAGE}" />
+<meta name="integra-per-page" content="{PER_PAGE}" />
+<meta name="integra-base-url" content="{A_BASE_URL}" />
+<meta name="integra-style-cookie" content="phpBBstyle" />
+<meta name="integra-style-cookie-settings" content="{A_COOKIE_SETTINGS}" />
+<script src="{ROOT_PATH}assets/js/integra_core.js"></script>
+<script src="{ROOT_PATH}assets/js/styleswitch.js"></script>
+<script src="{ROOT_PATH}assets/js/forum_fn.js"></script>
+<script src="{ROOT_PATH}assets/js/select_code.js"></script>
+
+<!-- IF S_CONTENT_DIRECTION eq 'rtl' -->
+<link href="{T_THEME_PATH}/bidi.css" rel="stylesheet" type="text/css" media="screen, projection" />
+<!-- ENDIF -->
+
+</head>
+
+<body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION}" data-jump-page="{LA_JUMP_PAGE}:" data-on-page="{ON_PAGE}" data-per-page="{PER_PAGE}" data-base-url="{A_BASE_URL}" data-style-cookie="phpBBstyle" data-style-cookie-settings="{A_COOKIE_SETTINGS}" data-user-pm-popup="<!-- IF S_USER_PM_POPUP and S_NEW_PM -->{UA_POPUP_PM}<!-- ENDIF -->">
+<!-- INCLUDE sprites/css_icon_sprite.html -->
+<!-- IF S_COOKIE_CONSENT_ENABLE -->
+<!-- INCLUDE cookie_consent.html -->
+<!-- ENDIF -->
+
+<div id="wrap">
+	<a id="top" name="top" accesskey="t"></a>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <div id="site-description">
+				<div class="logo-container">
+					<a href="{U_INDEX}" title="{L_INDEX}" id="logo">{SITE_LOGO_IMG}</a>
+				</div>
+				<div class="site-text">
+					<h1>{SITENAME}</h1>
+					<p>{SITE_DESCRIPTION}</p>
+					<p class="skiplink"><a href="#start_here">{L_SKIP}</a></p>
+				</div>
+			</div>
+
+        <!-- IF S_DISPLAY_SEARCH and not S_IN_SEARCH -->
+            <div id="search-box" class="search-toggle-container">
+                <button class="search-toggle-btn" aria-label="{L_SEARCH}" title="{L_SEARCH}"><svg class="css-icon css-icon-search" aria-hidden="true" focusable="false"><use href="#icon-search"></use></svg></button>
+				<form action="{U_SEARCH}" method="get" id="search" class="search-form-hidden">
+				<fieldset>
+					<input name="keywords" id="keywords" type="search" maxlength="128" title="{L_SEARCH_KEYWORDS}" class="inputbox search" placeholder="{L_SEARCH_MINI}" value="<!-- IF SEARCH_WORDS-->{SEARCH_WORDS}<!-- ENDIF -->" />
+                    <button class="button2" type="submit" title="{L_SEARCH}"><svg class="css-icon css-icon-arrow-right" aria-hidden="true" focusable="false"><use href="#icon-arrow-right"></use></svg></button><br />
+					<a href="{U_SEARCH}" title="{L_SEARCH_ADV_EXPLAIN}">{L_SEARCH_ADV}</a> {S_SEARCH_HIDDEN_FIELDS}
+				</fieldset>
+				</form>
+			</div>
+        <!-- ENDIF -->
+        </div>
+	</header>
+
+	<nav class="navbar off-canvas-container">
+        <div class="navbar-inner">
+            <button class="off-canvas-toggle" aria-label="Toggle Navigation"><svg class="css-icon css-icon-menu" aria-hidden="true" focusable="false"><use href="#icon-menu"></use></svg> <span id="active-page-title">{PAGE_TITLE}</span></button>
+            <div class="off-canvas-menu">
+                <button class="off-canvas-close" aria-label="Close Navigation"><svg class="css-icon css-icon-close" aria-hidden="true" focusable="false"><use href="#icon-close"></use></svg></button>
+                <!-- INCLUDE nav_menu.html -->
+            </div>
+        </div>
+	</nav>
+			
+	<main id="page-content">
+	
+	<!-- IF not S_IS_BOT and S_USER_LOGGED_IN -->
+	<div class="quicklinks-bar">
+<ul class="linklist leftside header-quicklinks">
+			<li>
+				<!-- IF S_DISPLAY_PM --><a href="{U_PRIVATEMSGS}"><svg class="css-icon css-icon-message" aria-hidden="true" focusable="false"><use href="#icon-message"></use></svg> {PRIVATE_MESSAGE_INFO}</a> &bull; <!-- ENDIF -->
+				<a href="{U_SEARCH_NEW}">{L_SEARCH_NEW}</a>
+				<!-- IF U_RESTORE_PERMISSIONS --> &bull;
+				<a href="{U_RESTORE_PERMISSIONS}">{L_RESTORE_PERMISSIONS}</a>
+				<!-- ENDIF -->
+			</li>
+		</ul>
+	</div>
+	<!-- ENDIF -->
+
+	<a name="start_here"></a>
+	<div id="page-body">
+		<!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN and (U_MCP or U_ACP) -->
+		<div id="information" class="rules panel">
+			<strong>{L_INFORMATION}:</strong> {L_BOARD_DISABLED}
+		</div>
+		<!-- ENDIF -->
+
+		
+		<div class="navlinks"><!-- IF SCRIPT_NAME == 'viewforum' or SCRIPT_NAME == 'viewtopic' --><a href="{U_INDEX}" accesskey="h">{L_INDEX}</a><!-- ENDIF --><!-- BEGIN navlinks --> <strong>&#8249;</strong> <a href="{navlinks.U_VIEW_FORUM}">{navlinks.FORUM_NAME}</a><!-- END navlinks --></div>

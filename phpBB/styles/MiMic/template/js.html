@@ -1,0 +1,12 @@
+<script>
+var jq = jQuery.noConflict(); 
+</script>
+
+<script>
+jq(function() {
+    var images = ['header.jpg', 'header2.jpg', 'header3.jpg'];
+    jq('#bground').css({
+        'background-image': 'url(' + '{T_THEME_PATH}' + '/images/bg/' + images[Math.floor(Math.random() * images.length)] + ')'
+    });
+});
+</script>
