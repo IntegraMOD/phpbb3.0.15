@@ -382,6 +382,11 @@ function build_cfg_template($tpl_type, $key, &$new, $config_key, $vars)
 				$args = array($new[$config_key], $key);
 			}
 
+			if (!is_callable($call))
+			{
+				break;
+			}
+
 			$return = call_user_func_array($call, $args);
 
 			if ($tpl_type[0] == 'select')

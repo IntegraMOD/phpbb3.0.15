@@ -27,9 +27,7 @@ class acp_board
 
 	function main($id, $mode)
 	{
-		global $db, $user, $auth, $template;
-		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
-		global $cache;
+		global $db, $user, $auth, $template, $cache, $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
 
 		$user->add_lang('acp/board');
 
@@ -292,14 +290,25 @@ class acp_board
 				$display_vars = array(
 					'title'	=> 'ACP_COOKIE_SETTINGS',
 					'vars'	=> array(
-						'legend1'		=> 'ACP_COOKIE_SETTINGS',
-						'cookie_domain'			=> array('lang' => 'COOKIE_DOMAIN',			'validate' => 'string',	'type' => 'text::255', 'explain' => false),
-						'cookie_name'			=> array('lang' => 'COOKIE_NAME',			'validate' => 'string',	'type' => 'text::16', 'explain' => false),
-						'cookie_path'			=> array('lang'	=> 'COOKIE_PATH',			'validate' => 'string',	'type' => 'text::255', 'explain' => false),
-						'cookie_secure'			=> array('lang' => 'COOKIE_SECURE',			'validate' => 'bool',	'type' => 'radio:disabled_enabled', 'explain' => true),
-						'cookie_samesite'		=> array('lang' => 'COOKIE_SAMESITE',		'validate' => 'string',	'type' => 'select', 'function' => 'samesite_select', 'explain' => true),
+						'legend1'				=> 'ACP_COOKIE_SETTINGS',
+						'cookie_domain'			=> array('lang' => 'COOKIE_DOMAIN',		'validate' => 'string',	'type' => 'text:25:255', 'explain' => true),
+						'cookie_name'			=> array('lang' => 'COOKIE_NAME',		'validate' => 'string',	'type' => 'text:25:255', 'explain' => true),
+						'cookie_path'			=> array('lang' => 'COOKIE_PATH',		'validate' => 'string',	'type' => 'text:25:255', 'explain' => true),
+						'cookie_secure'			=> array('lang' => 'COOKIE_SECURE',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'cookie_httponly'		=> array('lang' => 'COOKIE_HTTPONLY',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'cookie_samesite'		=> array('lang' => 'COOKIE_SAMESITE',	'validate' => 'int',	'type' => 'custom', 'method' => 'samesite_select', 'explain' => true),
 						'cookie_partitioned'	=> array('lang' => 'COOKIE_PARTITIONED',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-						'cookie_secure_admin'	=> array('lang' => 'COOKIE_SECURE_ADMIN',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true)
+						'cookie_secure_admin'	=> array('lang' => 'COOKIE_SECURE_ADMIN',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'session_length'		=> array('lang' => 'SESSION_LENGTH',	'validate' => 'int:60:9999999',	'type' => 'text:5:8', 'explain' => true, 'append' => ' ' . $user->lang['SECONDS']),
+						'online_length'			=> array('lang' => 'ONLINE_LENGTH',		'validate' => 'int:1:9999',	'type' => 'text:4:4', 'explain' => true, 'append' => ' ' . $user->lang['MINUTES']),
+						
+						'legend2'				=> 'COOKIE_CONSENT_SETTINGS',
+						'cookie_consent_enable'	=> array('lang' => 'COOKIE_CONSENT_ENABLE', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true),
+						'cookie_consent_title'	=> array('lang' => 'COOKIE_CONSENT_TITLE', 'validate' => 'string', 'type' => 'text:25:255', 'explain' => true),
+						'cookie_consent_message'=> array('lang' => 'COOKIE_CONSENT_MESSAGE', 'validate' => 'string', 'type' => 'textarea:5:50', 'explain' => true),
+						'cookie_consent_accept_text'=> array('lang' => 'COOKIE_CONSENT_ACCEPT_TEXT', 'validate' => 'string', 'type' => 'text:25:255', 'explain' => true),
+						'cookie_consent_decline_text'=> array('lang' => 'COOKIE_CONSENT_DECLINE_TEXT', 'validate' => 'string', 'type' => 'text:25:255', 'explain' => true),
+						'cookie_consent_position'=> array('lang' => 'COOKIE_CONSENT_POSITION', 'validate' => 'int', 'type' => 'custom', 'method' => 'consent_position_select', 'explain' => true),
 					)
 				);
 			break;
@@ -686,102 +695,9 @@ class acp_board
 	}
 
 	/**
-	 * Select SameSite cookie attribute
-	 */
-	function samesite_select($value, $key)
-	{
-		$samesite_options = array(
-			'None'		=> 'COOKIE_SAMESITE_NONE',
-			'Lax'		=> 'COOKIE_SAMESITE_LAX',
-			'Strict'	=> 'COOKIE_SAMESITE_STRICT',
-		);
-
-		$samesite_select = '';
-		foreach ($samesite_options as $option => $lang)
-		{
-			$selected = ($value == $option) ? ' selected="selected"' : '';
-			$samesite_select .= '<option value="' . $option . '"' . $selected . '>' . $lang . '</option>';
-		}
-
-		return $samesite_select;
-	}
-
-	/**
-	 * Build select field options in acp_board
-	 */
-	function build_select($option_ary, $option_default = false)
-	{
-		global $user;
-
-		$html = '';
-		foreach ($option_ary as $value => $title)
-		{
-			$selected = ($value == $option_default) ? ' selected="selected"' : '';
-			$html .= '<option value="' . $value . '"' . $selected . '>' . ((isset($user->lang[$title])) ? $user->lang[$title] : $title) . '</option>';
-		}
-
-		return $html;
-	}
-
-	/**
-	* Select auth method
-	*/
-	function select_auth_method($selected_method, $key = '')
-	{
-		global $phpbb_root_path, $phpEx;
-
-		$auth_plugins = array();
-
-		$dp = @opendir($phpbb_root_path . 'includes/auth');
-
-		if (!$dp)
-		{
-			return '';
-		}
-
-		while (($file = readdir($dp)) !== false)
-		{
-			if (preg_match('#^auth_(.*?)\.' . $phpEx . '$#', $file))
-			{
-				$auth_plugins[] = preg_replace('#^auth_(.*?)\.' . $phpEx . '$#', '\1', $file);
-			}
-		}
-		closedir($dp);
-
-		sort($auth_plugins);
-
-		$auth_select = '';
-		foreach ($auth_plugins as $method)
-		{
-			$selected = ($selected_method == $method) ? ' selected="selected"' : '';
-			$auth_select .= '<option value="' . $method . '"' . $selected . '>' . ucfirst($method) . '</option>';
-		}
-
-		return $auth_select;
-	}
-
-	/**
-	* Select mail authentication method
-	*/
-	function mail_auth_select($selected_method, $key = '')
-	{
-		global $user;
-
-		$auth_methods = array('PLAIN', 'LOGIN', 'CRAM-MD5', 'DIGEST-MD5', 'POP-BEFORE-SMTP');
-		$s_smtp_auth_options = '';
-
-		foreach ($auth_methods as $method)
-		{
-			$s_smtp_auth_options .= '<option value="' . $method . '"' . (($selected_method == $method) ? ' selected="selected"' : '') . '>' . $user->lang['SMTP_' . str_replace('-', '_', $method)] . '</option>';
-		}
-
-		return $s_smtp_auth_options;
-	}
-
-	/**
 	* Select full folder action
 	*/
-	function full_folder_select($value, $key = '')
+	function full_folder_select($value, $key)
 	{
 		global $user;
 
@@ -791,7 +707,7 @@ class acp_board
 	/**
 	* Select ip validation
 	*/
-	function select_ip_check($value, $key = '')
+	function select_ip_check($value, $key)
 	{
 		$radio_ary = array(4 => 'ALL', 3 => 'CLASS_C', 2 => 'CLASS_B', 0 => 'NO_IP_VALIDATION');
 
@@ -801,7 +717,7 @@ class acp_board
 	/**
 	* Select referer validation
 	*/
-	function select_ref_check($value, $key = '')
+	function select_ref_check($value, $key)
 	{
 		$radio_ary = array(REFERER_VALIDATE_PATH => 'REF_PATH', REFERER_VALIDATE_HOST => 'REF_HOST', REFERER_VALIDATE_NONE => 'NO_REF_VALIDATION');
 
@@ -834,7 +750,7 @@ class acp_board
 
 		return $act_options;
 	}
-
+	
 	/**
 	* Maximum/Minimum username length
 	*/
@@ -1039,6 +955,104 @@ class acp_board
 
 		// Empty sql cache for forums table because options changed
 		$cache->destroy('sql', FORUMS_TABLE);
+	}
+	
+	/**
+	* Select SameSite cookie setting
+	*/
+	function samesite_select($value, $key)
+	{
+		global $user;
+
+		$samesite_options = array(
+			0 => 'COOKIE_SAMESITE_NONE',
+			1 => 'COOKIE_SAMESITE_LAX',
+			2 => 'COOKIE_SAMESITE_STRICT',
+		);
+
+		$samesite_select = '';
+		foreach ($samesite_options as $option_value => $lang_key)
+		{
+			$selected = ($value == $option_value) ? ' selected="selected"' : '';
+			$samesite_select .= '<option value="' . $option_value . '"' . $selected . '>' . $user->lang[$lang_key] . '</option>';
+		}
+
+		return '<select id="' . $key . '" name="config[' . $key . ']">' . $samesite_select . '</select>';
+	}
+
+	/**
+	* Auth method select
+	*/
+	function select_auth_method($selected_value, $key)
+	{
+		global $phpbb_root_path, $phpEx;
+
+		$auth_plugins = array();
+
+		$dp = @opendir($phpbb_root_path . 'includes/auth');
+
+		if (!$dp)
+		{
+			return '';
+		}
+
+		while (($file = readdir($dp)) !== false)
+		{
+			if (preg_match('#^auth_(.*?)\.' . $phpEx . '$#', $file))
+			{
+				$auth_plugins[] = preg_replace('#^auth_(.*?)\.' . $phpEx . '$#', '\1', $file);
+			}
+		}
+		closedir($dp);
+
+		sort($auth_plugins);
+
+		$auth_select = '';
+		foreach ($auth_plugins as $method)
+		{
+			$selected = ($selected_value == $method) ? ' selected="selected"' : '';
+			$auth_select .= '<option value="' . $method . '"' . $selected . '>' . ucfirst($method) . '</option>';
+		}
+
+		return $auth_select;
+	}
+
+	/**
+	* Select mail authentication method
+	*/
+	function mail_auth_select($selected_value, $key)
+	{
+		global $user;
+
+		$auth_ary = array('PLAIN' => 'PLAIN', 'LOGIN' => 'LOGIN', 'CRAM-MD5' => 'CRAM-MD5', 'DIGEST-MD5' => 'DIGEST-MD5', 'POP-BEFORE-SMTP' => 'POP-BEFORE-SMTP');
+		$auth_options = '';
+		foreach ($auth_ary as $method_name => $method)
+		{
+			$selected = ($selected_value == $method_name) ? ' selected="selected"' : '';
+			$auth_options .= '<option value="' . $method_name . '"' . $selected . '>' . $user->lang['SMTP_' . str_replace('-', '_', $method)] . '</option>';
+		}
+
+		return $auth_options;
+	}
+
+	function consent_position_select($value, $key)
+	{
+		global $user;
+
+		$position_options = array(
+			0 => 'COOKIE_CONSENT_POSITION_TOP',
+			1 => 'COOKIE_CONSENT_POSITION_BOTTOM',
+			2 => 'COOKIE_CONSENT_POSITION_CENTER',
+		);
+
+		$position_select = '';
+		foreach ($position_options as $option_value => $lang_key)
+		{
+			$selected = ($value == $option_value) ? ' selected="selected"' : '';
+			$position_select .= '<option value="' . $option_value . '"' . $selected . '>' . $user->lang[$lang_key] . '</option>';
+		}
+
+		return '<select id="' . $key . '" name="config[' . $key . ']">' . $position_select . '</select>';
 	}
 
 }
