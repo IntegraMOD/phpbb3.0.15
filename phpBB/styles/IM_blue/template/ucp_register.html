@@ -1,21 +1,32 @@
 <!-- INCLUDE overall_header.html -->
 
-<script type="text/javascript">
-// <![CDATA[
-	/**
-	* Change language
-	*/
-	function change_language(lang_iso)
-	{
-		document.forms['register'].change_lang.value = lang_iso;
-		document.forms['register'].submit.click();
-	}
+<script>
+// Change language by setting a hidden input then submitting the form
+function change_language(lang_iso) {
+  var form = document.forms['register'];
+  if (!form) return; // form not found
 
-	<!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_REFRESH -->
-	onload_functions.push('apply_onkeypress_event()');
-	<!-- ENDIF -->
+  var changeLangInput = form.elements['change_lang'];
+  if (!changeLangInput) {
+    // create hidden input if it doesn't exist
+    changeLangInput = document.createElement('input');
+    changeLangInput.type = 'hidden';
+    changeLangInput.name = 'change_lang';
+    form.appendChild(changeLangInput);
+  }
 
-// ]]>
+  changeLangInput.value = lang_iso;
+  form.submit(); // call the submit method
+}
+
+// If you need to run apply_onkeypress_event on load, push a function reference
+if (typeof onload_functions !== 'undefined' && Array.isArray(onload_functions)) {
+  onload_functions.push(function () {
+    if (typeof apply_onkeypress_event === 'function') {
+      apply_onkeypress_event();
+    }
+  });
+}
 </script>
 
 <form method="post" action="{S_UCP_ACTION}" id="register">

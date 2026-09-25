@@ -84,6 +84,54 @@
 	background: #5A5A5A;
 	color: #FFFFFF;
 }
+div.buttons, div.buttons div.locked-icon, div.buttons div.post-icon, div.buttons div.reply-icon, div.buttons div.upload-icon, div.buttons div.qreply-icon, .postbody ul.profile-icons li.edit-icon, .postbody ul.profile-icons li.quote-icon, ul.profile-icons li.pm-icon {
+	background : none 0 0 no-repeat transparent;
+	padding : 0;
+	margin : 0;
+	height : 0;
+}
+
+.reply-icon span, .upload-icon, .post-icon span, .locked-icon span, .pmreply-icon span, .newpm-icon span, .forwardpm-icon span, .qreply-icon .edit-icon, .quote-icon, .pm-icon {
+	background : none 0 0 no-repeat transparent;
+}
+
+div.buttons {
+	float : left;
+	width : auto;
+	height : auto;
+}
+
+div.buttons div.locked-icon a, div.buttons div.post-icon a, div.buttons div.reply-icon a, div.buttons div.upload-icon a, div.buttons div.qreply-icon a, .postbody ul.profile-icons li.edit-icon a, .postbody ul.profile-icons li.quote-icon a, div.buttons div.pmreply-icon a, div.buttons div.newpm-icon a, div.buttons div.forwardpm-icon a {
+	color : #BC2A4D;
+	text-decoration : none;
+	display : inline-block;
+}
+
+div.buttons div.locked-icon, div.buttons div.post-icon, div.buttons div.reply-icon, div.buttons div.upload-icon, div.buttons div.qreply-icon, div.buttons div.pmreply-icon, div.buttons div.newpm-icon, div.buttons div.forwardpm-icon {
+	border : #C4C1BD solid 1px;
+	border-radius : 4px;
+	font-size : 12px;
+	font-family : helvetica, sans-serif;
+	margin : 0 4px;
+	padding : 0 8px 0 8px;
+	text-transform : uppercase;
+	text-decoration : none;
+	display : inline-block;
+	font-weight : 600;
+	line-height : 2.2em;
+	width : auto;
+	height : 25px;
+	white-space : nowrap;
+	background-color : #FBFBFB;
+	background-image : linear-gradient(to bottom, #FBFBFB, #E6E6E6);
+}
+
+div.buttons div.locked-icon:hover, div.buttons div.post-icon:hover, div.buttons div.reply-icon:hover, div.buttons div.upload-icon:hover, div.buttons div.qreply-icon:hover, div.buttons div.pmreply-icon:hover, div.buttons div.newpm-icon:hover, div.buttons div.forwardpm-icon:hover {
+	border : #4386CC solid 1px;
+	background-color : #E6E6E6;
+	text-decoration : none;
+	background-image : linear-gradient(to bottom, #E6E6E6, #FBFBFB);
+}
 @media screen and (max-width: 800px){
 	.menue {position:relative}
 	.menue ul {background:#E9E9EF;position:absolute;top:100%;right:0;left:0;z-index:3;height:auto;display:none;text-align:left;}

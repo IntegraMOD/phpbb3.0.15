@@ -1242,10 +1242,6 @@ h6, h6:hover {
 	display: none;
 }
 
-
-
-
-
 .rb { 
 	font-size: 1.5em;
     border: 4px solid;
@@ -1253,39 +1249,201 @@ h6, h6:hover {
 	padding:1em;
 }
 
-.column_resp p, .column_rev p, .column_home p {
-	margin: 6px;
+/*logo */
+/* Header container: logo left, branding right */
+.im-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  box-sizing: border-box;
 }
 
- /* For mobile phones: */
-
-.row_resp, .row_rev, .row_home {
-	display:flex;
-	flex-wrap: wrap;
+/* Ensure no legacy floats or absolute positioning interfere */
+.im-header * {
+  float: none !important;
+  position: relative !important;
 }
 
- [class*="column_"] {
+/* Logo block */
+.im-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  height: 100px;
+  text-decoration: none;
+  flex: 0 0 auto;
+}
+
+/* If you use an image logo, this will fit it */
+.im-logo img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Branding block stacks title and description */
+.im-branding {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+/* Title and description styling */
+.im-site-title {
+  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.1;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.im-site-desc {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Skip link */
+.skiplink {
+  margin-top: 6px;
+}
+.skiplink a {
+  color: #0073aa;
+  text-decoration: underline;
+}
+
+/* Responsive: allow wrapping on small screens */
+@media (max-width: 640px) {
+  /* Stack header items vertically and center them */
+  .im-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  /* Logo becomes a fixed-size centered block */
+  .im-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    flex: 0 0 auto;
+  }
+
+  /* Branding becomes a centered column and can take full width */
+  .im-branding {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
     width: 100%;
- }
+    box-sizing: border-box;
+    padding: 0 12px;
+  }
 
+  /* Allow title/description to wrap on small screens */
+  .im-site-title,
+  .im-site-desc {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
 
-@media only screen and (min-width: 768px) {
-	.column_resp, .column_home {
-		width: 47%;
-		margin: 2px;
-	}
+  /* Keep skip link visible and spaced */
+  .skiplink {
+    margin-top: 6px;
+  }
+}
 
-	.column_chat {
-		width: 67%;
-		margin: 2px;
-	}
+/* Accessibility focus */
+.im-logo:focus,
+.skiplink a:focus {
+  outline: 3px solid Highlight;
+  outline-offset: 2px;
+}
 
-	.column_cal {
-		width: 32%;
-		margin: 2px;
-	}	
-	.column_rev {
-		width: 23%;
-		margin: .5em;
-	}
+/* Screen-reader only helper */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}    
+/* Stack and center logo + title + description at 800px and below */
+@media (max-width: 800px) {
+  /* make header a centered column that fills the header background */
+  .im-header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px;
+    padding: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  /* logo: centered square, keep image scaled */
+  .im-logo {
+    width: 96px !important;
+    height: 96px !important;
+    flex: 0 0 auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+  }
+  .im-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    width: auto;
+    display: block;
+  }
+
+  /* branding: full width inside header, centered text */
+  .im-branding {
+    width: 100% !important;
+    max-width: 720px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* allow wrapping for title/desc */
+  .im-site-title,
+  .im-site-desc {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    width: 100%;
+    margin: 0;
+  }
+
+  .im-site-title { font-size: 1.125rem; line-height: 1.2; }
+  .im-site-desc  { margin-top: 6px; font-size: 0.95rem; color: #666; }
+.im-header { min-height: 180px;}
+  /* keep skip link centered */
+  .skiplink { width: 100%; text-align: center; margin-top: 8px; }
 }

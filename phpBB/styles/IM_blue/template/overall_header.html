@@ -34,7 +34,7 @@
 -->
 
 <link href="{T_STYLESHEET_LINK}" rel="stylesheet" type="text/css" media="screen, projection" />
-<link href="{T_THEME_PATH}/dark.css" rel="alternate stylesheet" type="text/css" title="dark" id="dark" data-bs-theme="dark" onload="this.media='all'" />
+<link href="{T_THEME_PATH}/dark.css" rel="stylesheet" type="text/css" title="dark" id="dark" data-bs-theme="dark" onload="this.media='all'" />
 
 <script>
 // <![CDATA[
@@ -158,7 +158,6 @@ onload_functions.push('checkCookieConsent()');
 <script src="{ROOT_PATH}assets/js/styleswitch.js"></script>
 <script src="{ROOT_PATH}assets/js/forum_fn.js"></script>
 <script src="{ROOT_PATH}assets/js/jquery/jquery-3.7.1.js"></script>
-<script src="{ROOT_PATH}assets/js/jquery/jquery.hoverIntent.minified.js"></script>
 
 <!-- Font Awesome 6.4.2 -->
 <script defer src="{ROOT_PATH}assets/js/all-custom.js"></script>
@@ -171,14 +170,20 @@ onload_functions.push('checkCookieConsent()');
 
 <body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION} {BODY_CLASS}">
 
-<!-- IF S_COOKIE_CONSENT_ENABLE -->
-<!-- INCLUDE cookie_consent.html -->
-<!-- ENDIF -->
-
 <div id="wrap">
 	<a id="top" name="top" accesskey="t"></a>
 	<div id="page-header">
-        <div id="header"><a href="{U_INDEX}" title="{L_INDEX}" id="logo"><span class="font-phpbb_logo"></span></a></div>
+        <div id="header" class="im-header">
+          <a href="{U_INDEX}" title="{L_INDEX}" id="logo" class="im-logo" aria-label="{L_INDEX}">
+            <span class="font-phpbb_logo" aria-hidden="true"></span>
+          </a>
+        
+          <div class="im-branding">
+            <h1 class="im-site-title">{SITENAME}</h1>
+            <p class="im-site-desc">{SITE_DESCRIPTION}</p>
+            <p class="skiplink"><a href="#start_here">{L_SKIP}</a></p>
+          </div>
+        </div>
 		<!-- INCLUDE nav_menu.html -->
 		<br />
         
