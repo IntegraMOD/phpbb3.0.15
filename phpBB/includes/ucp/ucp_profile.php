@@ -45,8 +45,8 @@ class ucp_profile
 
 				$data = array(
 					'username'			=> utf8_normalize_nfc(request_var('username', $user->data['username'], true)),
-					'email'				=> strtolower(request_var('email', $user->data['user_email'])),
-					'email_confirm'		=> strtolower(request_var('email_confirm', '')),
+					'email'				=> strtolower((string) request_var('email', $user->data['user_email'])),
+					'email_confirm'		=> strtolower((string) request_var('email_confirm', '')),
 					'new_password'		=> request_var('new_password', '', true),
 					'cur_password'		=> request_var('cur_password', '', true),
 					'password_confirm'	=> request_var('password_confirm', '', true),
@@ -141,7 +141,7 @@ class ucp_profile
 
 							$server_url = generate_board_url();
 
-							$user_actkey = gen_rand_string(mt_rand(6, 10));
+							$user_actkey = gen_rand_string(random_int(6, 10));
 
 							$messenger = new messenger(false);
 
@@ -153,7 +153,7 @@ class ucp_profile
 							$messenger->anti_abuse_headers($config, $user);
 
 							$messenger->assign_vars(array(
-								'USERNAME'		=> htmlspecialchars_decode($data['username'], ENT_COMPAT),
+								'USERNAME'		=> htmlspecialchars_decode((string) $data['username'], ENT_COMPAT),
 								'U_ACTIVATE'	=> "$server_url/ucp.$phpEx?mode=activate&u={$user->data['user_id']}&k=$user_actkey")
 							);
 
@@ -185,7 +185,7 @@ class ucp_profile
 									$messenger->im($row['user_jabber'], $row['username']);
 
 									$messenger->assign_vars(array(
-										'USERNAME'			=> htmlspecialchars_decode($data['username'], ENT_COMPAT),
+										'USERNAME'			=> htmlspecialchars_decode((string) $data['username'], ENT_COMPAT),
 										'U_USER_DETAILS'	=> "$server_url/memberlist.$phpEx?mode=viewprofile&u={$user->data['user_id']}",
 										'U_ACTIVATE'		=> "$server_url/ucp.$phpEx?mode=activate&u={$user->data['user_id']}&k=$user_actkey")
 									);
@@ -266,6 +266,15 @@ class ucp_profile
 				$cp_data = $cp_error = array();
 
 				$data = array(
+					'fb'  			=> request_var('fb',  isset($user->data['user_fb']) ? $user->data['user_fb'] : ''),
+					'ig'  			=> request_var('ig',  isset($user->data['user_ig']) ? $user->data['user_ig'] : ''),
+					'pt'  			=> request_var('pt',  isset($user->data['user_pt']) ? $user->data['user_pt'] : ''),
+					'twr' 			=> request_var('twr', isset($user->data['user_twr']) ? $user->data['user_twr'] : ''),
+					'skp' 			=> request_var('skp', isset($user->data['user_skp']) ? $user->data['user_skp'] : ''),
+					'tg'  			=> request_var('tg',  isset($user->data['user_tg']) ? $user->data['user_tg'] : ''),
+					'li'  			=> request_var('li',  isset($user->data['user_li']) ? $user->data['user_li'] : ''),
+					'tt'  			=> request_var('tt',  isset($user->data['user_tt']) ? $user->data['user_tt'] : ''),
+					'dc'  			=> request_var('dc',  isset($user->data['user_dc']) ? $user->data['user_dc'] : ''),
 					'icq'			=> request_var('icq', $user->data['user_icq']),
 					'aim'			=> request_var('aim', $user->data['user_aim']),
 					'msn'			=> request_var('msn', $user->data['user_msnm']),
@@ -283,7 +292,7 @@ class ucp_profile
 
 					if ($user->data['user_birthday'])
 					{
-						list($data['bday_day'], $data['bday_month'], $data['bday_year']) = explode('-', $user->data['user_birthday']);
+						[$data['bday_day'], $data['bday_month'], $data['bday_year']] = explode('-', (string) $user->data['user_birthday']);
 					}
 
 					$data['bday_day'] = request_var('bday_day', $data['bday_day']);
@@ -297,6 +306,24 @@ class ucp_profile
 				if ($submit)
 				{
 					$validate_array = array(
+						'fb'			=> array('string', true, 3, 255),
+						'ig'			=> array('string', true, 3, 255),
+						'pt'			=> array('string', true, 3, 255),
+						'twr'			=> array('string', true, 3, 255),
+						'skp'			=> array(
+							array('string', true, 6, 32),
+							array('match', true, '#^[a-zA-Z][a-zA-Z0-9.,\-_]{5,31}$#')
+						),
+						'tg'			=> array(
+							array('string', true, 5, 32),
+							array('match', true, '#^[a-zA-Z0-9_]{5,32}$#')
+						),
+						'li'			=> array('string', true, 3, 255),
+						'tt'			=> array('string', true, 3, 255),
+						'dc' => array(
+							array('string', true, 2, 32),
+							array('match', true, '/^[a-z0-9._]{2,32}$/i')
+						),
 						'icq'			=> array(
 							array('string', true, 3, 15),
 							array('match', true, '#^[0-9]+$#i')),
@@ -351,6 +378,15 @@ class ucp_profile
 						}
 
 						$sql_ary = array(
+							'user_fb'		=> $data['fb'],
+							'user_ig'		=> $data['ig'],
+							'user_pt'		=> $data['pt'],
+							'user_twr'		=> $data['twr'],
+							'user_skp'		=> $data['skp'],
+							'user_tg'		=> $data['tg'],
+							'user_li'		=> $data['li'],
+							'user_tt'		=> $data['tt'],
+							'user_dc'		=> $data['dc'],
 							'user_icq'		=> $data['icq'],
 							'user_aim'		=> $data['aim'],
 							'user_msnm'		=> $data['msn'],
@@ -422,6 +458,15 @@ class ucp_profile
 				$template->assign_vars(array(
 					'ERROR'		=> (sizeof($error)) ? implode('<br />', $error) : '',
 
+					'FB'		=> $data['fb'],
+					'IG'		=> $data['ig'],
+					'PT'		=> $data['pt'],
+					'TWR'		=> $data['twr'],
+					'SKP'		=> $data['skp'],
+					'TG'		=> $data['tg'],
+					'LI'		=> $data['li'],
+					'TT'		=> $data['tt'],
+					'DC'		=> $data['dc'],
 					'ICQ'		=> $data['icq'],
 					'YIM'		=> $data['yim'],
 					'AIM'		=> $data['aim'],
@@ -558,8 +603,8 @@ class ucp_profile
 				include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 
 				$display_gallery = request_var('display_gallery', '0');
-				$avatar_select = basename(request_var('avatar_select', ''));
-				$category = basename(request_var('category', ''));
+				$avatar_select = basename((string) request_var('avatar_select', ''));
+				$category = basename((string) request_var('category', ''));
 
 				$can_upload = (file_exists($phpbb_root_path . $config['avatar_path']) && phpbb_is_writable($phpbb_root_path . $config['avatar_path']) && $auth->acl_get('u_chgavatar') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 
@@ -631,14 +676,14 @@ class ucp_profile
 		}
 
 		$template->assign_vars(array(
-			'L_TITLE'	=> $user->lang['UCP_PROFILE_' . strtoupper($mode)],
-
+			'L_TITLE'	=> $user->lang['UCP_PROFILE_' . strtoupper((string) $mode)],
+            'UCP_DC_TAG'		=> $user->lang['UCP_DC_TAG'],
 			'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
 			'S_UCP_ACTION'		=> $this->u_action)
 		);
 
 		// Set desired template
 		$this->tpl_name = 'ucp_profile_' . $mode;
-		$this->page_title = 'UCP_PROFILE_' . strtoupper($mode);
+		$this->page_title = 'UCP_PROFILE_' . strtoupper((string) $mode);
 	}
 }

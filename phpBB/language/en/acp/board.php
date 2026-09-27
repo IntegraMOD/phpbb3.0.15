@@ -35,6 +35,7 @@ if (empty($lang) || !is_array($lang))
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
+
 // Board Settings
 $lang = array_merge($lang, array(
 	'ACP_BOARD_SETTINGS_EXPLAIN'	=> 'Here you can determine the basic operation of your board, give it a fitting name and description, and among other settings adjust the default values for timezone and language.',
@@ -351,8 +352,8 @@ $lang = array_merge($lang, array(
 	'COOKIE_PARTITIONED_EXPLAIN'	=> 'Enable partitioned cookies for enhanced privacy in third-party contexts. This is useful for embedded content and prevents cross-site tracking. Requires the Secure flag to be enabled.',
 	'COOKIE_SECURE_ADMIN'			=> 'Force secure cookies for admin',
 	'COOKIE_SECURE_ADMIN_EXPLAIN'	=> 'Forces all admin panel cookies to use the secure flag, regardless of the global secure setting. This adds an extra layer of security for administrative functions.',
-	'ONLINE_LENGTH'				    => 'View online time span',
-	'ONLINE_LENGTH_EXPLAIN'		    => 'Number of minutes after which inactive users will not appear in “Who is online” listings. The higher this value the greater is the processing required to generate the listing.',
+	'ONLINE_LENGTH'				=> 'View online time span',
+	'ONLINE_LENGTH_EXPLAIN'		=> 'Number of minutes after which inactive users will not appear in “Who is online” listings. The higher this value the greater is the processing required to generate the listing.',
 	'SESSION_GC'					=> 'Session garbage collection',
 	'SESSION_GC_EXPLAIN'			=> 'The system will clean out old sessions every x seconds.',
 	'SESSION_LENGTH'				=> 'Session length',
@@ -364,13 +365,15 @@ $lang = array_merge($lang, array(
 
 // Cookie Consent Settings
 $lang = array_merge($lang, [
-   'COOKIE_CONSENT_SETTINGS' => 'Cookie Consent Settings',
-   'COOKIE_CONSENT_ENABLE' => 'Enable Cookie Consent Modal',
-   'COOKIE_CONSENT_TEXT' => 'Consent Modal Text',
-   'COOKIE_CONSENT_CONFIRM' => 'Confirm Button Text',
-   'COOKIE_CONSENT_ACCEPT_TEXT' => 'Accept Cookies Button Text',
+   'COOKIE_CONSENT_TITLE'		 => 'Cookie Consent Title',
+   'COOKIE_CONSENT_MESSAGE'		 => 'Cookie Consent Message',
+   'COOKIE_CONSENT_SETTINGS'     => 'Cookie Consent Settings',
+   'COOKIE_CONSENT_ENABLE'       => 'Enable Cookie Consent Modal',
+   'COOKIE_CONSENT_TEXT'         => 'Consent Modal Text',
+   'COOKIE_CONSENT_CONFIRM'      => 'Confirm Button Text',
+   'COOKIE_CONSENT_ACCEPT_TEXT'  => 'Accept Cookies Button Text',
    'COOKIE_CONSENT_DECLINE_TEXT' => 'Decline Cookies Button Text',
-   'COOKIE_CONSENT_POSITION'    => 'Position of the Cookie Consent Modal',
+   'COOKIE_CONSENT_POSITION'     => 'Position of the Cookie Consent Modal',
    'COOKIE_CONSENT_POSITION_TOP'    => 'Top',
    'COOKIE_CONSENT_POSITION_BOTTOM' => 'Bottom',
    'COOKIE_CONSENT_POSITION_CENTER' => 'Center',

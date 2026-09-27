@@ -106,36 +106,197 @@
 	<tr>
 		<td class="row1">
 			<table width="100%" cellspacing="1" cellpadding="2" border="0">
-			<tr>
-				<td class="gen" align="{S_CONTENT_FLOW_END}" nowrap="nowrap">{L_EMAIL_ADDRESS}: </td>
-				<td width="100%"><!-- IF U_EMAIL --><a href="{U_EMAIL}">{EMAIL_IMG}</a><!-- ENDIF --></td>
-			</tr>
-			<!-- IF U_PM -->
+				<tr>
+					<td class="gen" align="{S_CONTENT_FLOW_END}" nowrap="nowrap">{L_EMAIL_ADDRESS}: </td>
+					<td width="100%"><!-- IF U_EMAIL --><a href="{U_EMAIL}">{EMAIL_IMG}</a><!-- ENDIF --></td>
+				</tr>
+				<!-- IF U_PM -->
 				<tr>
 					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_PM}: </td>
 					<td><a href="{U_PM}">{PM_IMG}</a></td>
 				</tr>
-			<!-- ENDIF -->
-			<tr>
-				<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_MSNM}: </td>
-				<td><!-- IF U_MSN --><a href="{U_MSN}" onclick="popup(this.href, 550, 320); return false">{MSN_IMG}</a><!-- ELSEIF USER_MSN -->{USER_MSN}<!-- ENDIF --></td>
-			</tr>
-			<tr>
-				<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_YIM}: </td>
-				<td><!-- IF U_YIM --><a href="{U_YIM}" onclick="popup(this.href, 780, 550); return false">{YIM_IMG}</a><!-- ELSEIF USER_YIM -->{USER_YIM}<!-- ENDIF --></td>
-			</tr>
-			<tr>
-				<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_AIM}: </td>
-				<td><!-- IF U_AIM --><a href="{U_AIM}" onclick="popup(this.href, 550, 320); return false">{AIM_IMG}</a><!-- ELSEIF USER_AIM -->{USER_AIM}<!-- ENDIF --></td>
-			</tr>
-			<tr>
-				<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_ICQ}: </td>
-				<td><!-- IF U_ICQ --><a href="{U_ICQ}" onclick="popup(this.href, 550, 320); return false">{ICQ_IMG}</a><!-- ELSEIF USER_ICQ -->{USER_ICQ}<!-- ENDIF --></td>
-			</tr>
-			<tr>
-				<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_JABBER}: </td>
-				<td><!-- IF U_JABBER --><a href="{U_JABBER}" onclick="popup(this.href, 550, 320); return false">{JABBER_IMG}</a><!-- ELSEIF USER_JABBER -->{USER_JABBER_IMG}<!-- ENDIF --></td>
-			</tr>
+				<!-- ENDIF -->
+				<!-- Facebook -->
+				<!-- IF U_FB -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_FB}:</td>
+					<td><a href="{U_FB}" onclick="popup(this.href, 780, 550); return false">{FB_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_FB -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_FB}:</td>
+					<td>{USER_FB}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- Instagram -->
+				<!-- IF U_IG -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_IG}:</td>
+					<td><a href="{U_IG}" onclick="popup(this.href, 780, 550); return false">{IG_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_IG -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_IG}:</td>
+					<td>{USER_IG}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- Pinterest -->
+				<!-- IF U_PT -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_PT}:</td>
+					<td><a href="{U_PT}" onclick="popup(this.href, 780, 550); return false">{PT_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_PT -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_PT}:</td>
+					<td>{USER_PT}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- Twitter -->
+				<!-- IF U_TWR -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_TWR}:</td>
+					<td><a href="{U_TWR}" onclick="popup(this.href, 780, 550); return false">{TWR_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_TWR -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_TWR}:</td>
+					<td>{USER_TWR}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- Skype -->
+				<!-- IF U_SKP -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_SKP}:</td>
+					<td><a href="{U_SKP}" onclick="popup(this.href, 780, 550); return false">{SKP_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_SKP -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_SKP}:</td>
+					<td>{USER_SKP}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- Telegram -->
+				<!-- IF U_TG -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_TG}:</td>
+					<td><a href="{U_TG}" onclick="popup(this.href, 780, 550); return false">{TG_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_TG -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_TG}:</td>
+					<td>{USER_TG}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- LinkedIn -->
+				<!-- IF U_LI -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_LI}:</td>
+					<td><a href="{U_LI}" onclick="popup(this.href, 780, 550); return false">{LI_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_LI -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_LI}:</td>
+					<td>{USER_LI}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- TikTok -->
+				<!-- IF U_TT -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_TT}:</td>
+					<td><a href="{U_TT}" onclick="popup(this.href, 780, 550); return false">{TT_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_TT -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_TT}:</td>
+					<td>{USER_TT}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- Discord -->
+				<!-- IF U_DC -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_DC}:</td>
+					<td><a href="{U_DC}" onclick="popup(this.href, 780, 550); return false">{DC_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_DC -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_DC}:</td>
+					<td>{USER_DC}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- MSN -->
+				<!-- IF U_MSN -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_MSNM}:</td>
+					<td><a href="{U_MSN}" onclick="popup(this.href, 550, 320); return false">{MSN_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_MSN -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_MSNM}:</td>
+					<td>{USER_MSN}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- Yahoo -->
+				<!-- IF U_YIM -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_YIM}:</td>
+					<td><a href="{U_YIM}" onclick="popup(this.href, 780, 550); return false">{YIM_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_YIM -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_YIM}:</td>
+					<td>{USER_YIM}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- AIM -->
+				<!-- IF U_AIM -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_AIM}:</td>
+					<td><a href="{U_AIM}" onclick="popup(this.href, 550, 320); return false">{AIM_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_AIM -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_AIM}:</td>
+					<td>{USER_AIM}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- ICQ -->
+				<!-- IF U_ICQ -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_ICQ}:</td>
+					<td><a href="{U_ICQ}" onclick="popup(this.href, 550, 320); return false">{ICQ_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_ICQ -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_ICQ}:</td>
+					<td>{USER_ICQ}</td>
+				</tr>
+				<!-- ENDIF -->
+
+				<!-- Jabber -->
+				<!-- IF U_JABBER -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_JABBER}:</td>
+					<td><a href="{U_JABBER}" onclick="popup(this.href, 550, 320); return false">{JABBER_IMG}</a></td>
+				</tr>
+				<!-- ELSEIF USER_JABBER -->
+				<tr>
+					<td class="gen" nowrap="nowrap" align="{S_CONTENT_FLOW_END}">{L_JABBER}:</td>
+					<td>{USER_JABBER_IMG}</td>
+				</tr>
+				<!-- ENDIF -->
 			</table>
 		</td>
 		<td class="row1">

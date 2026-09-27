@@ -20,11 +20,10 @@
 	  </ul>	
     </li>
 	<!-- ENDIF -->
-    <li><a class="dropdown-arrow <!-- IF S_IN_FAQ or S_IN_KNOWLEDGE_BASE or S_IN_MEMBERLIST or S_IN_DL or S_IN_HACKLIST or S_IN_GALLERY or S_IN_MCHAT or S_IN_CONTACT or S_IN_ACTIVITY or S_IN_MEETING or S_IN_BLOG --> activetab<!-- ENDIF -->" href="#">
+    <li><a class="dropdown-arrow <!-- IF S_IN_FAQ or S_IN_MEMBERLIST or S_IN_CONTACT --> activetab<!-- ENDIF -->" href="#">
 		<!-- IF S_IN_FAQ -->{L_FAQ}<!-- ENDIF -->
-		<!-- IF S_IN_KNOWLEDGE_BASE -->{L_KNOWLEDGE_BASE}<!-- ENDIF -->
 		<!-- IF S_DISPLAY_MEMBERLIST and S_IN_MEMBERLIST -->{L_MEMBERLIST}<!-- ENDIF -->
-			<!-- IF not S_IN_FAQ and not S_IN_MEMBERLIST -->{L_LINKS}<!-- ENDIF -->
+		<!-- IF not S_IN_FAQ and not S_IN_MEMBERLIST and not S_IN_CONTACT -->{L_LINKS}<!-- ENDIF -->
       </a>
       <ul class="sub-menus">
 		<li><a href="{U_FAQ}"><i class="fa-solid fa-circle-question"></i> {L_FAQ}</a></li>
@@ -46,7 +45,7 @@
 	<!-- ENDIF -->
 	
 	<!-- IF S_USER_LOGGED_IN and not S_IS_BOT -->
-    <li><a class="dropdown-arrow username uname" href="http:#">&nbsp;{S_USERNAME}&nbsp;</a>
+    <li><a class="dropdown-arrow username uname" href="{U_MEMBERLIST}?mode=viewprofile&un={S_USERNAME}">&nbsp;{S_USERNAME}&nbsp;</a>
       <ul class="sub-menus">
 		<li><a href="{U_PROFILE}"><i class="fa-solid fa-user-gear"></i> {L_PROFILE}</a></li>
 		<!-- IF S_DISPLAY_SEARCH -->
@@ -56,7 +55,7 @@
 		<li><a href="{U_RESTORE_PERMISSIONS}"><i class="fa-solid fa-window-restore"></i> {L_RESTORE_PERMISSIONS}</a></li>
 		<!-- ENDIF -->
         <!-- IF U_ACP -->
-		<li><a href="{U_ACP}"><i class="fa-solid fa-gear"></i> {L_ACP_SHORT}</a></li>
+		<li><a href="{U_ACP}"><i class="fa-solid fa-gear"></i> {L_SETTINGS}</a></li>
 		<!-- ENDIF -->
         <li><a href="{U_LOGIN_LOGOUT}"><i class="fa-solid fa-power-off"></i> {L_LOGIN_LOGOUT}</a></li>		
       </ul>

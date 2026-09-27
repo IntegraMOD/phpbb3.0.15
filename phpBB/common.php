@@ -6,7 +6,7 @@
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
-* Minimum Requirement: PHP 5.6.4
+* Minimum Requirement: PHP 7.4
 */
 
 /**
@@ -19,89 +19,9 @@ if (!defined('IN_PHPBB'))
 error_reporting  (E_ERROR | E_WARNING | E_PARSE); // This will NOT report uninitialized variables
 
 // Uncomment these and comment out the previous "error_reporting" to debug errors
-// ini_set('display_startup_errors',1); 
-// ini_set('display_errors',1);
-// error_reporting  (E_ALL);
-
-/**
-* PHP 8 String Function Compatibility
-* Works on PHP 5.6 ? 8.5
-* Only defines functions if missing.
-*/
-
-if (!function_exists('str_contains'))
-{
-    function str_contains($haystack, $needle)
-    {
-        return ($needle !== '' && strpos($haystack, $needle) !== false);
-    }
-}
-
-if (!function_exists('str_starts_with'))
-{
-    function str_starts_with($haystack, $needle)
-    {
-        return ($needle !== '' && strncmp($haystack, $needle, strlen($needle)) === 0);
-    }
-}
-
-if (!function_exists('str_ends_with'))
-{
-    function str_ends_with($haystack, $needle)
-    {
-        if ($needle === '') {
-            return false;
-        }
-
-        $len = strlen($needle);
-        return (substr($haystack, -$len) === $needle);
-    }
-}
-
-if (!function_exists('str_contains_ci'))
-{
-    // Optional helper: case-insensitive contains (phpBB uses this pattern often)
-    function str_contains_ci($haystack, $needle)
-    {
-        return ($needle !== '' && stripos($haystack, $needle) !== false);
-    }
-}
-
-if (!function_exists('str_starts_with_ci'))
-{
-    function str_starts_with_ci($haystack, $needle)
-    {
-        $len = strlen($needle);
-        return ($len && strncasecmp($haystack, $needle, $len) === 0);
-    }
-}
-
-if (!function_exists('str_ends_with_ci'))
-{
-    function str_ends_with_ci($haystack, $needle)
-    {
-        if ($needle === '') {
-            return false;
-        }
-
-        $len = strlen($needle);
-        return (strcasecmp(substr($haystack, -$len), $needle) === 0);
-    }
-}
-
-/**
-* PHP 8.2: safe version of str_contains for arrays (phpBB sometimes passes arrays)
-*/
-if (!function_exists('str_contains_safe'))
-{
-    function str_contains_safe($haystack, $needle)
-    {
-        if (!is_string($haystack)) {
-            return false;
-        }
-        return str_contains($haystack, $needle);
-    }
-}
+//ini_set('display_startup_errors',1); 
+//ini_set('display_errors',1);
+//error_reporting  (E_ALL);
 
 require($phpbb_root_path . 'includes/startup.' . $phpEx);
 

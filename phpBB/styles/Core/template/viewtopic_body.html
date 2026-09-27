@@ -178,17 +178,35 @@
 				</ul>
 			<!-- ENDIF -->
 		<!-- ENDIF -->
-
-			<h3 <!-- IF postrow.S_FIRST_ROW -->class="first"<!-- ENDIF -->><!-- IF postrow.POST_ICON_IMG --><img src="{T_ICONS_PATH}{postrow.POST_ICON_IMG}" width="{postrow.POST_ICON_IMG_WIDTH}" height="{postrow.POST_ICON_IMG_HEIGHT}" alt="" /> <!-- ENDIF --><a href="#p{postrow.POST_ID}">{postrow.POST_SUBJECT}</a></h3>
-            <div class="post-author"><!-- IF S_IS_BOT --><svg class="css-icon css-icon-post-marker" aria-hidden="true" focusable="false"><use href="#icon-topic"></use></svg><!-- ELSE --><a href="{postrow.U_MINI_POST}" class="post-marker"><svg class="css-icon css-icon-post-marker" aria-hidden="true" focusable="false"><use href="#icon-topic"></use></svg></a><!-- ENDIF -->{L_POST_BY_AUTHOR} <strong>{postrow.POST_AUTHOR_FULL}</strong> &raquo; {postrow.POST_DATE} </div>
-
-			<!-- IF postrow.S_POST_UNAPPROVED or postrow.S_POST_REPORTED -->
-				<div class="post-rules">
-                    <!-- IF postrow.S_POST_UNAPPROVED --><svg class="css-icon css-icon-warning" aria-hidden="true" focusable="false"><use href="#icon-warning"></use></svg> <a href="{postrow.U_MCP_APPROVE}"><strong>{L_POST_UNAPPROVED}</strong></a><span class="post-rule-break"></span><!-- ENDIF -->
-                    <!-- IF postrow.S_POST_REPORTED --><svg class="css-icon css-icon-flag" aria-hidden="true" focusable="false"><use href="#icon-flag"></use></svg> <a href="{postrow.U_MCP_REPORT}"><strong>{L_POST_REPORTED}</strong></a><!-- ENDIF -->
-				</div>
-			<!-- ENDIF -->
-
+            
+            <h3 <!-- IF postrow.S_FIRST_ROW -->class="first"<!-- ENDIF -->>
+                <!-- IF postrow.POST_ICON_IMG -->
+                    <img src="{T_ICONS_PATH}{postrow.POST_ICON_IMG}" width="{postrow.POST_ICON_IMG_WIDTH}" height="{postrow.POST_ICON_IMG_HEIGHT}" alt="" />
+                <!-- ENDIF -->
+                <a href="#p{postrow.POST_ID}">{postrow.POST_SUBJECT}</a>
+            </h3>
+            
+            <div class="post-author">
+                <!-- IF S_IS_BOT -->
+                    <span title="{L_POST}"><svg class="css-icon css-icon-post-marker" aria-hidden="true" focusable="false"><use href="#icon-topic"></use></svg></span>
+                <!-- ELSE -->
+                    <a href="{postrow.U_MINI_POST}" class="post-marker" title="{L_POST}"><svg class="css-icon css-icon-post-marker" aria-hidden="true" focusable="false"><use href="#icon-topic"></use></svg></a>
+                <!-- ENDIF -->
+                {L_POST_BY_AUTHOR} <strong>{postrow.POST_AUTHOR_FULL}</strong> &raquo; {postrow.POST_DATE}
+            </div>
+            
+            <!-- IF postrow.S_POST_UNAPPROVED or postrow.S_POST_REPORTED -->
+                <div class="post-rules">
+                    <!-- IF postrow.S_POST_UNAPPROVED -->
+                        <svg class="css-icon css-icon-warning" aria-hidden="true" focusable="false"><use href="#icon-warning"></use></svg>
+                        <a href="{postrow.U_MCP_APPROVE}"><strong>{L_POST_UNAPPROVED}</strong></a><span class="post-rule-break"></span>
+                    <!-- ENDIF -->
+                    <!-- IF postrow.S_POST_REPORTED -->
+                        <svg class="css-icon css-icon-flag" aria-hidden="true" focusable="false"><use href="#icon-flag"></use></svg>
+                        <a href="{postrow.U_MCP_REPORT}"><strong>{L_POST_REPORTED}</strong></a>
+                    <!-- ENDIF -->
+                </div>
+            <!-- ENDIF -->
 			<div class="post-message">{postrow.MESSAGE}</div>
 
 			<!-- IF postrow.S_HAS_ATTACHMENTS -->

@@ -33,7 +33,7 @@
 				<script type="text/javascript">
 				// <![CDATA[
 					var app = document.getElementById('objMessengerApp');
-					
+						
 					/**
 					* Check whether the browser supports this and whether MSNM is connected
 					*/
@@ -130,6 +130,80 @@
 		</tr>
 	<!-- ENDIF -->
 
+	<!-- Additional messengers and social services (subsilver2 style rows) -->
+
+	<!-- Facebook -->
+	<!-- IF U_FB or USER_FB -->
+		<tr>
+			<td class="row1"><b class="genmed">{L_FB}: </b></td>
+			<td class="row2"><!-- IF U_FB --><a href="{U_FB}" onclick="popup(this.href, 780, 550); return false">{FB_IMG}</a><!-- ELSE -->{USER_FB}<!-- ENDIF --></td>
+		</tr>
+	<!-- ENDIF -->
+
+	<!-- Instagram -->
+	<!-- IF U_IG or USER_IG -->
+		<tr>
+			<td class="row1"><b class="genmed">{L_IG}: </b></td>
+			<td class="row2"><!-- IF U_IG --><a href="{U_IG}" onclick="popup(this.href, 780, 550); return false">{IG_IMG}</a><!-- ELSE -->{USER_IG}<!-- ENDIF --></td>
+		</tr>
+	<!-- ENDIF -->
+
+	<!-- Pinterest -->
+	<!-- IF U_PT or USER_PT -->
+		<tr>
+			<td class="row1"><b class="genmed">{L_PT}: </b></td>
+			<td class="row2"><!-- IF U_PT --><a href="{U_PT}" onclick="popup(this.href, 780, 550); return false">{PT_IMG}</a><!-- ELSE -->{USER_PT}<!-- ENDIF --></td>
+		</tr>
+	<!-- ENDIF -->
+
+	<!-- Twitter -->
+	<!-- IF U_TWR or USER_TWR -->
+		<tr>
+			<td class="row1"><b class="genmed">{L_TWR}: </b></td>
+			<td class="row2"><!-- IF U_TWR --><a href="{U_TWR}" onclick="popup(this.href, 780, 550); return false">{TWR_IMG}</a><!-- ELSE -->{USER_TWR}<!-- ENDIF --></td>
+		</tr>
+	<!-- ENDIF -->
+
+	<!-- Skype -->
+	<!-- IF U_SKP or USER_SKP -->
+		<tr>
+			<td class="row1"><b class="genmed">{L_SKP}: </b></td>
+			<td class="row2"><!-- IF U_SKP --><a href="{U_SKP}" onclick="popup(this.href, 780, 550); return false">{SKP_IMG}</a><!-- ELSE -->{USER_SKP}<!-- ENDIF --></td>
+		</tr>
+	<!-- ENDIF -->
+
+	<!-- Telegram -->
+	<!-- IF U_TG or USER_TG -->
+		<tr>
+			<td class="row1"><b class="genmed">{L_TG}: </b></td>
+			<td class="row2"><!-- IF U_TG --><a href="{U_TG}" onclick="popup(this.href, 780, 550); return false">{TG_IMG}</a><!-- ELSE -->{USER_TG}<!-- ENDIF --></td>
+		</tr>
+	<!-- ENDIF -->
+
+	<!-- LinkedIn -->
+	<!-- IF U_LI or USER_LI -->
+		<tr>
+			<td class="row1"><b class="genmed">{L_LI}: </b></td>
+			<td class="row2"><!-- IF U_LI --><a href="{U_LI}" onclick="popup(this.href, 780, 550); return false">{LI_IMG}</a><!-- ELSE -->{USER_LI}<!-- ENDIF --></td>
+		</tr>
+	<!-- ENDIF -->
+
+	<!-- TikTok -->
+	<!-- IF U_TT or USER_TT -->
+		<tr>
+			<td class="row1"><b class="genmed">{L_TT}: </b></td>
+			<td class="row2"><!-- IF U_TT --><a href="{U_TT}" onclick="popup(this.href, 780, 550); return false">{TT_IMG}</a><!-- ELSE -->{USER_TT}<!-- ENDIF --></td>
+		</tr>
+	<!-- ENDIF -->
+
+	<!-- Discord -->
+	<!-- IF U_DC or USER_DC -->
+		<tr>
+			<td class="row1"><b class="genmed">{L_DC}: </b></td>
+			<td class="row2"><!-- IF U_DC --><a href="{U_DC}" onclick="popup(this.href, 780, 550); return false">{DC_IMG}</a><!-- ELSE -->{USER_DC}<!-- ENDIF --></td>
+		</tr>
+	<!-- ENDIF -->
+
 	</table>
 {S_FORM_TOKEN}
 </form>
@@ -137,3 +211,4 @@
 <a class="nav" href="#" onclick="window.close(); return false;">{L_CLOSE_WINDOW}</a>
 
 <!-- INCLUDE simple_footer.html -->
+

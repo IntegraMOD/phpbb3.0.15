@@ -277,46 +277,60 @@ switch ($mode)
 		switch ($action)
 		{
 			case 'fb':
-				$lang = 'Facebook';
+				$lang = 'FACEBOOK';
 				$sql_field = 'user_fb';
 				$s_select = 'S_SEND_FB';
 				$s_action = '';
 			break;
 
 			case 'ig':
-				$lang = 'Instagram';
+				$lang = 'INSTAGRAM';
 				$sql_field = 'user_ig';
 				$s_select = 'S_SEND_IG';
 				$s_action = '';
 			break;
 
 			case 'tt':
-				$lang = 'TikTok';
+				$lang = 'TIKTOK';
 				$sql_field = 'user_tt';
 				$s_select = 'S_SEND_TT';
 				$s_action = '';
 			break;
 
+			case 'twr':
+				$lang = 'TWITTER';
+				$sql_field = 'user_twr';
+				$s_select = 'S_SEND_TWR';
+				$s_action = '';
+			break;
+			
 			case 'dc':
-				$lang = 'Discord';
+				$lang = 'DISCORD';
 				$sql_field = 'user_dc';
 				$s_select = 'S_SEND_DC';
 				$s_action = '';
 			break;
 
 			case 'tg':
-				$lang = 'Telegram';
+				$lang = 'TELEGRAM';
 				$sql_field = 'user_tg';
 				$s_select = 'S_SEND_TG';
 				$s_action = '';
 			break;
 
 			case 'li':
-				$lang = 'LinkedIn';
+				$lang = 'LINKEDIN';
 				$sql_field = 'user_li';
 				$s_select = 'S_SEND_LI';
 				$s_action = '';
 			break;
+			case 'skp':
+				$lang = 'SKYPE';
+				$sql_field = 'user_skp';
+				$s_select = 'S_SEND_SKP';
+				$s_action = '';
+			break;
+			
 			case 'aim':
 				$lang = 'AIM';
 				$sql_field = 'user_aim';
@@ -417,6 +431,9 @@ switch ($mode)
 			'U_FB_CONTACT'		=> ($action == 'fb') ? 'https://facebook.com/' . urlencode($row[$sql_field]) : '',
 			'U_IG_CONTACT'		=> ($action == 'ig') ? 'https://instagram.com/' . urlencode($row[$sql_field]) : '',
 			'U_TT_CONTACT'		=> ($action == 'tt') ? 'https://www.tiktok.com/@' . urlencode($row[$sql_field]) : '',
+            'U_TWR_CONTACT'     => ($action == 'twr') ? 'https://twitter.com/' . urlencode($row[$sql_field]) : '',
+
+
 			'U_DC_CONTACT'		=> ($action == 'dc') ? 'https://discordapp.com/users/' . urlencode($row[$sql_field]) : '',
 			'U_TG_CONTACT'		=> ($action == 'tg') ? 'https://t.me/' . urlencode($row[$sql_field]) : '',
 			'U_LI_CONTACT'		=> ($action == 'li') ? 'https://linkedin.com/in/' . urlencode($row[$sql_field]) : '',
@@ -429,7 +446,7 @@ switch ($mode)
 
 			'PRESENCE_IMG'		=> $presence_img,
 
-			'L_SEND_IM_EXPLAIN'	=> $user->lang['IM_' . $lang],
+			'L_SEND_IM_EXPLAIN' => isset($user->lang['IM_' . $lang]) ? $user->lang['IM_' . $lang] : '',
 			'L_IM_SENT_JABBER'	=> sprintf($user->lang['IM_SENT_JABBER'], $row['username']),
 
 			$s_select			=> true,
@@ -1676,15 +1693,15 @@ switch ($mode)
 			'PM_IMG'		=> $user->img('icon_contact_pm', $user->lang['SEND_PRIVATE_MESSAGE']),
 			'EMAIL_IMG'		=> $user->img('icon_contact_email', $user->lang['EMAIL']),
 			'WWW_IMG'		=> $user->img('icon_contact_www', $user->lang['WWW']),
-			'FB_IMG'		=> $user->img('icon_contact_fb', $user->lang['FB']),
-			'IG_IMG'		=> $user->img('icon_contact_ig', $user->lang['IG']),
-			'PT_IMG'		=> $user->img('icon_contact_pt', $user->lang['PT']),
-			'TWR_IMG'		=> $user->img('icon_contact_twr', $user->lang['TWR']),
-			'SKP_IMG'		=> $user->img('icon_contact_skp', $user->lang['SKP']),
-			'TG_IMG'		=> $user->img('icon_contact_tg', $user->lang['TG']),
-			'LI_IMG'		=> $user->img('icon_contact_li', $user->lang['LI']),
-			'TT_IMG'		=> $user->img('icon_contact_tt', $user->lang['TT']),
-			'DC_IMG'		=> $user->img('icon_contact_dc', $user->lang['DC']),
+			'FB_IMG'		=> $user->img('icon_contact_fb', $user->lang['FACEBOOK']),
+			'IG_IMG'		=> $user->img('icon_contact_ig', $user->lang['INSTAGRAM']),
+			'PT_IMG'		=> $user->img('icon_contact_pt', $user->lang['PINTEREST']),
+			'TWR_IMG'		=> $user->img('icon_contact_twr', $user->lang['TWITTER']),
+			'SKP_IMG'		=> $user->img('icon_contact_skp', $user->lang['SKYPE']),
+			'TG_IMG'		=> $user->img('icon_contact_tg', $user->lang['TELEGRAM']),
+			'LI_IMG'		=> $user->img('icon_contact_li', $user->lang['LINKEDIN']),
+			'TT_IMG'		=> $user->img('icon_contact_tt', $user->lang['TIKTOK']),
+			'DC_IMG'		=> $user->img('icon_contact_dc', $user->lang['DISCORD']),
 			'ICQ_IMG'		=> $user->img('icon_contact_icq', $user->lang['ICQ']),
 			'AIM_IMG'		=> $user->img('icon_contact_aim', $user->lang['AIM']),
 			'MSN_IMG'		=> $user->img('icon_contact_msnm', $user->lang['MSNM']),

@@ -2673,15 +2673,16 @@ function group_correct_avatar($group_id, $old_entry)
 {
 	global $config, $db, $phpbb_root_path;
 
-    $group_id		= (int)$group_id;
-    $ext 			= substr(strrchr((string) $old_entry, '.'), 1);
-    $old_filename 	= get_avatar_filename($old_entry);
-    $new_filename 	= $config['avatar_salt'] . "_g$group_id.$ext";
-    $new_entry 		= 'g' . $group_id . '_' . substr(time(), -5) . ".$ext";
+	$group_id		= (int)$group_id;
+	$ext 			= substr(strrchr($old_entry, '.'), 1);
+	$old_filename 	= get_avatar_filename($old_entry);
+	$new_filename 	= $config['avatar_salt'] . "_g$group_id.$ext";
+	$new_entry 		= 'g' . $group_id . '_' . substr(time(), -5) . ".$ext";
 
-    $avatar_path = $phpbb_root_path . $config['avatar_path'];
-    if (@rename($avatar_path . '/'. $old_filename, $avatar_path . '/' . $new_filename)) {
-        $sql = 'UPDATE ' . GROUPS_TABLE . '
+	$avatar_path = $phpbb_root_path . $config['avatar_path'];
+	if (@rename($avatar_path . '/'. $old_filename, $avatar_path . '/' . $new_filename))
+	{
+		$sql = 'UPDATE ' . GROUPS_TABLE . '
 			SET group_avatar = \'' . $db->sql_escape($new_entry) . "'
 			WHERE group_id = $group_id";
 		$db->sql_query($sql);
@@ -3175,9 +3176,9 @@ function group_user_attributes($action, $group_id, $user_id_ary = false, $userna
 				$messenger->im($row['user_jabber'], $row['username']);
 
 				$messenger->assign_vars(array(
-                    'USERNAME'		=> htmlspecialchars_decode((string) $row['username'], ENT_COMPAT),
-                    'GROUP_NAME'	=> htmlspecialchars_decode((string) $group_name, ENT_COMPAT),
-                    'U_GROUP'		=> generate_board_url() . "/ucp.$phpEx?i=groups&mode=membership")
+					'USERNAME'		=> htmlspecialchars_decode($row['username'], ENT_COMPAT),
+					'GROUP_NAME'	=> htmlspecialchars_decode($group_name, ENT_COMPAT),
+					'U_GROUP'		=> generate_board_url() . "/ucp.$phpEx?i=groups&mode=membership")
 				);
 
 				$messenger->send($row['user_notify_type']);

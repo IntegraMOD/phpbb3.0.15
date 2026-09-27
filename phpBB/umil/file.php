@@ -26,37 +26,44 @@ $file = request_var('file', '');
 $filename = $phpbb_root_path . 'umil/error_files/' . $file . '.txt';
 
 if ($user->data['user_type'] != USER_FOUNDER || // Only founders can access this.
-    !$file || // Do we have a file name?
-    strpos((string) $file, '/') || strpos((string) $file, '.')) { // Make sure they are not attempting to grab files outside of the umil/error_files/ directory
-    header('HTTP/1.0 403 Forbidden');
-    trigger_error($user->lang['LINKAGE_FORBIDDEN']);
+	!$file || // Do we have a file name?
+	strpos($file, '/') || strpos($file, '.')) // Make sure they are not attempting to grab files outside of the umil/error_files/ directory
+{
+	header('HTTP/1.0 403 Forbidden');
+	trigger_error($user->lang['LINKAGE_FORBIDDEN']);
 }
 
 // Check if headers already sent or not able to get the file contents.
-if (headers_sent() || !@file_exists($filename) || !@is_readable($filename)) {
-    // PHP track_errors setting On?
-    if (!empty($php_errormsg)) {
-        trigger_error($user->lang['UNABLE_TO_DELIVER_FILE'] . '<br />' . sprintf($user->lang['TRACKED_PHP_ERROR'], $php_errormsg));
-    }
+if (headers_sent() || !@file_exists($filename) || !@is_readable($filename))
+{
+	// PHP track_errors setting On?
+	if (!empty($php_errormsg))
+	{
+		trigger_error($user->lang['UNABLE_TO_DELIVER_FILE'] . '<br />' . sprintf($user->lang['TRACKED_PHP_ERROR'], $php_errormsg));
+	}
 
-    trigger_error('UNABLE_TO_DELIVER_FILE');
+	trigger_error('UNABLE_TO_DELIVER_FILE');
 }
 
 header('Content-type: text/plain');
 header('Content-Disposition: filename="' . $file . '.txt"');
 
 $size = @filesize($filename);
-if ($size) {
-    header("Content-Length: $size");
+if ($size)
+{
+	header("Content-Length: $size");
 }
 
 $fp = @fopen($filename, 'rb');
-if ($fp !== false) {
-    while (!feof($fp)) {
-        echo fread($fp, 8192);
-    }
-    fclose($fp);
+if ($fp !== false)
+{
+	while (!feof($fp))
+	{
+		echo fread($fp, 8192);
+	}
+	fclose($fp);
 }
 
 garbage_collection();
 exit_handler();
+?>

@@ -472,8 +472,8 @@ $highlight_match = $highlight = '';
 if ($hilit_words)
 {
 	$highlight_match = phpbb_clean_search_string($hilit_words);
-	$highlight = urlencode($highlight_match);
-	$highlight_match = str_replace('\*', '\w+?', preg_quote($highlight_match, '#'));
+	$highlight = urlencode((string) $highlight_match);
+	$highlight_match = str_replace('\*', '\w+?', preg_quote((string) $highlight_match, '#'));
 	$highlight_match = preg_replace('#(?<=^|\s)\\\\w\*\?(?=\s|$)#', '\w+?', $highlight_match);
 	$highlight_match = str_replace(' ', '|', $highlight_match);
 }
@@ -607,7 +607,7 @@ if (!empty($_EXTRA_URL))
 {
 	foreach ($_EXTRA_URL as $url_param)
 	{
-		$url_param = explode('=', $url_param, 2);
+		$url_param = explode('=', (string) $url_param, 2);
 		$s_search_hidden_fields[$url_param[0]] = $url_param[1];
 	}
 }
@@ -642,6 +642,15 @@ $template->assign_vars(array(
 	'PM_IMG' 			=> $user->img('icon_contact_pm', 'SEND_PRIVATE_MESSAGE'),
 	'EMAIL_IMG' 		=> $user->img('icon_contact_email', 'SEND_EMAIL'),
 	'WWW_IMG' 			=> $user->img('icon_contact_www', 'VISIT_WEBSITE'),
+	'FB_IMG'			=> $user->img('icon_contact_fb', 'FACEBOOK'),
+	'IG_IMG'			=> $user->img('icon_contact_ig', 'INSTAGRAM'),
+	'PT_IMG'			=> $user->img('icon_contact_pt', 'PINTEREST'),
+	'TWR_IMG'			=> $user->img('icon_contact_twr', 'TWITTER'),
+	'SKP_IMG'			=> $user->img('icon_contact_skp', 'SKYPE'),
+	'TG_IMG'			=> $user->img('icon_contact_tg', 'TELEGRAM'),
+	'LI_IMG'			=> $user->img('icon_contact_li', 'LINKEDIN'),
+	'TT_IMG'			=> $user->img('icon_contact_tt', 'TIKTOK'),
+	'DC_IMG'			=> $user->img('icon_contact_dc', 'DISCORD'),
 	'ICQ_IMG' 			=> $user->img('icon_contact_icq', 'ICQ'),
 	'AIM_IMG' 			=> $user->img('icon_contact_aim', 'AIM'),
 	'MSN_IMG' 			=> $user->img('icon_contact_msnm', 'MSNM'),
@@ -659,9 +668,10 @@ $template->assign_vars(array(
 	'S_SINGLE_MODERATOR'	=> (!empty($forum_moderators[$forum_id]) && sizeof($forum_moderators[$forum_id]) > 1) ? false : true,
 	'S_TOPIC_ACTION' 		=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start")),
 	'S_TOPIC_MOD' 			=> ($topic_mod != '') ? '<select name="action" id="quick-mod-select">' . $topic_mod . '</select>' : '',
-	'S_MOD_ACTION' 			=> append_sid("{$phpbb_root_path}mcp.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") . "&amp;quickmod=1&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url)), true, $user->session_id),
+	'S_MOD_ACTION' 			=> append_sid("{$phpbb_root_path}mcp.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") . "&amp;quickmod=1&amp;redirect=" . urlencode(str_replace('&amp;', '&', (string) $viewtopic_url)), true, $user->session_id),
 
 	'S_VIEWTOPIC'			=> true,
+	'S_IS_VIEWTOPIC'		=> true,	
 	'S_DISPLAY_SEARCHBOX'	=> ($auth->acl_get('u_search') && $auth->acl_get('f_search', $forum_id) && $config['load_search']) ? true : false,
 	'S_SEARCHBOX_ACTION'	=> append_sid("{$phpbb_root_path}search.$phpEx"),
 	'S_SEARCH_LOCAL_HIDDEN_FIELDS'	=> build_hidden_fields($s_search_hidden_fields),
@@ -731,7 +741,7 @@ if (!empty($topic_data['poll_start']))
 		// the need to delete cookies to mess with results.
 		if (isset($_COOKIE[$config['cookie_name'] . '_poll_' . $topic_id]))
 		{
-			$cur_voted_id = explode(',', $_COOKIE[$config['cookie_name'] . '_poll_' . $topic_id]);
+			$cur_voted_id = explode(',', (string) $_COOKIE[$config['cookie_name'] . '_poll_' . $topic_id]);
 			$cur_voted_id = array_map('intval', $cur_voted_id);
 		}
 	}
@@ -824,7 +834,7 @@ if (!empty($topic_data['poll_start']))
 
 		if ($user->data['user_id'] == ANONYMOUS && !$user->data['is_bot'])
 		{
-			$user->set_cookie('poll_' . $topic_id, implode(',', $voted_id), time() + 31536000);
+			$user->set_cookie('poll_' . $topic_id, implode(',', $voted_id), time() + 31_536_000);
 		}
 
 		$sql = 'UPDATE ' . TOPICS_TABLE . '
@@ -1071,12 +1081,12 @@ while ($row = $db->sql_fetchrow($result))
 	);
 
 	// Define the global bbcode bitfield, will be used to load bbcodes
-	$bbcode_bitfield = $bbcode_bitfield | base64_decode($row['bbcode_bitfield']);
+	$bbcode_bitfield = $bbcode_bitfield | base64_decode((string) $row['bbcode_bitfield']);
 
 	// Is a signature attached? Are we going to display it?
 	if ($row['enable_sig'] && $config['allow_sig'] && $user->optionget('viewsigs'))
 	{
-		$bbcode_bitfield = $bbcode_bitfield | base64_decode($row['user_sig_bbcode_bitfield']);
+		$bbcode_bitfield = $bbcode_bitfield | base64_decode((string) $row['user_sig_bbcode_bitfield']);
 	}
 
 	// Cache various user specific data ... so we don't have to recompute
@@ -1104,6 +1114,15 @@ while ($row = $db->sql_fetchrow($result))
 				'pm'				=> '',
 				'email'				=> '',
 				'www'				=> '',
+				'fb'				=> '',
+				'ig'				=> '',
+				'pt'				=> '',
+				'twr'				=> '',
+				'skp'				=> '',
+				'tg'				=> '',
+				'li'				=> '',
+				'tt'				=> '',
+				'dc'				=> '',
 				'icq_status_img'	=> '',
 				'icq'				=> '',
 				'aim'				=> '',
@@ -1160,9 +1179,23 @@ while ($row = $db->sql_fetchrow($result))
 				'online'		=> false,
 				'profile'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=$poster_id"),
 				'www'			=> $row['user_website'],
+				'fb'			=> ($row['user_fb'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=fb&amp;u=$poster_id") : '',
+				'ig'			=> ($row['user_ig'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=ig&amp;u=$poster_id") : '',
+				'pt'			=> ($row['user_pt'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=pt&amp;u=$poster_id") : '',
+//				'twr'			=> ($row['user_twr'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=twr&amp;u=$poster_id") : '',
+                'twr'           => ($row['user_twr'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&action=twr&u=$poster_id") : '',
+
+
+
+
+				'skp'			=> ($row['user_skp'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=skp&amp;u=$poster_id") : '',
+				'tg'			=> ($row['user_tg'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=tg&amp;u=$poster_id") : '',
+				'li'			=> ($row['user_li'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=li&amp;u=$poster_id") : '',
+				'tt'			=> ($row['user_tt']) ? 'https://www.tiktok.com/@' . urlencode((string) $row['user_tt']) : '',
+				'dc'			=> ($row['user_dc']) ? 'https://discordapp.com/users/' . urlencode((string) $row['user_dc']) : '',
 				'aim'			=> ($row['user_aim'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=aim&amp;u=$poster_id") : '',
 				'msn'			=> ($row['user_msnm'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=msnm&amp;u=$poster_id") : '',
-				'yim'			=> ($row['user_yim']) ? 'http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($row['user_yim']) . '&amp;.src=pg' : '',
+				'yim'			=> ($row['user_yim']) ? 'http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode((string) $row['user_yim']) . '&amp;.src=pg' : '',
 				'jabber'		=> ($row['user_jabber'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=jabber&amp;u=$poster_id") : '',
 				'search'		=> ($auth->acl_get('u_search')) ? append_sid("{$phpbb_root_path}search.$phpEx", "author_id=$poster_id&amp;sr=posts") : '',
 
@@ -1185,7 +1218,7 @@ while ($row = $db->sql_fetchrow($result))
 
 			if (!empty($row['user_icq']))
 			{
-				$user_cache[$poster_id]['icq'] = 'http://www.icq.com/people/' . urlencode($row['user_icq']) . '/';
+				$user_cache[$poster_id]['icq'] = 'http://www.icq.com/people/' . urlencode((string) $row['user_icq']) . '/';
 				$user_cache[$poster_id]['icq_status_img'] = '<img src="http://web.icq.com/whitepages/online?icq=' . $row['user_icq'] . '&amp;img=5" width="18" height="18" alt="" />';
 			}
 			else
@@ -1196,7 +1229,7 @@ while ($row = $db->sql_fetchrow($result))
 
 			if ($config['allow_birthdays'] && !empty($row['user_birthday']))
 			{
-				list($bday_day, $bday_month, $bday_year) = array_map('intval', explode('-', $row['user_birthday']));
+				[$bday_day, $bday_month, $bday_year] = array_map('intval', explode('-', (string) $row['user_birthday']));
 
 				if ($bday_year)
 				{
@@ -1401,8 +1434,8 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 	// Highlight active words (primarily for search)
 	if ($highlight_match)
 	{
-		$message = preg_replace('#(?!<.*)(?<!\w)(' . $highlight_match . ')(?!\w|[^<>]*(?:</s(?:cript|tyle))?>)#is', '<span class="posthilit">\1</span>', $message);
-		$row['post_subject'] = preg_replace('#(?!<.*)(?<!\w)(' . $highlight_match . ')(?!\w|[^<>]*(?:</s(?:cript|tyle))?>)#is', '<span class="posthilit">\1</span>', $row['post_subject']);
+		$message = preg_replace('#(?!<.*)(?<!\w)(' . $highlight_match . ')(?!\w|[^<>]*(?:</s(?:cript|tyle))?>)#is', '<span class="posthilit">\1</span>', (string) $message);
+		$row['post_subject'] = preg_replace('#(?!<.*)(?<!\w)(' . $highlight_match . ')(?!\w|[^<>]*(?:</s(?:cript|tyle))?>)#is', '<span class="posthilit">\1</span>', (string) $row['post_subject']);
 	}
 
 	// Editing information
@@ -1565,6 +1598,15 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		'U_PM'			=> ($poster_id != ANONYMOUS && $config['allow_privmsg'] && $auth->acl_get('u_sendpm') && ($user_cache[$poster_id]['allow_pm'] || $auth->acl_gets('a_', 'm_') || $auth->acl_getf_global('m_'))) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=compose&amp;action=quotepost&amp;p=' . $row['post_id']) : '',
 		'U_EMAIL'		=> $user_cache[$poster_id]['email'],
 		'U_WWW'			=> $user_cache[$poster_id]['www'],
+		'U_FB'			=> $user_cache[$poster_id]['fb'],
+		'U_IG'			=> $user_cache[$poster_id]['ig'],
+		'U_PT'			=> $user_cache[$poster_id]['pt'],
+		'U_TWR'			=> $user_cache[$poster_id]['twr'],
+		'U_SKP'			=> $user_cache[$poster_id]['skp'],
+		'U_TG'			=> $user_cache[$poster_id]['tg'],
+		'U_LI'			=> $user_cache[$poster_id]['li'],
+		'U_TT'			=> $user_cache[$poster_id]['tt'],
+		'U_DC'			=> $user_cache[$poster_id]['dc'],
 		'U_ICQ'			=> $user_cache[$poster_id]['icq'],
 		'U_AIM'			=> $user_cache[$poster_id]['aim'],
 		'U_MSN'			=> $user_cache[$poster_id]['msn'],
@@ -1633,7 +1675,7 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 unset($rowset, $user_cache);
 
 // Update topic view and if necessary attachment view counters ... but only for humans and if this is the first 'page view'
-if (isset($user->data['session_page']) && !$user->data['is_bot'] && (strpos($user->data['session_page'], '&t=' . $topic_id) === false || isset($user->data['session_created'])))
+if (isset($user->data['session_page']) && !$user->data['is_bot'] && (strpos((string) $user->data['session_page'], '&t=' . $topic_id) === false || isset($user->data['session_created']))) 
 {
 	$sql = 'UPDATE ' . TOPICS_TABLE . '
 		SET topic_views = topic_views + 1, topic_last_view_time = ' . time() . "

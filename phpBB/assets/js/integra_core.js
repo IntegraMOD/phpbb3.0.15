@@ -39,6 +39,72 @@ const executeFunctions = (functions) => {
 let mchatScriptsLoaded = false;
 let pageActionsInitialized = false;
 
+window.initCalendarPage = function() {
+    const calendarPage = document.querySelector('[data-calendar-page]');
+    if (!calendarPage || calendarPage.getAttribute('data-calendar-ready') === '1') {
+        return;
+    }
+    calendarPage.setAttribute('data-calendar-ready', '1');
+
+    const calendarPanels = ['calendar-panel', 'event-panel', 'bday-panel', 'notes-panel', 'settings-panel', 'submit-panel', 'options-panel'];
+    const tabPanels = ['calendar-panel', 'event-panel', 'settings-panel'];
+
+    const setDisplay = (id, show) => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.display = show ? 'block' : 'none';
+        }
+    };
+
+    window.showCalendarPanel = function(panel) {
+        const showUpcoming = calendarPage.getAttribute('data-show-upcoming') === '1';
+        const mondayFirst = calendarPage.getAttribute('data-monday-first') === '1';
+        const overrideUser = calendarPage.getAttribute('data-override-user') === '1';
+
+        tabPanels.forEach(id => {
+            const tab = document.getElementById(id + '-tab');
+            if (tab) {
+                tab.className = (id === panel) ? 'activetab' : '';
+            }
+        });
+
+        calendarPanels.forEach(id => setDisplay(id, false));
+
+        if (panel === 'event-panel') {
+            setDisplay('event-panel', true);
+            setDisplay('submit-panel', true);
+            setDisplay('options-panel', true);
+        } else if (panel === 'settings-panel') {
+            setDisplay('settings-panel', true);
+            setDisplay('notes-panel', !mondayFirst);
+        } else {
+            setDisplay('calendar-panel', true);
+            setDisplay('bday-panel', showUpcoming);
+            setDisplay('notes-panel', !mondayFirst);
+            if (overrideUser) {
+                setDisplay('settings-panel', false);
+            }
+        }
+    };
+
+    const requested = calendarPage.getAttribute('data-active-tab') || 'calendar-panel';
+    window.showCalendarPanel(requested);
+};
+
+document.addEventListener('click', function(e) {
+    const tabLink = e.target.closest('[data-action="calendar-subpanel"]');
+    if (!tabLink) {
+        return;
+    }
+    e.preventDefault();
+    if (typeof window.initCalendarPage === 'function') {
+        window.initCalendarPage();
+    }
+    if (typeof window.showCalendarPanel === 'function') {
+        window.showCalendarPanel(tabLink.getAttribute('data-panel'));
+    }
+});
+
 const loadScriptOnce = (src) => {
     return new Promise((resolve, reject) => {
         const existing = document.querySelector(`script[src="${src}"]`);
@@ -500,33 +566,91 @@ const initializePasswordStrength = async () => {
     await loadScriptOnce(`${config.dataset.rootPath || ''}password_strength/password_strength_min.js`);
 };
 
-const initializeOneSignal = () => {
-    if (typeof ONESIGNAL_APP_ID === 'undefined' || !ONESIGNAL_APP_ID) {
+const initializeSortablesCaptcha = () => {
+    const root = document.getElementById('sortables-captcha');
+    if (!root || root.getAttribute('data-ready') === '1') {
+        return;
+    }
+    if (typeof jQuery === 'undefined' || !jQuery.fn || typeof jQuery.fn.sortable !== 'function') {
         return;
     }
 
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-            appId: ONESIGNAL_APP_ID,
-            allowLocalhostAsSecureOrigin: true
-        });
-
-        if (typeof PHPBB_USER_ID !== 'undefined' && PHPBB_USER_ID > 0) {
-            await OneSignal.login(String(PHPBB_USER_ID));
+    const start = () => {
+        if (root.getAttribute('data-ready') === '1') {
+            return;
         }
 
-        OneSignal.User.PushSubscription.addEventListener('change', function(event) {
-            console.log('OneSignal subscription state changed:', event.current && event.current.optedIn);
-        });
-    });
+        const $ = jQuery;
+        const createSortableData = (listItems, column) => {
+            const data = document.getElementById(column);
+            if (!data) {
+                return;
+            }
+            while (data.firstChild) {
+                data.removeChild(data.firstChild);
+            }
+            listItems.each(function() {
+                const answer = String(this.id || '').replace(/^answer_/, '');
+                if (!answer) {
+                    return;
+                }
+                const inputbox = document.createElement('input');
+                inputbox.type = 'hidden';
+                inputbox.name = column + '[]';
+                inputbox.value = answer;
+                data.appendChild(inputbox);
+            });
+        };
 
-    loadScriptOnce('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js').catch(() => {});
+        const syncColumns = () => {
+            createSortableData($('#sortable1').children('li'), 'sortables_options_left');
+            createSortableData($('#sortable2').children('li'), 'sortables_options_right');
+        };
+
+        root.classList.add('sortables-captcha-ready');
+
+        const enableJs = document.getElementById('enable_js');
+        if (enableJs) {
+            enableJs.removeAttribute('hidden');
+            enableJs.classList.add('sortables-captcha-ready');
+            enableJs.style.display = '';
+        }
+
+        const $lists = $('#sortable1, #sortable2');
+        if (!$lists.length) {
+            return;
+        }
+
+        $lists.sortable({
+            connectWith: '.connectedSortable',
+            items: 'li',
+            forcePlaceholderSize: true,
+            placeholder: 'sortables-captcha-placeholder',
+            update: syncColumns
+        });
+
+        if (typeof $lists.disableSelection === 'function') {
+            $lists.disableSelection();
+        }
+
+        $lists.on('sortreceive sortupdate', syncColumns);
+        syncColumns();
+        root.setAttribute('data-ready', '1');
+    };
+
+    const punchSrc = root.getAttribute('data-touch-punch');
+    if (punchSrc) {
+        loadScriptOnce(punchSrc).then(start).catch(start);
+        return;
+    }
+
+    start();
 };
+
+document.addEventListener('DOMContentLoaded', initializeSortablesCaptcha);
 
 window.addEventListener('load', () => {
     checkCookieConsent();
-    initializeOneSignal();
 
     executeFunctions(initFunctions.onload);
     initializePageActions();
@@ -563,45 +687,7 @@ window.addEventListener('load', () => {
         }
     }
 
-    // Sortables CAPTCHA (replaces prosilver's inline jQuery UI sortable script)
-    if (document.getElementById('sortables-captcha') && typeof jQuery !== 'undefined') {
-        const $ = jQuery;
-
-        const createSortableData = (listItems, column) => {
-            const data = document.getElementById(column);
-            if (!data) {
-                return;
-            }
-            while (data.firstChild) {
-                data.removeChild(data.firstChild);
-            }
-            listItems.each(function() {
-                const answer = this.id.replace(/^answer_/, '');
-                const inputbox = document.createElement('input');
-                inputbox.type = 'hidden';
-                inputbox.name = column + '[]';
-                inputbox.value = answer;
-                data.appendChild(inputbox);
-            });
-        };
-
-        const enableJs = document.getElementById('enable_js');
-        if (enableJs) {
-            enableJs.style.display = 'block';
-        }
-
-        $('#sortable1, #sortable2').sortable({
-            connectWith: '.connectedSortable',
-            items: 'li',
-            forcePlaceholderSize: true,
-            placeholder: 'bg3'
-        }).disableSelection();
-
-        $('#sortable1, #sortable2').on('sortreceive', function() {
-            createSortableData($('#sortable1').children(), 'sortables_options_left');
-            createSortableData($('#sortable2').children(), 'sortables_options_right');
-        });
-    }
+    initializeSortablesCaptcha();
 
     document.querySelectorAll('[data-rmstream-init]').forEach(el => {
         const attachId = el.getAttribute('data-rmstream-init');
@@ -705,7 +791,11 @@ window.addEventListener('load', () => {
         if (repeatWhen && typeof showHideRepeatOptions === 'function') {
             showHideRepeatOptions(repeatWhen);
         }
-        revalidateRepeatDates();
+        try {
+            revalidateRepeatDates();
+        } catch (calendarValidateError) {
+            console.error('Calendar repeat validation failed:', calendarValidateError);
+        }
     }
 
     // Calendar datetime picker controls (replaces prosilver's inline onchange/onclick)
@@ -729,6 +819,20 @@ window.addEventListener('load', () => {
     });
     document.querySelectorAll('[data-action="calendar-next-month"]').forEach(el => {
         el.addEventListener('click', function() { if (typeof next_month === 'function') { next_month(); } });
+    });
+
+    if (typeof window.initCalendarPage === 'function') {
+        window.initCalendarPage();
+    }
+
+    document.querySelectorAll('[data-action="calendar-check-max"]').forEach(input => {
+        input.addEventListener('keyup', function() {
+            const max = parseInt(input.getAttribute('data-max') || '0', 10);
+            const value = parseInt(input.value, 10);
+            if (!isNaN(value) && !isNaN(max) && value > max) {
+                input.value = max;
+            }
+        });
     });
 
     document.querySelectorAll('[data-jumpbox-form]').forEach(form => {
@@ -785,16 +889,55 @@ window.addEventListener('load', () => {
     const offCanvasToggle = document.querySelector('.off-canvas-toggle');
     const offCanvasClose = document.querySelector('.off-canvas-close');
     const offCanvasMenu = document.querySelector('.off-canvas-menu');
+    let offCanvasOverlay = document.querySelector('.off-canvas-overlay');
+    const closeOffCanvas = function () {
+        if (!offCanvasMenu) {
+            return;
+        }
+        offCanvasMenu.classList.remove('is-open');
+        document.body.classList.remove('off-canvas-open');
+    };
+    const openOffCanvas = function () {
+        if (!offCanvasMenu) {
+            return;
+        }
+        if (!offCanvasOverlay) {
+            offCanvasOverlay = document.createElement('div');
+            offCanvasOverlay.className = 'off-canvas-overlay';
+            document.body.appendChild(offCanvasOverlay);
+            offCanvasOverlay.addEventListener('click', closeOffCanvas);
+        }
+        offCanvasMenu.classList.add('is-open');
+        document.body.classList.add('off-canvas-open');
+    };
     if (offCanvasToggle && offCanvasMenu) {
-        offCanvasToggle.addEventListener('click', () => {
-            offCanvasMenu.classList.add('is-open');
+        offCanvasToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (offCanvasMenu.classList.contains('is-open')) {
+                closeOffCanvas();
+            } else {
+                openOffCanvas();
+            }
         });
     }
     if (offCanvasClose && offCanvasMenu) {
-        offCanvasClose.addEventListener('click', () => {
-            offCanvasMenu.classList.remove('is-open');
+        offCanvasClose.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeOffCanvas();
         });
     }
+    if (offCanvasOverlay) {
+        offCanvasOverlay.addEventListener('click', closeOffCanvas);
+    }
+    document.addEventListener('click', (e) => {
+        if (!offCanvasMenu || !offCanvasMenu.classList.contains('is-open')) {
+            return;
+        }
+        if (e.target.closest('.off-canvas-menu') || e.target.closest('.off-canvas-toggle')) {
+            return;
+        }
+        closeOffCanvas();
+    });
 
     // Nav Dropdowns
     const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
@@ -888,11 +1031,103 @@ window.addEventListener('load', () => {
 
         const action = actionEl.getAttribute('data-action');
 
+        if (action === 'onesignal-subscribe') {
+            // Handled by assets/js/onesignal_init.js (own document click listener)
+            return;
+        }
+
         if (action === 'jumpto') {
             e.preventDefault();
             if (typeof jumpto === 'function') {
                 jumpto();
             }
+            return;
+        }
+
+        if (action === 'toggle-id') {
+            e.preventDefault();
+            const ids = (actionEl.getAttribute('data-toggle-ids') || actionEl.getAttribute('data-toggle-id') || '').split(',');
+            ids.forEach((id) => {
+                const trimmed = id.trim();
+                if (trimmed && typeof window.toggleDiv === 'function') {
+                    window.toggleDiv(trimmed);
+                }
+            });
+            return;
+        }
+
+        if (action === 'subpanel') {
+            e.preventDefault();
+            if (typeof subPanels === 'function') {
+                subPanels(actionEl.getAttribute('data-panel'));
+            }
+            return;
+        }
+
+        if (action === 'blog-archive-toggle') {
+            e.preventDefault();
+            const month = actionEl.getAttribute('data-month');
+            const monthEl = document.getElementById('month_' + month);
+            const icon = actionEl.querySelector('.blog-archive-icon');
+            if (!monthEl) {
+                return;
+            }
+            const hidden = monthEl.classList.toggle('blog-hidden');
+            if (icon) {
+                icon.textContent = hidden ? '+' : '-';
+            }
+            return;
+        }
+
+        if (action === 'blog-friends-page') {
+            e.preventDefault();
+            const field = actionEl.getAttribute('data-field');
+            const direction = actionEl.getAttribute('data-direction');
+            if (direction === 'next' && typeof window.next_list === 'function') {
+                window.next_list(field);
+            } else if (direction === 'previous' && typeof window.previous_list === 'function') {
+                window.previous_list(field);
+            }
+            return;
+        }
+
+        if (action === 'dl-subpanel') {
+            e.preventDefault();
+            const panel = actionEl.getAttribute('data-panel');
+            document.querySelectorAll('[data-dl-subpanel]').forEach((el) => {
+                el.classList.toggle('is-active', el.getAttribute('data-dl-subpanel') === panel);
+                el.style.display = el.getAttribute('data-dl-subpanel') === panel ? '' : 'none';
+            });
+            document.querySelectorAll('[data-action="dl-subpanel"]').forEach((el) => {
+                el.classList.toggle('is-active', el.getAttribute('data-panel') === panel);
+            });
+            return;
+        }
+
+        if (action === 'insert-smiley') {
+            e.preventDefault();
+            if (typeof insert_text === 'function') {
+                insert_text(actionEl.getAttribute('data-smiley-code') || '', true);
+            }
+            return;
+        }
+
+        if (action === 'attach-inline') {
+            e.preventDefault();
+            if (typeof attach_inline === 'function') {
+                attach_inline(actionEl.getAttribute('data-attach-index'), actionEl.getAttribute('data-attach-name'));
+            }
+            return;
+        }
+
+        if (action === 'post-preview') {
+            const form = actionEl.form || document.getElementById('postform');
+            if (form && form.action.indexOf('#preview') === -1) {
+                form.action += '#preview';
+            }
+        }
+
+        if (action === 'blog-style-demo') {
             return;
         }
 
@@ -939,6 +1174,130 @@ window.addEventListener('load', () => {
             const target = actionEl.getAttribute('data-popup-target') || '_blank';
             if (typeof popup === 'function') {
                 popup(actionEl.href, width, height, target);
+            }
+            return;
+        }
+
+        if (action === 'toggle-display') {
+            e.preventDefault();
+            const targetId = actionEl.getAttribute('data-toggle-id') || '';
+            const target = targetId ? document.getElementById(targetId) : null;
+            if (!target) {
+                return;
+            }
+            if (target.hasAttribute('hidden')) {
+                target.removeAttribute('hidden');
+                target.style.display = '';
+            } else if (target.style.display === 'none') {
+                target.style.display = '';
+            } else {
+                target.setAttribute('hidden', 'hidden');
+                target.style.display = 'none';
+            }
+            return;
+        }
+
+        if (action === 'gallery-insert-image') {
+            e.preventDefault();
+            const imageId = actionEl.getAttribute('data-image-id') || '';
+            const insertId = actionEl.getAttribute('data-insert-id') || '';
+            try {
+                if (window.opener && window.opener.document && window.opener.document.forms && window.opener.document.forms.postform) {
+                    window.opener.document.forms.postform.message.value += '[album]' + imageId + '[/album]';
+                }
+            } catch (err) {
+                return;
+            }
+            const inserted = insertId ? document.getElementById('inserted_' + insertId) : null;
+            if (inserted) {
+                inserted.removeAttribute('hidden');
+                inserted.style.display = '';
+            }
+            return;
+        }
+
+        if (action === 'donate-paypal-submit') {
+            const contact = document.getElementById('contactpaypal');
+            const processing = document.getElementById('processingpaypal');
+            if (contact) {
+                contact.setAttribute('hidden', 'hidden');
+                contact.style.display = 'none';
+            }
+            if (processing) {
+                processing.removeAttribute('hidden');
+                processing.style.display = '';
+            }
+            return;
+        }
+
+        if (action === 'clear-date') {
+            e.preventDefault();
+            const fieldId = actionEl.getAttribute('data-date-field') || '';
+            const field = fieldId ? document.getElementById(fieldId) : null;
+            if (field) {
+                field.value = '';
+            }
+            return;
+        }
+
+        if (action === 'gallery-add-field') {
+            e.preventDefault();
+            if (typeof window.galleryAddField === 'function') {
+                window.galleryAddField();
+            }
+            return;
+        }
+
+        if (action === 'gallery-same-name') {
+            if (typeof window.change_read_write === 'function') {
+                window.change_read_write();
+            }
+            return;
+        }
+
+        if (action === 'gallery-update-all') {
+            const field = actionEl.getAttribute('data-update-field');
+            if (typeof window.update_all === 'function') {
+                if (field) {
+                    window.update_all(field);
+                } else {
+                    window.update_all('image_name');
+                    window.update_all('message');
+                }
+            }
+            return;
+        }
+
+        if (action === 'gallery-set-text') {
+            const index = parseInt(actionEl.getAttribute('data-image-index') || '0', 10);
+            if (typeof window.set_text_field === 'function') {
+                window.set_text_field(index);
+            }
+            const field = actionEl.getAttribute('data-update-field');
+            if (field && typeof window.update_all === 'function') {
+                window.update_all(field);
+            }
+            return;
+        }
+
+        if (action === 'gallery-popup') {
+            e.preventDefault();
+            const width = parseInt(actionEl.getAttribute('data-popup-width') || '300', 10);
+            const height = parseInt(actionEl.getAttribute('data-popup-height') || '350', 10);
+            const target = actionEl.getAttribute('data-popup-target') || '_popup';
+            if (typeof window.gallery_popup === 'function') {
+                window.gallery_popup(actionEl.href, width, height, target);
+            } else if (typeof popup === 'function') {
+                popup(actionEl.href, width, height, target);
+            }
+            return;
+        }
+
+        if (action === 'help-popup') {
+            e.preventDefault();
+            const url = actionEl.getAttribute('data-help-url') || actionEl.href;
+            if (url) {
+                window.open(url, '_blank', 'height=400,resizable=yes,width=550');
             }
             return;
         }
@@ -1024,8 +1383,26 @@ window.addEventListener('load', () => {
             return;
         }
 
-        if (action === 'toggle-history-view') {            e.preventDefault();
-            const topicReview = document.getElementById('topicreview');
+        if (action === 'insert-text') {
+            e.preventDefault();
+            if (typeof insert_text === 'function') {
+                insert_text(actionEl.getAttribute('data-insert-text') || '', true);
+            }
+            return;
+        }
+
+        if (action === 'mcp-subpanel') {
+            e.preventDefault();
+            if (typeof window.showMcpPanel === 'function') {
+                window.showMcpPanel(actionEl.getAttribute('data-panel'));
+            }
+            return;
+        }
+
+        if (action === 'toggle-history-view') {
+            e.preventDefault();
+            const targetId = actionEl.getAttribute('data-target') || 'topicreview';
+            const topicReview = document.getElementById(targetId);
             if (topicReview && typeof viewableArea === 'function') {
                 viewableArea(topicReview, true);
             }
@@ -1376,9 +1753,381 @@ window.addEventListener('load', () => {
     initializeDateOptions();
     wireFormSubmitChecks();
 
+    document.querySelectorAll('[data-store-caret]').forEach((el) => {
+        ['select', 'click', 'keyup'].forEach((evt) => {
+            el.addEventListener(evt, () => {
+                if (typeof storeCaret === 'function') {
+                    storeCaret(el);
+                }
+            });
+        });
+        el.addEventListener('focus', () => {
+            if (typeof initInsertions === 'function') {
+                initInsertions();
+            }
+        });
+    });
+
+    document.querySelectorAll('[data-action="blog-style-demo"]').forEach((select) => {
+        select.addEventListener('change', function() {
+            const demo = document.getElementById('style_demo');
+            const selected = this.options[this.selectedIndex];
+            if (demo && selected) {
+                demo.src = selected.id;
+            }
+        });
+    });
+
     // Initialize posting sub-panels (Options / Attach / Poll / Event tabs)
-    if (typeof subPanels === 'function' && typeof show_panel !== 'undefined') {
+    if (typeof window.initCalendarPage === 'function' && document.querySelector('[data-calendar-page]')) {
+        window.initCalendarPage();
+    } else if (typeof subPanels === 'function' && typeof show_panel !== 'undefined') {
         subPanels(show_panel);
+    }
+
+    const blogPosting = document.querySelector('[data-blog-panels]');
+    if (blogPosting && typeof subPanels === 'function') {
+        const panelList = blogPosting.getAttribute('data-blog-panels') || '';
+        window.panels = panelList.split(',').map((name) => name.replace(/['"\s]/g, '')).filter(Boolean);
+        const firstPanel = window.panels[0] || (typeof show_panel !== 'undefined' ? show_panel : 'options-panel');
+        subPanels(firstPanel);
+    }
+
+    const kbPanels = document.querySelector('[data-kb-panels]');
+    if (kbPanels && typeof subPanels === 'function') {
+        const panelList = kbPanels.getAttribute('data-kb-panels') || '';
+        window.panels = panelList.split(',').map((name) => name.replace(/['"\s]/g, '')).filter(Boolean);
+        const hash = (window.location.hash || '').replace('#', '');
+        const hashPanel = hash ? hash + '-panel' : '';
+        const firstPanel = (hashPanel && window.panels.indexOf(hashPanel) !== -1)
+            ? hashPanel
+            : (window.panels[0] || 'article-panel');
+        subPanels(firstPanel);
+    }
+
+    if (typeof window.DropDate !== 'function') {
+        window.DropDate = function(field) {
+            const el = document.getElementById(field);
+            if (el) {
+                el.value = '';
+            }
+        };
+    }
+
+    if (typeof window.openguestpopup !== 'function') {
+        window.openguestpopup = function(meeting, user) {
+            const source = document.querySelector('[data-meeting-guest-popup]');
+            const base = source ? source.getAttribute('data-meeting-guest-popup') : '';
+            if (!base) {
+                return;
+            }
+            window.open(base + '&m_id=' + meeting + '&u=' + user, '_blank', 'height=600,resizable=yes,width=400');
+        };
+    }
+
+    const seoForm = document.querySelector('[data-kb-seo="1"]');
+    const seoSource = seoForm ? seoForm.querySelector('[data-kb-seo-source]') : null;
+    if (seoSource) {
+        seoSource.addEventListener('keyup', function() {
+            const target = document.getElementById('page_uri');
+            if (!target) {
+                return;
+            }
+            let title = this.value || '';
+            title = title.split(' ').join('-').toLowerCase();
+            title = title.split('ä').join('ae');
+            title = title.split('ö').join('oe');
+            title = title.split('ü').join('ur');
+            title = title.split('ß').join('ss');
+            title = title.split('?').join('');
+            title = title.split('!').join('');
+            target.value = escape(title);
+        });
+    }
+
+    const meetingEditor = document.querySelector('[data-meeting-editor]');
+    if (meetingEditor) {
+        window.form_name = 'edit_meeting';
+        window.text_name = 'message';
+    }
+
+    document.addEventListener('change', function(e) {
+        const styleDemo = e.target.closest('[data-action="blog-style-demo"]');
+        if (styleDemo && styleDemo.options) {
+            const selected = styleDemo.options[styleDemo.selectedIndex];
+            const demo = document.getElementById('style_demo');
+            if (demo && selected && selected.id) {
+                demo.src = selected.id;
+            }
+            return;
+        }
+
+        const submitFormEl = e.target.closest('[data-action="submit-form"]');
+        if (submitFormEl) {
+            const form = submitFormEl.form || submitFormEl.closest('form');
+            if (form) {
+                form.submit();
+            }
+        }
+    });
+
+    document.querySelectorAll('[data-store-caret]').forEach((field) => {
+        const store = function() {
+            if (typeof storeCaret === 'function') {
+                storeCaret(field);
+            }
+        };
+        field.addEventListener('select', store);
+        field.addEventListener('click', store);
+        field.addEventListener('keyup', store);
+        field.addEventListener('focus', function() {
+            if (typeof initInsertions === 'function') {
+                initInsertions();
+            }
+        });
+    });
+
+    const dlAjaxConfig = document.getElementById('dl-ajax-config');
+    if (dlAjaxConfig) {
+        window.phpEx = dlAjaxConfig.getAttribute('data-phpex') || '';
+        window.S_SID = dlAjaxConfig.getAttribute('data-sid') || '';
+        window.ajax_page_charset = dlAjaxConfig.getAttribute('data-charset') || '';
+    }
+
+    const dlHelpConfig = document.getElementById('dl-help-config');
+    window.help_popup = function(helpKey) {
+        const base = dlHelpConfig ? (dlHelpConfig.getAttribute('data-help-url') || '') : '';
+        if (base && helpKey) {
+            window.open(base + helpKey, '_blank', 'height=400,resizable=yes,width=550');
+        }
+    };
+
+    window.hide_dl_button = function() {
+        const button = document.getElementById('dl_mod_button');
+        if (button) {
+            button.style.display = 'none';
+        }
+    };
+
+    document.querySelectorAll('form[data-hide-dl-button]').forEach((form) => {
+        form.addEventListener('submit', function() {
+            window.hide_dl_button();
+        });
+    });
+
+    const galleryUploadConfig = document.getElementById('gallery-upload-config');
+    if (galleryUploadConfig) {
+        let numDisplayedFields = 1;
+        const limitFields = parseInt(galleryUploadConfig.getAttribute('data-limit') || '1', 10);
+        const hideField = (id) => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.setAttribute('hidden', 'hidden');
+                el.style.display = 'none';
+            }
+        };
+        const showField = (id) => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.removeAttribute('hidden');
+                el.style.display = '';
+            }
+        };
+        window.galleryAddField = function() {
+            if (numDisplayedFields < limitFields) {
+                showField('upload_field_' + numDisplayedFields);
+                numDisplayedFields += 1;
+                if (numDisplayedFields === limitFields) {
+                    hideField('add_field_link');
+                }
+            }
+        };
+        for (let i = 1; i < limitFields; i += 1) {
+            hideField('upload_field_' + i);
+        }
+        if (limitFields > 1) {
+            showField('add_field_link');
+        }
+    }
+
+    const galleryEditorConfig = document.getElementById('gallery-editor-config');
+    if (galleryEditorConfig) {
+        window.form_name = galleryEditorConfig.getAttribute('data-form-name') || 'postform';
+        window.text_name = galleryEditorConfig.getAttribute('data-text-name') || 'message_0';
+        if (typeof window.set_text_field === 'function') {
+            window.set_text_field(0);
+        }
+    }
+
+    const highslideMeta = document.querySelector('meta[name="integra-gallery-highslide-graphics-dir"]');
+    if (highslideMeta && window.hs) {
+        window.hs.graphicsDir = highslideMeta.getAttribute('content') || '';
+    }
+
+    document.querySelectorAll('[data-action="select-on-focus"]').forEach((el) => {
+        el.addEventListener('focus', function() {
+            this.select();
+        });
+    });
+
+    document.querySelectorAll('[data-action="placeholder-toggle"]').forEach((el) => {
+        const placeholder = el.getAttribute('data-placeholder') || '';
+        el.addEventListener('focus', function() {
+            if (this.value === placeholder) {
+                this.value = '';
+            }
+        });
+        el.addEventListener('blur', function() {
+            if (this.value === '') {
+                this.value = placeholder;
+            }
+        });
+    });
+
+    document.querySelectorAll('form[data-action="jumpbox-guard"]').forEach((form) => {
+        form.addEventListener('submit', function(e) {
+            const fieldName = form.getAttribute('data-jump-name') || 'album_id';
+            const field = form.elements[fieldName];
+            if (field && String(field.value) === '-1') {
+                e.preventDefault();
+            }
+        });
+    });
+
+    const dlEditorConfig = document.getElementById('dl-editor-config');
+    if (dlEditorConfig) {
+        window.form_name = dlEditorConfig.getAttribute('data-form-name') || 'postform';
+        window.text_name = dlEditorConfig.getAttribute('data-text-name') || 'message';
+        window.LANG_TOO_FEW_CHARS = dlEditorConfig.getAttribute('data-too-few-chars') || '';
+        window.LANG_L_NO_TEXT_SELECTED = dlEditorConfig.getAttribute('data-no-text-selected') || '';
+    }
+
+    const dlThumbs = document.getElementById('dl_thumbs');
+    if (dlThumbs && dlThumbs.getAttribute('data-carousel') === '1' && window.jQuery && typeof window.jQuery.fn.jcarousel === 'function') {
+        window.jQuery(dlThumbs).jcarousel({
+            visible: parseInt(dlThumbs.getAttribute('data-visible') || '1', 10),
+            scroll: parseInt(dlThumbs.getAttribute('data-scroll') || '1', 10)
+        });
+    }
+
+    const blogConfig = document.getElementById('blog-config');
+    if (blogConfig) {
+        const greyStar = blogConfig.getAttribute('data-grey-star') || '';
+        const greenStar = blogConfig.getAttribute('data-green-star') || '';
+        const redStar = blogConfig.getAttribute('data-red-star') || '';
+        const orangeStar = blogConfig.getAttribute('data-orange-star') || '';
+        const maxRating = parseInt(blogConfig.getAttribute('data-max-rating'), 10) || 0;
+        const minRating = parseInt(blogConfig.getAttribute('data-min-rating'), 10) || 0;
+
+        window.ratingHover = function(id, name) {
+            for (let i = minRating; i <= maxRating; i += 1) {
+                const star = document.getElementById(name + i);
+                if (star) {
+                    star.src = i <= id ? redStar : greyStar;
+                }
+            }
+        };
+
+        window.ratingUnHover = function(id, name) {
+            for (let i = minRating; i <= maxRating; i += 1) {
+                const star = document.getElementById(name + i);
+                if (star) {
+                    star.src = i <= id ? orangeStar : greyStar;
+                }
+            }
+        };
+
+        window.ratingDown = function(id, name) {
+            for (let i = minRating; i <= maxRating; i += 1) {
+                const star = document.getElementById(name + i);
+                if (star) {
+                    star.src = i <= id ? greenStar : greyStar;
+                }
+            }
+        };
+    }
+
+    const friendsConfig = document.getElementById('blog-friends-config');
+    if (friendsConfig) {
+        const limit = parseInt(friendsConfig.getAttribute('data-limit'), 10) || 5;
+        let currentOnlineId = limit;
+        let currentOfflineId = limit;
+        let currentUserFriendsId = limit;
+        let onlineEnd = 0;
+        let offlineEnd = 0;
+        let userFriendsEnd = 0;
+
+        const setCurrent = (field, value, end) => {
+            if (field === 'online') {
+                currentOnlineId = value;
+                onlineEnd = end;
+            } else if (field === 'offline') {
+                currentOfflineId = value;
+                offlineEnd = end;
+            } else {
+                currentUserFriendsId = value;
+                userFriendsEnd = end;
+            }
+        };
+
+        window.next_list = function(field) {
+            let currentId = field === 'online' ? currentOnlineId - limit : (field === 'offline' ? currentOfflineId - limit : currentUserFriendsId - limit);
+            let end = field === 'online' ? onlineEnd : (field === 'offline' ? offlineEnd : userFriendsEnd);
+
+            for (let i = 0; i < (limit * 2); i += 1) {
+                const next = document.getElementById(field + '_friends_' + currentId);
+                if (next) {
+                    next.classList.toggle('blog-hidden', i < limit);
+                    currentId += 1;
+                } else {
+                    end += 1;
+                }
+            }
+
+            const previous = document.getElementById('previous_' + field);
+            if (previous) {
+                previous.classList.remove('blog-hidden');
+            }
+
+            const following = document.getElementById(field + '_friends_' + currentId);
+            if (end > 0 || !following) {
+                const nextBtn = document.getElementById('next_' + field);
+                if (nextBtn) {
+                    nextBtn.classList.add('blog-hidden');
+                }
+            }
+
+            setCurrent(field, currentId, end);
+        };
+
+        window.previous_list = function(field) {
+            let currentId = field === 'online' ? currentOnlineId - 1 : (field === 'offline' ? currentOfflineId - 1 : currentUserFriendsId - 1);
+            let end = field === 'online' ? onlineEnd : (field === 'offline' ? offlineEnd : userFriendsEnd);
+
+            for (let i = 0; i < ((limit * 2) - end); i += 1) {
+                const next = document.getElementById(field + '_friends_' + currentId);
+                if (next) {
+                    next.classList.toggle('blog-hidden', i < (limit - end));
+                    currentId -= 1;
+                }
+            }
+
+            currentId = currentId + limit + 1;
+            const nextBtn = document.getElementById('next_' + field);
+            if (nextBtn) {
+                nextBtn.classList.remove('blog-hidden');
+            }
+            end = 0;
+
+            if (currentId === limit) {
+                const previous = document.getElementById('previous_' + field);
+                if (previous) {
+                    previous.classList.add('blog-hidden');
+                }
+            }
+
+            setCurrent(field, currentId, end);
+        };
     }
 
     // Fast reply toggle
@@ -1493,6 +2242,16 @@ function showCookieConsent() {
     var modal = document.getElementById('cookie-consent-modal');
     if (modal) modal.style.display = 'block';
 }
+
+window.toggleDiv = function(divName) {
+    const thisDiv = document.getElementById(divName);
+    if (!thisDiv) {
+        return;
+    }
+    const isHidden = thisDiv.style.display === 'none' || thisDiv.classList.contains('blog-hidden');
+    thisDiv.style.display = isHidden ? '' : 'none';
+    thisDiv.classList.toggle('blog-hidden', !isHidden);
+};
 
 function hideCookieConsent() {
     var modal = document.getElementById('cookie-consent-modal');

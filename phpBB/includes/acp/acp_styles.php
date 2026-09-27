@@ -110,10 +110,10 @@ inherit_from = {INHERIT_FROM}
 				'site_logo',
 			),
 			'buttons'	=> array(
-				'icon_back_top', 'icon_contact_aim', 'icon_contact_email', 'icon_contact_icq', 'icon_contact_jabber', 'icon_contact_msnm', 'icon_contact_pm', 'icon_contact_yahoo', 'icon_contact_www', 'icon_post_delete', 'icon_post_edit', 'icon_post_info', 'icon_post_quote', 'icon_post_report', 'icon_user_online', 'icon_user_offline', 'icon_user_profile', 'icon_user_search', 'icon_user_warn', 'button_pm_forward', 'button_pm_new', 'button_pm_reply', 'button_topic_locked', 'button_topic_new', 'button_topic_reply',
+				'icon_back_top', 'icon_contact_fb', 'icon_contact_ig', 'icon_contact_pt', 'icon_contact_twr', 'icon_contact_skp', 'icon_contact_tg', 'icon_contact_li', 'icon_contact_tt', 'icon_contact_dc', 'icon_contact_aim', 'icon_contact_email', 'icon_contact_icq', 'icon_contact_jabber', 'icon_contact_msnm', 'icon_contact_pm', 'icon_contact_yahoo', 'icon_contact_www', 'icon_download', 'icon_post_delete', 'icon_post_edit', 'icon_post_info', 'icon_post_quote', 'icon_post_report', 'icon_user_online', 'icon_user_offline', 'icon_user_profile', 'icon_user_search', 'icon_user_warn', 'button_pm_forward', 'button_pm_new', 'button_pm_reply', 'button_topic_locked', 'button_topic_new', 'button_topic_reply', 'button_blog_new', 'button_download_search', 'button_download_upload', 'button_upload_image',
 			),
 			'icons'		=> array(
-				'icon_post_target', 'icon_post_target_unread', 'icon_topic_attach', 'icon_topic_latest', 'icon_topic_newest', 'icon_topic_reported', 'icon_topic_unapproved', 'icon_friend', 'icon_foe',
+				'icon_post_target', 'icon_post_target_unread', 'icon_topic_attach', 'icon_topic_latest', 'icon_topic_newest', 'icon_topic_reported', 'icon_topic_unapproved', 'icon_friend', 'icon_foe', 'icon_kb', 'icon_cal', 'icon_gall', 'icon_cht', 'icon_ifs', 'icon_faq', 'icon_mem', 'icon_ajax_checking', 'icon_ajax_true', 'icon_ajax_false', 'icon_ajax_password_strength_1', 'icon_ajax_password_strength_2', 'icon_ajax_password_strength_3', 'icon_ajax_password_strength_4',
 			),
 			'forums'	=> array(
 				'forum_link', 'forum_read', 'forum_read_locked', 'forum_read_subforum', 'forum_unread', 'forum_unread_locked', 'forum_unread_subforum', 'subforum_read', 'subforum_unread'
@@ -285,13 +285,13 @@ inherit_from = {INHERIT_FROM}
 //									if (@filemtime("{$phpbb_root_path}styles/{$template_row['template_path']}/template/" . $row['template_filename']) > $row['template_mtime'])
 //									{
 										// get folder info from the filename
-										if (($slash_pos = strrpos($row['template_filename'], '/')) === false)
+										if (($slash_pos = strrpos((string) $row['template_filename'], '/')) === false)
 										{
 											$filelist[''][] = $row['template_filename'];
 										}
 										else
 										{
-											$filelist[substr($row['template_filename'], 0, $slash_pos + 1)][] = substr($row['template_filename'], $slash_pos + 1, strlen($row['template_filename']) - $slash_pos - 1);
+											$filelist[substr((string) $row['template_filename'], 0, $slash_pos + 1)][] = substr((string) $row['template_filename'], $slash_pos + 1, strlen((string) $row['template_filename']) - $slash_pos - 1);
 										}
 //									}
 								}
@@ -421,16 +421,16 @@ inherit_from = {INHERIT_FROM}
 
 							foreach ($cfg_data_imageset as $image_name => $value)
 							{
-								if (strpos($value, '*') !== false)
+								if (strpos((string) $value, '*') !== false)
 								{
-									if (substr($value, -1, 1) === '*')
+									if (substr((string) $value, -1) === '*')
 									{
-										list($image_filename, $image_height) = explode('*', $value);
+										[$image_filename, $image_height] = explode('*', (string) $value);
 										$image_width = 0;
 									}
 									else
 									{
-										list($image_filename, $image_height, $image_width) = explode('*', $value);
+										[$image_filename, $image_height, $image_width] = explode('*', (string) $value);
 									}
 								}
 								else
@@ -439,9 +439,9 @@ inherit_from = {INHERIT_FROM}
 									$image_height = $image_width = 0;
 								}
 
-								if (strpos($image_name, 'img_') === 0 && $image_filename)
+								if ((strncmp((string) $image_name, 'img_', 4) === 0) && $image_filename)
 								{
-									$image_name = substr($image_name, 4);
+									$image_name = substr((string) $image_name, 4);
 									if (in_array($image_name, $imageset_definitions))
 									{
 										$sql_ary[] = array(
@@ -467,16 +467,16 @@ inherit_from = {INHERIT_FROM}
 									$cfg_data_imageset_data = parse_cfg_file("{$phpbb_root_path}styles/{$imageset_row['imageset_path']}/imageset/{$row['lang_dir']}/imageset.cfg");
 									foreach ($cfg_data_imageset_data as $image_name => $value)
 									{
-										if (strpos($value, '*') !== false)
+										if (strpos((string) $value, '*') !== false)
 										{
-											if (substr($value, -1, 1) === '*')
+											if (substr((string) $value, -1) === '*')
 											{
-												list($image_filename, $image_height) = explode('*', $value);
+												[$image_filename, $image_height] = explode('*', (string) $value);
 												$image_width = 0;
 											}
 											else
 											{
-												list($image_filename, $image_height, $image_width) = explode('*', $value);
+												[$image_filename, $image_height, $image_width] = explode('*', (string) $value);
 											}
 										}
 										else
@@ -485,9 +485,9 @@ inherit_from = {INHERIT_FROM}
 											$image_height = $image_width = 0;
 										}
 
-										if (strpos($image_name, 'img_') === 0 && $image_filename)
+										if ((strncmp((string) $image_name, 'img_', 4) === 0) && $image_filename)
 										{
-											$image_name = substr($image_name, 4);
+											$image_name = substr((string) $image_name, 4);
 											if (in_array($image_name, $imageset_definitions))
 											{
 												$sql_ary[] = array(
@@ -578,7 +578,7 @@ inherit_from = {INHERIT_FROM}
 				trigger_error($user->lang['NO_MODE'] . adm_back_link($this->u_action), E_USER_WARNING);
 		}
 
-		$l_prefix = strtoupper($mode);
+		$l_prefix = strtoupper((string) $mode);
 
 		$this->page_title = 'ACP_' . $l_prefix . 'S';
 
@@ -616,13 +616,13 @@ inherit_from = {INHERIT_FROM}
 			$s_options = array();
 			foreach ($options as $option)
 			{
-				$s_options[] = '<a href="' . $this->u_action . "&amp;action=$option&amp;id=" . $row[$mode . '_id'] . '">' . $user->lang[strtoupper($option)] . '</a>';
+				$s_options[] = '<a href="' . $this->u_action . "&amp;action=$option&amp;id=" . $row[$mode . '_id'] . '">' . $user->lang[strtoupper((string) $option)] . '</a>';
 			}
 
 			$s_actions = array();
 			foreach ($actions as $option)
 			{
-				$s_actions[] = '<a href="' . $this->u_action . "&amp;action=$option&amp;id=" . $row[$mode . '_id'] . '">' . $user->lang[strtoupper($option)] . '</a>';
+				$s_actions[] = '<a href="' . $this->u_action . "&amp;action=$option&amp;id=" . $row[$mode . '_id'] . '">' . $user->lang[strtoupper((string) $option)] . '</a>';
 			}
 
 			$template->assign_block_vars('installed', array(
@@ -663,7 +663,7 @@ inherit_from = {INHERIT_FROM}
 					if ($cfg = file("{$phpbb_root_path}styles/$file/$subpath$mode.cfg"))
 					{
 						$items = parse_cfg_file('', $cfg);
-						$name = (isset($items['name'])) ? trim($items['name']) : false;
+						$name = (isset($items['name'])) ? trim((string) $items['name']) : false;
 
 						if ($name && !in_array($name, $installed))
 						{
@@ -723,13 +723,13 @@ inherit_from = {INHERIT_FROM}
 		$filelist = $filelist_cats = array();
 
 		$template_data	= utf8_normalize_nfc(request_var('template_data', '', true));
-		$template_data	= htmlspecialchars_decode($template_data, ENT_COMPAT);
+		$template_data	= htmlspecialchars_decode((string) $template_data, ENT_COMPAT);
 		$template_file	= utf8_normalize_nfc(request_var('template_file', '', true));
 		$text_rows		= max(5, min(999, request_var('text_rows', 20)));
 		$save_changes	= (isset($_POST['save'])) ? true : false;
 
 		// make sure template_file path doesn't go upwards
-		$template_file = preg_replace('#\.{2,}#', '.', $template_file);
+		$template_file = preg_replace('#\.{2,}#', '.', (string) $template_file);
 
 		// Retrieve some information about the template
 		$sql = 'SELECT template_storedb, template_path, template_name
@@ -836,7 +836,7 @@ inherit_from = {INHERIT_FROM}
 			$filelist = array('' => array());
 			while ($row = $db->sql_fetchrow($result))
 			{
-				$file_info = pathinfo($row['template_filename']);
+				$file_info = pathinfo((string) $row['template_filename']);
 
 				if (($file_info['basename'] != 'bbcode') && ($file_info['extension'] == 'html'))
 				{
@@ -883,8 +883,8 @@ inherit_from = {INHERIT_FROM}
 				$cats = array();
 				foreach ($file_ary as $file)
 				{
-					$cats[] = substr($file, 0, strpos($file, '_'));
-					$filelist_cats[substr($file, 0, strpos($file, '_'))][$file] = $file;
+					$cats[] = substr((string) $file, 0, strpos((string) $file, '_'));
+					$filelist_cats[substr((string) $file, 0, strpos((string) $file, '_'))][$file] = $file;
 				}
 
 				$cats = array_values(array_unique($cats));
@@ -955,7 +955,7 @@ inherit_from = {INHERIT_FROM}
 	{
 		global $phpbb_root_path, $phpEx, $config, $db, $cache, $user, $template;
 
-		$source		= str_replace('/', '.', request_var('source', ''));
+		$source		= str_replace('/', '.', (string) request_var('source', ''));
 		$file_ary	= array_diff(request_var('delete', array('')), array(''));
 		$submit		= isset($_POST['submit']) ? true : false;
 
@@ -978,7 +978,7 @@ inherit_from = {INHERIT_FROM}
 			trigger_error($user->lang['TEMPLATE_CACHE_CLEARED'] . adm_back_link($this->u_action . "&amp;action=cache&amp;id=$template_id"));
 		}
 
-		$cache_prefix = 'tpl_' . str_replace('_', '-', $template_row['template_path']);
+		$cache_prefix = 'tpl_' . str_replace('_', '-', (string) $template_row['template_path']);
 
 		// Someone wants to see the cached source ... so we'll highlight it,
 		// add line numbers and indent it appropriately. This could be nasty
@@ -1061,7 +1061,7 @@ inherit_from = {INHERIT_FROM}
 
 		foreach ($file_ary as $file)
 		{
-			$file		= str_replace('/', '.', $file);
+			$file		= str_replace('/', '.', (string) $file);
 
 			// perform some dirty guessing to get the path right.
 			// We assume that three dots in a row were '../'
@@ -1139,13 +1139,13 @@ inherit_from = {INHERIT_FROM}
 		$filelist = $filelist_cats = array();
 
 		$theme_data		= utf8_normalize_nfc(request_var('template_data', '', true));
-		$theme_data		= htmlspecialchars_decode($theme_data, ENT_COMPAT);
+		$theme_data		= htmlspecialchars_decode((string) $theme_data, ENT_COMPAT);
 		$theme_file		= utf8_normalize_nfc(request_var('template_file', '', true));
 		$text_rows		= max(5, min(999, request_var('text_rows', 20)));
 		$save_changes	= (isset($_POST['save'])) ? true : false;
 
 		// make sure theme_file path doesn't go upwards
-		$theme_file = str_replace('..', '.', $theme_file);
+		$theme_file = str_replace('..', '.', (string) $theme_file);
 
 		// Retrieve some information about the theme
 		$sql = 'SELECT theme_storedb, theme_path, theme_name, theme_data
@@ -1244,8 +1244,8 @@ inherit_from = {INHERIT_FROM}
 				$cats = array();
 				foreach ($file_ary as $file)
 				{
-					$cats[] = substr($file, 0, strpos($file, '_'));
-					$filelist_cats[substr($file, 0, strpos($file, '_'))][$file] = $file;
+					$cats[] = substr((string) $file, 0, strpos((string) $file, '_'));
+					$filelist_cats[substr((string) $file, 0, strpos((string) $file, '_'))][$file] = $file;
 				}
 
 				$cats = array_values(array_unique($cats));
@@ -1327,7 +1327,7 @@ inherit_from = {INHERIT_FROM}
 		$update		= (isset($_POST['update'])) ? true : false;
 
 		$imgname	= request_var('imgname', 'site_logo');
-		$imgname	= preg_replace('#[^a-z0-9\-+_]#i', '', $imgname);
+		$imgname	= preg_replace('#[^a-z0-9\-+_]#i', '', (string) $imgname);
 		$sql_extra = $imgnamelang = '';
 
 		$sql = 'SELECT imageset_path, imageset_name
@@ -1347,7 +1347,7 @@ inherit_from = {INHERIT_FROM}
 
 		if (strpos($imgname, '-') !== false)
 		{
-			list($imgname, $imgnamelang) = explode('-', $imgname);
+			[$imgname, $imgnamelang] = explode('-', $imgname);
 			$sql_extra = " AND image_lang IN ('" . $db->sql_escape($imgnamelang) . "', '')";
 		}
 
@@ -1386,7 +1386,7 @@ inherit_from = {INHERIT_FROM}
 			$imgheight	= request_var('imgheight', 0);
 			$imgsize	= request_var('imgsize', 0);
 			$imgpath	= request_var('imgpath', '');
-			$imgpath	= str_replace('..', '.', $imgpath);
+			$imgpath	= str_replace('..', '.', (string) $imgpath);
 
 			// If no dimensions selected, we reset width and height to 0 ;)
 			if (!$imgsize)
@@ -1406,7 +1406,7 @@ inherit_from = {INHERIT_FROM}
 			{
 				if (!$imgwidth || !$imgheight)
 				{
-					list($imgwidth_file, $imgheight_file) = getimagesize("{$phpbb_root_path}styles/$imageset_path/imageset/$imgpath");
+					[$imgwidth_file, $imgheight_file] = getimagesize("{$phpbb_root_path}styles/$imageset_path/imageset/$imgpath");
 					$imgwidth = ($imgwidth) ? $imgwidth : $imgwidth_file;
 					$imgheight = ($imgheight) ? $imgheight : $imgheight_file;
 				}
@@ -1416,7 +1416,7 @@ inherit_from = {INHERIT_FROM}
 
 			if (strpos($imgpath, '/') !== false)
 			{
-				list($imglang, $imgfilename) = explode('/', $imgpath);
+				[$imglang, $imgfilename] = explode('/', $imgpath);
 			}
 			else
 			{
@@ -1503,7 +1503,7 @@ inherit_from = {INHERIT_FROM}
 		foreach ($this->imageset_keys as $category => $img_ary)
 		{
 			$template->assign_block_vars('category', array(
-				'NAME'			=> $user->lang['IMG_CAT_' . strtoupper($category)]
+				'NAME'			=> $user->lang['IMG_CAT_' . strtoupper((string) $category)]
 			));
 
 			foreach ($img_ary as $img)
@@ -1515,7 +1515,7 @@ inherit_from = {INHERIT_FROM}
 						$template->assign_block_vars('category.images', array(
 							'SELECTED'			=> ($img == $imgname && $language == $imgnamelang),
 							'VALUE'				=> $img . '-' . $language,
-							'TEXT'				=> $user->lang['IMG_' . strtoupper($img)] . ' [ ' . $language . ' ]'
+							'TEXT'				=> $user->lang['IMG_' . strtoupper((string) $img)] . ' [ ' . $language . ' ]'
 						));
 					}
 				}
@@ -1524,7 +1524,7 @@ inherit_from = {INHERIT_FROM}
 					$template->assign_block_vars('category.images', array(
 						'SELECTED'			=> ($img == $imgname),
 						'VALUE'				=> $img,
-						'TEXT'				=> (($category == 'custom') ? $img : $user->lang['IMG_' . strtoupper($img)])
+						'TEXT'				=> (($category == 'custom') ? $img : $user->lang['IMG_' . strtoupper((string) $img)])
 					));
 				}
 			}
@@ -1548,7 +1548,7 @@ inherit_from = {INHERIT_FROM}
 			foreach ($img_ary as $img)
 			{
 				$imgtext = preg_replace('/^([^\/]+\/)/', '', $img);
-				$selected = (!empty($imgname) && strpos($image_filename, $imgtext) !== false);
+				$selected = (!empty($imgname) && strpos((string) $image_filename, $imgtext) !== false);
 				if ($selected)
 				{
 					$image_found = true;
@@ -1576,9 +1576,9 @@ inherit_from = {INHERIT_FROM}
 			'U_ACTION'			=> $this->u_action . "&amp;action=edit&amp;id=$imageset_id",
 			'U_BACK'			=> $this->u_action,
 			'NAME'				=> $imageset_name,
-			'A_NAME'			=> addslashes($imageset_name),
+			'A_NAME'			=> addslashes((string) $imageset_name),
 			'PATH'				=> $imageset_path,
-			'A_PATH'			=> addslashes($imageset_path),
+			'A_PATH'			=> addslashes((string) $imageset_path),
 			'ERROR'				=> !$valid_name,
 			'IMG_SRC'			=> ($image_found) ? '../styles/' . $imageset_path . '/imageset/' . $img_val : 'images/no_image.png',
 			'IMAGE_SELECT'		=> $image_found
@@ -1632,7 +1632,7 @@ inherit_from = {INHERIT_FROM}
 			trigger_error($msg . adm_back_link($this->u_action), E_USER_WARNING);
 		}
 
-		$l_prefix = strtoupper($mode);
+		$l_prefix = strtoupper((string) $mode);
 
 		$sql = "SELECT $sql_select
 			FROM $sql_from
@@ -1831,8 +1831,8 @@ inherit_from = {INHERIT_FROM}
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
 
-			$s_options .= '<option value="-1" selected="selected">' . $user->lang['DELETE_' . strtoupper($component)] . '</option>';
-			$s_options .= '<option value="0">' . sprintf($user->lang['KEEP_' . strtoupper($component)], $row[$component . '_name']) . '</option>';
+			$s_options .= '<option value="-1" selected="selected">' . $user->lang['DELETE_' . strtoupper((string) $component)] . '</option>';
+			$s_options .= '<option value="0">' . sprintf($user->lang['KEEP_' . strtoupper((string) $component)], $row[$component . '_name']) . '</option>';
 		}
 		else
 		{
@@ -1852,7 +1852,7 @@ inherit_from = {INHERIT_FROM}
 				}
 				else if ($component != 'style')
 				{
-					$s_keep_option = '<option value="0" selected="selected">' . sprintf($user->lang['KEEP_' . strtoupper($component)], $row[$component . '_name']) . '</option>';
+					$s_keep_option = '<option value="0" selected="selected">' . sprintf($user->lang['KEEP_' . strtoupper((string) $component)], $row[$component . '_name']) . '</option>';
 				}
 			}
 			$db->sql_freeresult($result);
@@ -1861,7 +1861,7 @@ inherit_from = {INHERIT_FROM}
 
 		if (!$style_row)
 		{
-			$template->assign_var('S_REPLACE_' . strtoupper($component) . '_OPTIONS', $s_options);
+			$template->assign_var('S_REPLACE_' . strtoupper((string) $component) . '_OPTIONS', $s_options);
 		}
 		else
 		{
@@ -1871,7 +1871,7 @@ inherit_from = {INHERIT_FROM}
 				$components = array('template', 'theme', 'imageset');
 				foreach ($components as $component)
 				{
-					$this->display_component_options($component, $style_row[$component . '_id'], false, $component_id, true);
+					$this->display_component_options($component, $style_row[$component . '_id'], false, $component_id);
 				}
 			}
 		}
@@ -2034,7 +2034,7 @@ inherit_from = {INHERIT_FROM}
 
 			if ($mode == 'style')
 			{
-				$style_cfg = str_replace(array('{MODE}', '{NAME}', '{COPYRIGHT}', '{VERSION}'), array($mode, $style_row['style_name'], $style_row['style_copyright'], $config['version']), $this->style_cfg);
+				$style_cfg = str_replace(array('{MODE}', '{NAME}', '{COPYRIGHT}', '{VERSION}'), array($mode, $style_row['style_name'], $style_row['style_copyright'], $config['version']), (string) $this->style_cfg);
 
 				$style_cfg .= (!$inc_template) ? "\nrequired_template = {$style_row['template_name']}" : '';
 				$style_cfg .= (!$inc_theme) ? "\nrequired_theme = {$style_row['theme_name']}" : '';
@@ -2065,7 +2065,7 @@ inherit_from = {INHERIT_FROM}
 					$db->sql_freeresult($result);
 				}
 
-				$template_cfg = str_replace(array('{MODE}', '{NAME}', '{COPYRIGHT}', '{VERSION}', '{INHERIT_FROM}'), array($mode, $style_row['template_name'], $style_row['template_copyright'], $config['version'], $use_template_name), $this->template_cfg);
+				$template_cfg = str_replace(array('{MODE}', '{NAME}', '{COPYRIGHT}', '{VERSION}', '{INHERIT_FROM}'), array($mode, $style_row['template_name'], $style_row['template_copyright'], $config['version'], $use_template_name), (string) $this->template_cfg);
 
 				$template_cfg .= "\n\nbbcode_bitfield = {$style_row['bbcode_bitfield']}";
 
@@ -2106,7 +2106,7 @@ inherit_from = {INHERIT_FROM}
 			// Export theme core code
 			if ($mode == 'theme' || $inc_theme)
 			{
-				$theme_cfg = str_replace(array('{MODE}', '{NAME}', '{COPYRIGHT}', '{VERSION}'), array($mode, $style_row['theme_name'], $style_row['theme_copyright'], $config['version']), $this->theme_cfg);
+				$theme_cfg = str_replace(array('{MODE}', '{NAME}', '{COPYRIGHT}', '{VERSION}'), array($mode, $style_row['theme_name'], $style_row['theme_copyright'], $config['version']), (string) $this->theme_cfg);
 
 				// Read old cfg file
 				$items = $cache->obtain_cfg_items($style_row);
@@ -2145,7 +2145,7 @@ inherit_from = {INHERIT_FROM}
 			// Export imageset core code
 			if ($mode == 'imageset' || $inc_imageset)
 			{
-				$imageset_cfg = str_replace(array('{MODE}', '{NAME}', '{COPYRIGHT}', '{VERSION}'), array($mode, $style_row['imageset_name'], $style_row['imageset_copyright'], $config['version']), $this->imageset_cfg);
+				$imageset_cfg = str_replace(array('{MODE}', '{NAME}', '{COPYRIGHT}', '{VERSION}'), array($mode, $style_row['imageset_name'], $style_row['imageset_copyright'], $config['version']), (string) $this->imageset_cfg);
 
 				$imageset_main = array();
 
@@ -2214,7 +2214,7 @@ inherit_from = {INHERIT_FROM}
 
 				foreach ($imageset_lang as $lang => $imageset_localized)
 				{
-					$imageset_cfg = str_replace(array('{MODE}', '{NAME}', '{COPYRIGHT}', '{VERSION}'), array($mode, $style_row['imageset_name'], $style_row['imageset_copyright'], $config['version']), $this->imageset_cfg);
+					$imageset_cfg = str_replace(array('{MODE}', '{NAME}', '{COPYRIGHT}', '{VERSION}'), array($mode, $style_row['imageset_name'], $style_row['imageset_copyright'], $config['version']), (string) $this->imageset_cfg);
 
 					foreach ($this->imageset_keys as $topic => $key_array)
 					{
@@ -2264,7 +2264,7 @@ inherit_from = {INHERIT_FROM}
 
 				if ($mode == 'style')
 				{
-					$path = preg_replace('#[^\w-]+#', '_', $style_row['style_name']);
+					$path = preg_replace('#[^\w-]+#', '_', (string) $style_row['style_name']);
 				}
 				else
 				{
@@ -2357,7 +2357,7 @@ inherit_from = {INHERIT_FROM}
 		global $template, $db, $config, $user, $safe_mode, $cache, $phpbb_root_path;
 
 		$update = (isset($_POST['update'])) ? true : false;
-		$l_type = strtoupper($mode);
+		$l_type = strtoupper((string) $mode);
 
 		$error = array();
 		$element_ary = array('template' => STYLES_TEMPLATE_TABLE, 'theme' => STYLES_THEME_TABLE, 'imageset' => STYLES_IMAGESET_TABLE);
@@ -2417,7 +2417,7 @@ inherit_from = {INHERIT_FROM}
 			$sql = "SELECT {$mode}_id, {$mode}_name
 				FROM $sql_from
 				WHERE {$mode}_id <> $style_id
-				AND LOWER({$mode}_name) = '" . $db->sql_escape(strtolower($name)) . "'";
+				AND LOWER({$mode}_name) = '" . $db->sql_escape(strtolower((string) $name)) . "'";
 			$result = $db->sql_query($sql);
 			$conflict = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -2528,7 +2528,7 @@ inherit_from = {INHERIT_FROM}
 
 							if ($fp = @fopen("{$phpbb_root_path}styles/{$style_row['theme_path']}/theme/stylesheet.css", 'wb'))
 							{
-								$store_db = (@fwrite($fp, str_replace("styles/{$style_row['theme_path']}/theme/", './', $theme_data))) ? 0 : 1;
+								$store_db = (@fwrite($fp, str_replace("styles/{$style_row['theme_path']}/theme/", './', (string) $theme_data))) ? 0 : 1;
 							}
 							fclose($fp);
 						}
@@ -2645,10 +2645,10 @@ inherit_from = {INHERIT_FROM}
 			'S_TEMPLATE'			=> ($mode == 'template') ? true : false,
 			'S_THEME'				=> ($mode == 'theme') ? true : false,
 			'S_IMAGESET'			=> ($mode == 'imageset') ? true : false,
-			'S_STORE_DB'			=> (isset($style_row[$mode . '_storedb'])) ? $style_row[$mode . '_storedb'] : 0,
-			'S_STORE_DB_DISABLED'	=> (isset($style_row[$mode . '_inherits_id'])) ? $style_row[$mode . '_inherits_id'] : 0,
-			'S_STYLE_ACTIVE'		=> (isset($style_row['style_active'])) ? $style_row['style_active'] : 0,
-			'S_STYLE_DEFAULT'		=> (isset($style_row['style_default'])) ? $style_row['style_default'] : 0,
+			'S_STORE_DB'			=> isset($style_row[$mode . '_storedb']) ? $style_row[$mode . '_storedb'] : 0,
+			'S_STORE_DB_DISABLED'	=> isset($style_row[$mode . '_inherits_id']) ? $style_row[$mode . '_inherits_id'] : 0,
+			'S_STYLE_ACTIVE'		=> isset($style_row['style_active']) ? $style_row['style_active'] : 0,
+			'S_STYLE_DEFAULT'		=> isset($style_row['style_default']) ? $style_row['style_default'] : 0,
 			'S_SUPERTEMPLATE'		=> (isset($style_row[$mode . '_inherits_id']) && $style_row[$mode . '_inherits_id']) ? $super['template_name'] : 0,
 
 			'S_TEMPLATE_OPTIONS'	=> ($mode == 'style') ? $template_options : '',
@@ -2706,7 +2706,7 @@ inherit_from = {INHERIT_FROM}
 	*
 	* @return string Stylesheet data for theme_data column in the theme table
 	*/
-	function db_theme_data($theme_row, $stylesheet = false, $root_path = '')
+	function db_theme_data($theme_row, mixed $stylesheet = false, $root_path = '')
 	{
 		global $phpbb_root_path;
 
@@ -2726,11 +2726,11 @@ inherit_from = {INHERIT_FROM}
 
 		// Match CSS imports
 		$matches = array();
-		preg_match_all('/@import url\((["\'])(.*)\1\);/i', $stylesheet, $matches);
+		preg_match_all('/@import url\((["\'])(.*)\1\);/i', (string) $stylesheet, $matches);
 
 		// remove commented stylesheets (very simple parser, allows only whitespace
 		// around an @import statement)
-		preg_match_all('#/\*\s*@import url\((["\'])(.*)\1\);\s\*/#i', $stylesheet, $commented);
+		preg_match_all('#/\*\s*@import url\((["\'])(.*)\1\);\s\*/#i', (string) $stylesheet, $commented);
 		$matches[2] = array_diff($matches[2], $commented[2]);
 
 		if (sizeof($matches))
@@ -2739,13 +2739,13 @@ inherit_from = {INHERIT_FROM}
 			{
 				if (isset($matches[2][$idx]))
 				{
-					$stylesheet = str_replace($match, acp_styles::load_css_file($theme_row['theme_path'], $matches[2][$idx]), $stylesheet);
+					$stylesheet = str_replace($match, (new acp_styles())->load_css_file($theme_row['theme_path'], $matches[2][$idx]), (string) $stylesheet);
 				}
 			}
 		}
 
 		// adjust paths
-		return str_replace('./', 'styles/' . $theme_row['theme_path'] . '/theme/', $stylesheet);
+		return str_replace('./', 'styles/' . $theme_row['theme_path'] . '/theme/', (string) $stylesheet);
 	}
 
 	/**
@@ -2785,7 +2785,7 @@ inherit_from = {INHERIT_FROM}
 				{
 					foreach ($matches[1] as $match)
 					{
-						$includes[trim($match)][] = $file;
+						$includes[trim((string) $match)][] = $file;
 					}
 				}
 			}
@@ -2796,7 +2796,7 @@ inherit_from = {INHERIT_FROM}
 			foreach ($file_ary as $file)
 			{
 				// Skip index.
-				if (strpos($file, 'index.') === 0)
+				if (strncmp((string) $file, 'index.', 6) === 0)
 				{
 					continue;
 				}
@@ -2852,7 +2852,7 @@ inherit_from = {INHERIT_FROM}
 				continue;
 			}
 
-			if (is_file($phpbb_root_path . 'cache/' . $file) && (strpos($file, $cache_prefix) === 0))
+			if (is_file($phpbb_root_path . 'cache/' . $file) && (strncmp($file, $cache_prefix, strlen($cache_prefix)) === 0))
 			{
 				$file_ary[] = str_replace('.', '/', preg_replace('#^' . preg_quote($cache_prefix, '#') . '_(.*?)\.html\.' . $phpEx . '$#i', '\1', $file));
 			}
@@ -2869,11 +2869,11 @@ inherit_from = {INHERIT_FROM}
 	* @param mixed $file_ary is optional and may contain an array of template file names which should be refreshed in the cache.
 	*	The file names should be the original template file names and not the cache file names.
 	*/
-	function clear_template_cache($template_row, $file_ary = false)
+	function clear_template_cache($template_row, mixed $file_ary = false)
 	{
 		global $phpbb_root_path, $phpEx, $user;
 
-		$cache_prefix = 'tpl_' . str_replace('_', '-', $template_row['template_path']);
+		$cache_prefix = 'tpl_' . str_replace('_', '-', (string) $template_row['template_path']);
 
 		if (!$file_ary || !is_array($file_ary))
 		{
@@ -2887,7 +2887,7 @@ inherit_from = {INHERIT_FROM}
 
 		foreach ($file_ary as $file)
 		{
-			$file = str_replace('/', '.', $file);
+			$file = str_replace('/', '.', (string) $file);
 
 			$file = "{$phpbb_root_path}cache/{$cache_prefix}_$file.html.$phpEx";
 			if (file_exists($file) && is_file($file))
@@ -2907,7 +2907,7 @@ inherit_from = {INHERIT_FROM}
 	{
 		global $phpbb_root_path, $phpEx, $config, $db, $cache, $user, $template;
 
-		$l_type = strtoupper($mode);
+		$l_type = strtoupper((string) $mode);
 
 		$error = $installcfg = $style_row = array();
 		$root_path = $cfg_file = '';
@@ -2955,9 +2955,9 @@ inherit_from = {INHERIT_FROM}
 						'style_copyright'	=> $installcfg['copyright']
 					);
 
-					$reqd_template = (isset($installcfg['required_template'])) ? $installcfg['required_template'] : false;
-					$reqd_theme = (isset($installcfg['required_theme'])) ? $installcfg['required_theme'] : false;
-					$reqd_imageset = (isset($installcfg['required_imageset'])) ? $installcfg['required_imageset'] : false;
+					$reqd_template	= isset($installcfg['required_template']) ? $installcfg['required_template'] : false;
+					$reqd_theme		= isset($installcfg['required_theme']) ? $installcfg['required_theme'] : false;
+					$reqd_imageset	= isset($installcfg['required_imageset']) ? $installcfg['required_imageset'] : false;
 
 					// Check to see if each element is already installed, if it is grab the id
 					foreach ($element_ary as $element => $table)
@@ -3052,14 +3052,14 @@ inherit_from = {INHERIT_FROM}
 			'S_LOCATION'		=> (isset($installcfg['inherit_from']) && $installcfg['inherit_from']) ? false : true,
 			'S_STYLE'			=> ($mode == 'style') ? true : false,
 			'S_TEMPLATE'		=> ($mode == 'template') ? true : false,
-			'S_SUPERTEMPLATE'	=> (isset($installcfg['inherit_from'])) ? $installcfg['inherit_from'] : '',
+			'S_SUPERTEMPLATE'	=> isset($installcfg['inherit_from']) ? $installcfg['inherit_from'] : '',
 			'S_THEME'			=> ($mode == 'theme') ? true : false,
 
-			'S_STORE_DB'			=> (isset($style_row[$mode . '_storedb'])) ? $style_row[$mode . '_storedb'] : 0,
-			'S_STYLE_ACTIVE'		=> (isset($style_row['style_active'])) ? $style_row['style_active'] : 0,
-			'S_STYLE_DEFAULT'		=> (isset($style_row['style_default'])) ? $style_row['style_default'] : 0,
+			'S_STORE_DB'		=> isset($style_row[$mode . '_storedb']) ? $style_row[$mode . '_storedb'] : 0,
+			'S_STYLE_ACTIVE'	=> isset($style_row['style_active']) ? $style_row['style_active'] : 0,
+			'S_STYLE_DEFAULT'	=> isset($style_row['style_default']) ? $style_row['style_default'] : 0,
 
-			'U_ACTION'			=> $this->u_action . "&amp;action=install&amp;path=" . urlencode($install_path),
+			'U_ACTION'			=> $this->u_action . "&amp;action=install&amp;path=" . urlencode((string) $install_path),
 			'U_BACK'			=> $this->u_action,
 
 			'L_TITLE'				=> $user->lang[$this->page_title],
@@ -3084,7 +3084,7 @@ inherit_from = {INHERIT_FROM}
 	{
 		global $phpbb_root_path, $phpEx, $config, $db, $cache, $user, $template;
 
-		$l_type = strtoupper($mode);
+		$l_type = strtoupper((string) $mode);
 		$element_ary = array('template' => STYLES_TEMPLATE_TABLE, 'theme' => STYLES_THEME_TABLE, 'imageset' => STYLES_IMAGESET_TABLE);
 		$error = array();
 
@@ -3208,9 +3208,9 @@ inherit_from = {INHERIT_FROM}
 			'S_THEME'			=> ($mode == 'theme') ? true : false,
 			'S_BASIS'			=> ($basis) ? true : false,
 
-			'S_STORE_DB'			=> (isset($style_row['storedb'])) ? $style_row['storedb'] : 0,
-			'S_STYLE_ACTIVE'		=> (isset($style_row['style_active'])) ? $style_row['style_active'] : 0,
-			'S_STYLE_DEFAULT'		=> (isset($style_row['style_default'])) ? $style_row['style_default'] : 0,
+			'S_STORE_DB'			=> isset($style_row['storedb']) ? $style_row['storedb'] : 0,
+			'S_STYLE_ACTIVE'		=> isset($style_row['style_active']) ? $style_row['style_active'] : 0,
+			'S_STYLE_DEFAULT'		=> isset($style_row['style_default']) ? $style_row['style_default'] : 0,
 			'S_TEMPLATE_OPTIONS'	=> ($mode == 'style') ? $template_options : '',
 			'S_THEME_OPTIONS'		=> ($mode == 'style') ? $theme_options : '',
 			'S_IMAGESET_OPTIONS'	=> ($mode == 'style') ? $imageset_options : '',
@@ -3268,7 +3268,7 @@ inherit_from = {INHERIT_FROM}
 			break;
 		}
 
-		$l_element = strtoupper($element);
+		$l_element = strtoupper((string) $element);
 
 		$chk_name = ($reqd_name !== false) ? $reqd_name : $name;
 
@@ -3421,7 +3421,7 @@ inherit_from = {INHERIT_FROM}
 			break;
 		}
 
-		$l_type = strtoupper($mode);
+		$l_type = strtoupper((string) $mode);
 
 		if (!$name)
 		{
@@ -3583,16 +3583,16 @@ inherit_from = {INHERIT_FROM}
 
 			foreach ($cfg_data as $key => $value)
 			{
-				if (strpos($value, '*') !== false)
+				if (strpos((string) $value, '*') !== false)
 				{
-					if (substr($value, -1, 1) === '*')
+					if (substr((string) $value, -1) === '*')
 					{
-						list($image_filename, $image_height) = explode('*', $value);
+						[$image_filename, $image_height] = explode('*', (string) $value);
 						$image_width = 0;
 					}
 					else
 					{
-						list($image_filename, $image_height, $image_width) = explode('*', $value);
+						[$image_filename, $image_height, $image_width] = explode('*', (string) $value);
 					}
 				}
 				else
@@ -3601,14 +3601,14 @@ inherit_from = {INHERIT_FROM}
 					$image_height = $image_width = 0;
 				}
 
-				if (strpos($key, 'img_') === 0 && $image_filename)
+				if ((strncmp((string) $key, 'img_', 4) === 0) && $image_filename)
 				{
-					$key = substr($key, 4);
+					$key = substr((string) $key, 4);
 					if (in_array($key, $imageset_definitions))
 					{
 						$sql_ary = array(
 							'image_name'		=> $key,
-							'image_filename'	=> str_replace('{PATH}', "styles/$path/imageset/", trim($image_filename)),
+							'image_filename'	=> str_replace('{PATH}', "styles/$path/imageset/", trim((string) $image_filename)),
 							'image_height'		=> (int) $image_height,
 							'image_width'		=> (int) $image_width,
 							'imageset_id'		=> (int) $id,
@@ -3631,16 +3631,16 @@ inherit_from = {INHERIT_FROM}
 					$cfg_data_imageset_data = parse_cfg_file("$root_path$mode/{$row['lang_dir']}/imageset.cfg");
 					foreach ($cfg_data_imageset_data as $image_name => $value)
 					{
-						if (strpos($value, '*') !== false)
+						if (strpos((string) $value, '*') !== false)
 						{
-							if (substr($value, -1, 1) === '*')
+							if (substr((string) $value, -1) === '*')
 							{
-								list($image_filename, $image_height) = explode('*', $value);
+								[$image_filename, $image_height] = explode('*', (string) $value);
 								$image_width = 0;
 							}
 							else
 							{
-								list($image_filename, $image_height, $image_width) = explode('*', $value);
+								[$image_filename, $image_height, $image_width] = explode('*', (string) $value);
 							}
 						}
 						else
@@ -3649,9 +3649,9 @@ inherit_from = {INHERIT_FROM}
 							$image_height = $image_width = 0;
 						}
 
-						if (strpos($image_name, 'img_') === 0 && $image_filename)
+						if ((strncmp((string) $image_name, 'img_', 4) === 0) && $image_filename)
 						{
-							$image_name = substr($image_name, 4);
+							$image_name = substr((string) $image_name, 4);
 							if (in_array($image_name, $imageset_definitions))
 							{
 								$sql_ary = array(
@@ -3947,7 +3947,7 @@ inherit_from = {INHERIT_FROM}
 					break;
 				}
 
-				fwrite($fp, $row['template_data']);
+				fwrite($fp, (string) $row['template_data']);
 				fclose($fp);
 			}
 			$db->sql_freeresult($result);
