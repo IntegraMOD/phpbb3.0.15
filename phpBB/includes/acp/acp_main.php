@@ -369,6 +369,11 @@ class acp_main
 							}
 						}
 
+						if (phpbb_acm_stores_guest_sessions())
+						{
+							phpbb_guest_session_purge();
+						}
+
 						// let's restore the admin session
 						$reinsert_ary = array(
 								'session_id'			=> (string) $user->session_id,

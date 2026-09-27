@@ -17,6 +17,102 @@ if (!defined('IN_PHPBB'))
 }
 
 /**
+* Generate the drop down of available ACM (cache) options
+*/
+function acm_select($default = '')
+{
+	global $lang, $phpbb_root_path, $phpEx;
+
+	$candidates = array(
+		'file'			=> array('label' => isset($lang['CACHE_FILE']) ? $lang['CACHE_FILE'] : 'File', 'available' => true),
+		'memcache'		=> array('label' => isset($lang['CACHE_MEMCACHE']) ? $lang['CACHE_MEMCACHE'] : 'Memcache', 'available' => (@extension_loaded('memcache') || @class_exists('Memcache', false))),
+		'redis'			=> array('label' => isset($lang['CACHE_REDIS']) ? $lang['CACHE_REDIS'] : 'Redis', 'available' => (@extension_loaded('redis') || @class_exists('Redis', false))),
+		'apc'			=> array('label' => isset($lang['CACHE_APC']) ? $lang['CACHE_APC'] : 'APCu / APC', 'available' => @function_exists('apc_fetch')),
+		'wincache'		=> array('label' => isset($lang['CACHE_WINCACHE']) ? $lang['CACHE_WINCACHE'] : 'WinCache', 'available' => @extension_loaded('wincache')),
+		'xcache'		=> array('label' => isset($lang['CACHE_XCACHE']) ? $lang['CACHE_XCACHE'] : 'XCache', 'available' => @extension_loaded('xcache')),
+		'eaccelerator'	=> array('label' => isset($lang['CACHE_EACCELERATOR']) ? $lang['CACHE_EACCELERATOR'] : 'eAccelerator', 'available' => @extension_loaded('eaccelerator')),
+	);
+
+	if ($default === '')
+	{
+		$default = 'file';
+	}
+
+	$s_options = '';
+	foreach ($candidates as $key => $meta)
+	{
+		if (!$meta['available'] || !file_exists($phpbb_root_path . 'includes/acm/acm_' . $key . '.' . $phpEx))
+		{
+			continue;
+		}
+
+		$selected = ($key == $default) ? ' selected="selected"' : '';
+		$s_options .= '<option value="' . $key . '"' . $selected . '>' . $meta['label'] . '</option>';
+	}
+
+	return $s_options;
+}
+
+/**
+* Restrict ACM type to a known driver file
+*/
+function phpbb_validate_acm_type($acm_type)
+{
+	global $phpbb_root_path, $phpEx;
+
+	$acm_type = preg_replace('/[^a-z0-9_]/', '', strtolower((string) $acm_type));
+	if ($acm_type === '' || !file_exists($phpbb_root_path . 'includes/acm/acm_' . $acm_type . '.' . $phpEx))
+	{
+		return 'file';
+	}
+
+	return $acm_type;
+}
+
+/**
+* Rewrite $acm_type in an already written config.php
+*/
+function phpbb_update_config_acm_type($acm_type)
+{
+	global $phpbb_root_path, $phpEx;
+
+	$acm_type = phpbb_validate_acm_type($acm_type);
+	$config_file = $phpbb_root_path . 'config.' . $phpEx;
+	$config_data = @file_get_contents($config_file);
+
+	if ($config_data === false)
+	{
+		return false;
+	}
+
+	$acm_line = "\$acm_type = '" . str_replace("'", "\\'", $acm_type) . "';";
+
+	if (preg_match('/\$acm_type\s*=\s*\'[^\']*\';/', $config_data))
+	{
+		$config_data = preg_replace('/\$acm_type\s*=\s*\'[^\']*\';/', $acm_line, $config_data, 1);
+	}
+	else if (preg_match("/(@define\\('PHPBB_INSTALLED', true\\);)/", $config_data))
+	{
+		$config_data = preg_replace("/(@define\\('PHPBB_INSTALLED', true\\);)/", $acm_line . "\n\\1", $config_data, 1);
+	}
+	else
+	{
+		$config_data .= "\n" . $acm_line . "\n";
+	}
+
+	$fp = @fopen($config_file, 'wb');
+	if ($fp === false)
+	{
+		return false;
+	}
+
+	$written = (@fwrite($fp, $config_data) !== false);
+	@fclose($fp);
+
+	return $written;
+}
+
+/**
 * Determine if we are able to load a specified PHP module and do so if possible
 */
 function can_load_dll($dll)
@@ -573,7 +669,7 @@ function phpbb_create_config_file_data($data, $dbms, $load_extensions, $debug = 
 		'dbuser'		=> $data['dbuser'],
 		'dbpasswd'		=> htmlspecialchars_decode($data['dbpasswd'], ENT_COMPAT),
 		'table_prefix'	=> $data['table_prefix'],
-		'acm_type'		=> 'file',
+		'acm_type'		=> phpbb_validate_acm_type(isset($data['acm_type']) ? $data['acm_type'] : 'file'),
 		'load_extensions'	=> $load_extensions,
 	);
 

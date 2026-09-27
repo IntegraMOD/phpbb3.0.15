@@ -56,17 +56,35 @@ if ($mode == 'whois' && $auth->acl_get('a_') && $session_id)
 {
 	include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 
-	$sql = 'SELECT u.user_id, u.username, u.user_type, s.session_ip
-		FROM ' . USERS_TABLE . ' u, ' . SESSIONS_TABLE . " s
-		WHERE s.session_id = '" . $db->sql_escape($session_id) . "'
-			AND	u.user_id = s.session_user_id";
-	$result = $db->sql_query($sql);
-
-	if ($row = $db->sql_fetchrow($result))
+	$whois_ip = false;
+	if (phpbb_acm_stores_guest_sessions())
 	{
-		$template->assign_var('WHOIS', user_ipwhois($row['session_ip']));
+		$guest_session = phpbb_guest_session_get($session_id);
+		if (is_array($guest_session))
+		{
+			$whois_ip = $guest_session['session_ip'];
+		}
 	}
-	$db->sql_freeresult($result);
+
+	if ($whois_ip === false)
+	{
+		$sql = 'SELECT u.user_id, u.username, u.user_type, s.session_ip
+			FROM ' . USERS_TABLE . ' u, ' . SESSIONS_TABLE . " s
+			WHERE s.session_id = '" . $db->sql_escape($session_id) . "'
+				AND	u.user_id = s.session_user_id";
+		$result = $db->sql_query($sql);
+
+		if ($row = $db->sql_fetchrow($result))
+		{
+			$whois_ip = $row['session_ip'];
+		}
+		$db->sql_freeresult($result);
+	}
+
+	if ($whois_ip !== false)
+	{
+		$template->assign_var('WHOIS', user_ipwhois($whois_ip));
+	}
 
 	// Output the page
 	page_header($user->lang['WHO_IS_ONLINE']);
@@ -97,28 +115,7 @@ $guest_counter = 0;
 // Get number of online guests (if we do not display them)
 if (!$show_guests)
 {
-	switch ($db->sql_layer)
-	{
-		case 'sqlite':
-			$sql = 'SELECT COUNT(session_ip) as num_guests
-				FROM (
-					SELECT DISTINCT session_ip
-						FROM ' . SESSIONS_TABLE . '
-						WHERE session_user_id = ' . ANONYMOUS . '
-							AND session_time >= ' . (time() - ($config['load_online_time'] * 60)) .
-				')';
-		break;
-
-		default:
-			$sql = 'SELECT COUNT(DISTINCT session_ip) as num_guests
-				FROM ' . SESSIONS_TABLE . '
-				WHERE session_user_id = ' . ANONYMOUS . '
-					AND session_time >= ' . (time() - ($config['load_online_time'] * 60));
-		break;
-	}
-	$result = $db->sql_query($sql);
-	$guest_counter = (int) $db->sql_fetchfield('num_guests');
-	$db->sql_freeresult($result);
+	$guest_counter = obtain_guest_count();
 }
 
 // Get user list
@@ -126,14 +123,95 @@ $sql = 'SELECT u.user_id, u.username, u.username_clean, u.user_type, u.user_colo
 	FROM ' . USERS_TABLE . ' u, ' . SESSIONS_TABLE . ' s
 	WHERE u.user_id = s.session_user_id
 		AND s.session_time >= ' . (time() - ($config['load_online_time'] * 60)) .
-		((!$show_guests) ? ' AND s.session_user_id <> ' . ANONYMOUS : '') . '
+		((!$show_guests || phpbb_acm_stores_guest_sessions()) ? ' AND s.session_user_id <> ' . ANONYMOUS : '') . '
 	ORDER BY ' . $order_by;
 $result = $db->sql_query($sql);
+
+$online_rows = array();
+while ($row = $db->sql_fetchrow($result))
+{
+	$online_rows[] = $row;
+}
+$db->sql_freeresult($result);
+
+if (phpbb_acm_stores_guest_sessions())
+{
+	$acm_user_ids = array();
+	$acm_sessions = phpbb_guest_session_list();
+	foreach ($acm_sessions as $acm_row)
+	{
+		$acm_user_id = (int) $acm_row['session_user_id'];
+		if ($acm_user_id && $acm_user_id !== ANONYMOUS)
+		{
+			$acm_user_ids[$acm_user_id] = $acm_user_id;
+		}
+	}
+
+	$acm_users = array();
+	if (sizeof($acm_user_ids))
+	{
+		$sql = 'SELECT user_id, username, username_clean, user_type, user_colour
+			FROM ' . USERS_TABLE . '
+			WHERE ' . $db->sql_in_set('user_id', $acm_user_ids);
+		$acm_result = $db->sql_query($sql);
+		while ($acm_user = $db->sql_fetchrow($acm_result))
+		{
+			$acm_users[(int) $acm_user['user_id']] = $acm_user;
+		}
+		$db->sql_freeresult($acm_result);
+	}
+
+	foreach ($acm_sessions as $acm_row)
+	{
+		$acm_user_id = (int) $acm_row['session_user_id'];
+		if ($acm_user_id === ANONYMOUS)
+		{
+			if (!$show_guests)
+			{
+				continue;
+			}
+
+			$online_rows[] = array_merge($acm_row, array(
+				'user_id'			=> ANONYMOUS,
+				'username'			=> $user->lang['GUEST'],
+				'username_clean'	=> '',
+				'user_type'			=> USER_IGNORE,
+				'user_colour'		=> '',
+			));
+			continue;
+		}
+
+		if (!isset($acm_users[$acm_user_id]))
+		{
+			continue;
+		}
+
+		$online_rows[] = array_merge($acm_users[$acm_user_id], $acm_row);
+	}
+
+	$sort_dir_mul = ($sort_dir == 'a') ? 1 : -1;
+	usort($online_rows, function($a, $b) use ($sort_key, $sort_dir_mul) {
+		if ($sort_key == 'a')
+		{
+			$cmp = strcasecmp($a['username_clean'], $b['username_clean']);
+		}
+		else if ($sort_key == 'c')
+		{
+			$cmp = strcasecmp($a['session_page'], $b['session_page']);
+		}
+		else
+		{
+			$cmp = ((int) $a['session_time'] < (int) $b['session_time']) ? -1 : (((int) $a['session_time'] > (int) $b['session_time']) ? 1 : 0);
+		}
+
+		return $cmp * $sort_dir_mul;
+	});
+}
 
 $prev_id = $prev_ip = $user_list = array();
 $logged_visible_online = $logged_hidden_online = $counter = 0;
 
-while ($row = $db->sql_fetchrow($result))
+foreach ($online_rows as $row)
 {
 	if ($row['user_id'] != ANONYMOUS && !isset($prev_id[$row['user_id']]))
 	{
@@ -340,8 +418,7 @@ while ($row = $db->sql_fetchrow($result))
 		'S_USER_TYPE'		=> $row['user_type'],
 	));
 }
-$db->sql_freeresult($result);
-unset($prev_id, $prev_ip);
+unset($prev_id, $prev_ip, $online_rows);
 
 // Generate reg/hidden/guest online text
 $vars_online = array(

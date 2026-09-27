@@ -516,6 +516,38 @@ class install_install extends module
 			));
 		}
 
+		// Display supported ACM backends. Selection is not made on this page.
+		$template->assign_block_vars('checks', array(
+			'S_LEGEND'			=> true,
+			'LEGEND'			=> $lang['CACHE_STORE'],
+			'LEGEND_EXPLAIN'	=> isset($lang['CACHE_STORE_EXPLAIN']) ? $lang['CACHE_STORE_EXPLAIN'] : '',
+		));
+
+		$cache_backends = array(
+			'file'			=> true,
+			'redis'			=> (@extension_loaded('redis') || @class_exists('Redis', false)),
+			'memcached'		=> (@extension_loaded('memcached') || @class_exists('Memcached', false)),
+			'memcache'		=> (@extension_loaded('memcache') || @class_exists('Memcache', false)),
+			'apc'			=> (@extension_loaded('apcu') || @function_exists('apcu_fetch') || @extension_loaded('apc') || @function_exists('apc_fetch')),
+			'wincache'		=> @extension_loaded('wincache'),
+			'xcache'		=> @extension_loaded('xcache'),
+			'eaccelerator'	=> @extension_loaded('eaccelerator'),
+		);
+
+		foreach ($cache_backends as $acm_type => $available)
+		{
+			$label_key = 'CACHE_' . strtoupper($acm_type);
+			$title = isset($lang[$label_key]) ? $lang[$label_key] : $acm_type;
+
+			$template->assign_block_vars('checks', array(
+				'TITLE'		=> $title,
+				'RESULT'	=> ($available) ? '<strong style="color:green">' . $lang['AVAILABLE'] . '</strong>' : '<span style="color:gray">' . $lang['UNAVAILABLE'] . '</span>',
+
+				'S_EXPLAIN'	=> false,
+				'S_LEGEND'	=> false,
+			));
+		}
+
 		// And finally where do we want to go next (well today is taken isn't it :P)
 		$s_hidden_fields = ($img_imagick) ? '<input type="hidden" name="img_imagick" value="' . addslashes($img_imagick) . '" />' : '';
 
@@ -1071,6 +1103,52 @@ class install_install extends module
 			$s_hidden_fields .= '<input type="hidden" name="' . $config_key . '" value="' . $data[$config_key] . '" />';
 		}
 
+		// Add ACM selection (cache backend). Place it in its own legend at the bottom
+		$data['acm_type'] = phpbb_validate_acm_type(($data['acm_type'] !== '') ? $data['acm_type'] : 'file');
+		$detected_options = acm_select($data['acm_type']);
+
+		$template->assign_block_vars('options', array(
+			'S_LEGEND'		=> true,
+			'LEGEND'		=> $lang['CACHE_STORE'],
+		));
+
+		$template->assign_block_vars('options', array(
+			'KEY'			=> 'acm_type',
+			'TITLE'			=> $lang['CACHE_STORE'],
+			'S_EXPLAIN'		=> true,
+			'S_LEGEND'		=> false,
+			'TITLE_EXPLAIN'	=> isset($lang['CACHE_STORE_EXPLAIN']) ? $lang['CACHE_STORE_EXPLAIN'] : '',
+			'CONTENT'		=> '<select id="acm_type" name="acm_type">' . $detected_options . '</select>',
+		));
+
+		$backends = array(
+			'file'			=> array('avail' => true, 'explain_key' => 'CACHE_FILE_EXPLAIN'),
+			'redis'			=> array('avail' => (@extension_loaded('redis') || @class_exists('Redis', false)), 'explain_key' => 'CACHE_REDIS_EXPLAIN'),
+			'memcached'		=> array('avail' => (@extension_loaded('memcached') || @class_exists('Memcached', false)), 'explain_key' => 'CACHE_MEMCACHED_EXPLAIN'),
+			'memcache'		=> array('avail' => (@extension_loaded('memcache') || @class_exists('Memcache', false)), 'explain_key' => 'CACHE_MEMCACHE_EXPLAIN'),
+			'apc'			=> array('avail' => (@function_exists('apc_fetch') || @extension_loaded('apcu')), 'explain_key' => 'CACHE_APC_EXPLAIN'),
+			'wincache'		=> array('avail' => @extension_loaded('wincache'), 'explain_key' => 'CACHE_WINCACHE_EXPLAIN'),
+			'xcache'		=> array('avail' => @extension_loaded('xcache'), 'explain_key' => 'CACHE_XCACHE_EXPLAIN'),
+			'eaccelerator'	=> array('avail' => @extension_loaded('eaccelerator'), 'explain_key' => 'CACHE_EACCELERATOR_EXPLAIN'),
+		);
+
+		foreach ($backends as $key => $info)
+		{
+			$label_key = 'CACHE_' . strtoupper($key);
+			$title = isset($lang[$label_key]) ? $lang[$label_key] : ucfirst($key);
+			$explain = isset($lang[$info['explain_key']]) ? $lang[$info['explain_key']] : '';
+			$status = $info['avail'] ? '<strong style="color:green">' . $lang['AVAILABLE'] . '</strong>' : '<span style="color:gray">' . $lang['UNAVAILABLE'] . '</span>';
+
+			$template->assign_block_vars('options', array(
+				'KEY'			=> 'acm_' . $key,
+				'TITLE'			=> $title,
+				'S_EXPLAIN'		=> true,
+				'S_LEGEND'		=> false,
+				'TITLE_EXPLAIN'	=> $explain . '<br /><em>' . $status . '</em>',
+				'CONTENT'		=> '',
+			));
+		}
+
 		$submit = $lang['NEXT_STEP'];
 
 		$url = $this->p_master->module_url . "?mode=$mode&amp;sub=create_table";
@@ -1095,6 +1173,8 @@ class install_install extends module
 
 		// Obtain any submitted data
 		$data = $this->get_submitted_data();
+		$data['acm_type'] = phpbb_validate_acm_type($data['acm_type']);
+		phpbb_update_config_acm_type($data['acm_type']);
 
 		if ($data['dbms'] == '')
 		{
@@ -2110,6 +2190,7 @@ class install_install extends module
 			'server_name'	=> request_var('server_name', ''),
 			'server_port'	=> request_var('server_port', ''),
 			'script_path'	=> request_var('script_path', ''),
+			'acm_type'		=> request_var('acm_type', ''),
 		);
 	}
 
