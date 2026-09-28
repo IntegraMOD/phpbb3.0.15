@@ -2339,6 +2339,10 @@ function change_database_data(&$no_updates, $version)
 			set_config('jab_verify_peer_name', '0');
 			set_config('recaptcha_v2_pubkey', '1');
 			set_config('recaptcha_v2_privkey', '1');
+			set_config('gcloud_fd_sitekey', '');
+			set_config('gcloud_fd_apikey', '');
+			set_config('gcloud_fd_project', '');
+			set_config('gcloud_fd_score', '0.50');
 
 			$no_updates = false;
 		break;

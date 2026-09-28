@@ -226,6 +226,10 @@ INSERT INTO phpbb_config (config_name, config_value) VALUES ('queue_interval', '
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('ranks_path', 'images/ranks');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('recaptcha_v2_pubkey', '1');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('recaptcha_v2_privkey', '1');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('gcloud_fd_sitekey', '');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('gcloud_fd_apikey', '');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('gcloud_fd_project', '');
+INSERT INTO phpbb_config (config_name, config_value) VALUES ('gcloud_fd_score', '0.50');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('require_activation', '0');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('referer_validation', '1');
 INSERT INTO phpbb_config (config_name, config_value) VALUES ('script_path', '');

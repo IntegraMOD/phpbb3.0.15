@@ -1,0 +1,23 @@
+<!-- IF S_GCLOUD_FD_AVAILABLE -->
+<tr>
+    <th colspan="2" valign="middle">{L_CONFIRMATION}</th>
+</tr>
+<tr>
+    <td class="row1"><b class="genmed">{L_CONFIRM_CODE}:</b><br /><span class="gensmall">{L_GCLOUD_FD_EXPLAIN}</span></td>
+    <td class="row2">
+        <noscript>
+            <div>{L_GCLOUD_FD_NOSCRIPT}</div>
+        </noscript>
+        <div data-gcloud-fd="1" data-sitekey="{GCLOUD_FD_SITEKEY}" data-action="{GCLOUD_FD_ACTION}"<!-- IF S_GCLOUD_FD_PREVIEW --> data-gcloud-fd-preview="1"<!-- ENDIF -->>
+            <input type="hidden" name="gcloud_fd_token" value="" />
+        </div>
+        <!-- IF not S_GCLOUD_FD_PREVIEW -->
+        <script src="https://www.google.com/recaptcha/enterprise.js?render={GCLOUD_FD_SITEKEY}"></script>
+        <script src="{ROOT_PATH}assets/js/captcha_gcloud_fraud_defense.js"></script>
+        <!-- ENDIF -->
+    </td>
+</tr>
+
+<!-- ELSE -->
+{L_GCLOUD_FD_NOT_AVAILABLE}
+<!-- ENDIF -->
